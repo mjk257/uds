@@ -89,7 +89,8 @@ const ConfigurationList = () => {
                 {/*        <RemoveIcon />*/}
                 {/*    </Fab>}*/}
             </div>
-            <ConfigurationForm config={ config } />
+            {/* @ts-ignore */}
+            <ConfigurationForm config={ config } currentConfig={ currentConfig } setConfig={ setConfig }  />
         </div>
     );
 };
