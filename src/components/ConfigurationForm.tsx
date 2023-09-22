@@ -101,9 +101,10 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
                                 <MenuItem value="">
                                     <em>No Preference</em>
                                 </MenuItem>
-                                <MenuItem value={"Low"}>Low</MenuItem>
-                                <MenuItem value={"Medium"}>Medium</MenuItem>
-                                <MenuItem value={"High"}>High</MenuItem>
+                                <MenuItem value={"Low"}>&lt;1,000</MenuItem>
+                                <MenuItem value={"Medium-Low"}>1,000 - 10,000</MenuItem>
+                                <MenuItem value={"Medium-High"}>10,000 - 25,000</MenuItem>
+                                <MenuItem value={"High"}>25,000+</MenuItem>
                             </Select>
                         </FormControl>
                         <FormControl variant="standard" className="preferences-slider-text">
