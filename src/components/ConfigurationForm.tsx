@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {CityPreferencesConfiguration, defaultCityPreferencesConfiguration} from "../types/utility-types";
 import {
     Button,
@@ -15,16 +15,25 @@ import {Configs} from "../types/utility-types";
 
 // Note that some of this stuff might be placeholders for later on
 
-const ConfigurationForm = ({ currentConfig, setCurrentConfig } : Props) => {
+const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, currentConfigName, setAllConfigs } : Props) => {
 
     const handleChange = (property : any, event : any) => {
         // @ts-ignore
+        console.log(currentConfig);
+        console.log(allConfigs);
         setCurrentConfig({ ...currentConfig, [property]: event.target.value });
     }
 
-    const clearForm = () => {
+    useEffect(() => {
+        console.log(currentConfig);
         // @ts-ignore
-        setCurrentConfig({ ...currentConfig, defaultCityPreferencesConfiguration });
+        setAllConfigs({ ...allConfigs, [currentConfigName]: currentConfig });
+    }, [currentConfig])
+
+    const clearForm = () => {
+        console.log("Entered")
+        // @ts-ignore
+        setCurrentConfig(defaultCityPreferencesConfiguration);
     }
 
     return  (
@@ -247,7 +256,10 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig } : Props) => {
 
 type Props = {
     currentConfig: CityPreferencesConfiguration,
-    setCurrentConfig: Function
+    setCurrentConfig: Function,
+    allConfigs: Configs,
+    currentConfigName: String,
+    setAllConfigs: Function
 }
 
 export default ConfigurationForm;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 import ConfigurationForm from "./ConfigurationForm";
 import {
@@ -9,14 +9,15 @@ import {
 
 const ConfigurationList = () => {
 
-    const allConfigs = defaultCityPreferencesConfigurationSet;
+    const [allConfigs, setAllConfigs ]= useState(defaultCityPreferencesConfigurationSet);
     const [currentConfig, setCurrentConfig] = useState(allConfigs.config1);
-    const [currentConfigButton, setCurrentConfigButton] = useState('config1');
+    const [currentConfigName, setCurrentConfigName] = useState('config1');
     const handleChange = (event : any) => {
-        if (event.target.value !== currentConfigButton) {
+        if (event.target.value !== currentConfigName) {
             // @ts-ignore
             setCurrentConfig(allConfigs[event.target.value]);
-            setCurrentConfigButton(event.target.value);
+            // @ts-ignore
+            setCurrentConfigName(String(event.target.value));
         }
     }
 
@@ -24,7 +25,7 @@ const ConfigurationList = () => {
         <div>
             <h2>Configurations</h2>
             <div className='config-container'>
-                <ToggleButtonGroup color="primary" value={ currentConfigButton } exclusive
+                <ToggleButtonGroup color="primary" value={ currentConfigName } exclusive
                                    aria-label={'config-settings'} onChange={ handleChange }>
                     <ToggleButton value="config1" onChange={ () => setCurrentConfig(allConfigs.config1) }>
                         Configuration 1
@@ -43,7 +44,8 @@ const ConfigurationList = () => {
                     </ToggleButton>
                 </ToggleButtonGroup>
             </div>
-            <ConfigurationForm currentConfig={ currentConfig } setCurrentConfig={ setCurrentConfig }  />
+            <ConfigurationForm currentConfig={ currentConfig } setCurrentConfig={ setCurrentConfig } allConfigs={ allConfigs }
+                               currentConfigName={ currentConfigName } setAllConfigs={ setAllConfigs } />
         </div>
     );
 };
