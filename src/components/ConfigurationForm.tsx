@@ -28,8 +28,11 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
     }, [currentConfig])
 
     const clearForm = () => {
-        console.log("Entered")
         setCurrentConfig(defaultCityPreferencesConfiguration);
+    }
+
+    const submitForm = () => {
+        console.log("Not implemented yet, will be done once API stuff is finished");
     }
 
     return  (
@@ -231,7 +234,7 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
                             <Button color='error' variant="outlined" onClick={ clearForm }>
                                 Clear
                             </Button>
-                            <Button color='primary' variant="outlined">
+                            <Button color='primary' variant="outlined" onClick={ submitForm }>
                                 Submit
                             </Button>
                         </div>
