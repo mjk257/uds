@@ -227,6 +227,9 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
                                 }}
                                 onChange={ (event) => handleChange("avgPopulationAge", event) }
                                 helperText='Please enter a number between 1 - 100'
+                                // @ts-ignore
+                                error={ currentConfig.avgPopulationAge < 1 || currentConfig.avgPopulationAge > 100
+                                    || String(currentConfig.avgPopulationAge).match('^\\D+$') }
                             >
                             </TextField>
                         </FormControl>

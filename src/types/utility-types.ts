@@ -29,7 +29,7 @@ export const defaultCityPreferencesConfiguration : CityPreferencesConfiguration 
     politics: "",
     qualityOfEducation: "",
     climate: "",
-    avgPopulationAge: 0
+    avgPopulationAge: 1
 };
 
 export const defaultCityPreferencesConfigurationSet : Configs = {
@@ -43,7 +43,7 @@ export const defaultCityPreferencesConfigurationSet : Configs = {
         politics: "",
         qualityOfEducation: "",
         climate: "",
-        avgPopulationAge: 0
+        avgPopulationAge: 1
     },
     "config2": {
         population: "",
@@ -55,7 +55,7 @@ export const defaultCityPreferencesConfigurationSet : Configs = {
         politics: "",
         qualityOfEducation: "",
         climate: "",
-        avgPopulationAge: 0
+        avgPopulationAge: 1
     },
     "config3": {
         population: "",
@@ -67,7 +67,7 @@ export const defaultCityPreferencesConfigurationSet : Configs = {
         politics: "",
         qualityOfEducation: "",
         climate: "",
-        avgPopulationAge: 0
+        avgPopulationAge: 1
     },
     "config4": {
         population: "",
@@ -79,7 +79,7 @@ export const defaultCityPreferencesConfigurationSet : Configs = {
         politics: "",
         qualityOfEducation: "",
         climate: "",
-        avgPopulationAge: 0
+        avgPopulationAge: 1
     },
     "config5": {
         population: "",
@@ -91,7 +91,7 @@ export const defaultCityPreferencesConfigurationSet : Configs = {
         politics: "",
         qualityOfEducation: "",
         climate: "",
-        avgPopulationAge: 0
+        avgPopulationAge: 1
     }
 };
 
