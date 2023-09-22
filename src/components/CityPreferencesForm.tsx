@@ -1,16 +1,11 @@
 import React from "react";
-import {Box, Button, Card, CardActions, CardContent, Typography} from "@mui/material";
+import {
+    Box,
+    Card,
+    CardContent, FormControl, FormHelperText, FormLabel, Slider
+} from "@mui/material";
 import ConfigurationList from "./ConfigurationList";
-
-const bull = (
-    <Box
-        component="span"
-        sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}
-    >
-        •
-    </Box>
-);
-
+import Grid from "@mui/material/Unstable_Grid2";
 
 export const CityPreferencesForm = () => {
     return (

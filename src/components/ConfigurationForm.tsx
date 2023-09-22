@@ -1,15 +1,30 @@
 import React from "react";
-import CityPreferencesForm from "./CityPreferencesForm";
-import {CityPreferencesConfiguration} from "../types/utility-types";
-import {Button, Card, CardContent, CardHeader, Divider, FormControl, InputLabel, MenuItem, Select} from "@mui/material";
+import {CityPreferencesConfiguration, defaultCityPreferencesConfiguration} from "../types/utility-types";
+import {
+    Button,
+    Card,
+    CardContent,
+    CardHeader,
+    Divider,
+    FormControl, FormHelperText, FormLabel,
+    InputLabel,
+    MenuItem,
+    Select, Slider, TextField, Typography
+} from "@mui/material";
+import {Configs} from "../types/utility-types";
 
 // Note that some of this stuff might be placeholders for later on
 
-const ConfigurationForm = ({ config, setConfig, currentConfig } : Props) => {
+const ConfigurationForm = ({ currentConfig, setCurrentConfig } : Props) => {
 
     const handleChange = (property : any, event : any) => {
         // @ts-ignore
-        setConfig({ ...config[currentConfig], [property]: event.target.value });
+        setCurrentConfig({ ...currentConfig, [property]: event.target.value });
+    }
+
+    const clearForm = () => {
+        // @ts-ignore
+        setCurrentConfig({ ...currentConfig, defaultCityPreferencesConfiguration });
     }
 
     return  (
@@ -19,83 +34,209 @@ const ConfigurationForm = ({ config, setConfig, currentConfig } : Props) => {
                     <CardHeader title="What are you looking for in a city?" />
                     <Divider />
                     <CardContent className='preferences-form-content'>
-                        <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+                        <FormControl variant="standard" className='preferences-select'>
                             <InputLabel>Population</InputLabel>
                             <Select
                                 labelId="population-select"
                                 // This is likely going to cause an error
-                                value={config.population}
-                                onChange={ () => handleChange("population", this) }
+                                value={currentConfig.population}
+                                onChange={ (event) => handleChange("population", event) }
                                 label="Population"
                             >
                                 <MenuItem value="">
-                                    <em>None</em>
+                                    <em>No Preference</em>
                                 </MenuItem>
                                 <MenuItem value={"Low"}>Low</MenuItem>
                                 <MenuItem value={"Medium"}>Medium</MenuItem>
                                 <MenuItem value={"High"}>High</MenuItem>
                             </Select>
                         </FormControl>
-                        <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+                        <FormControl variant="standard" className='preferences-select'>
                             <InputLabel>Population Density</InputLabel>
                             <Select
                                 labelId="population-density-select"
                                 // This is likely going to cause an error
-                                value={config.populationDensity}
-                                onChange={ () => handleChange("populationDensity", this) }
+                                value={currentConfig.populationDensity}
+                                onChange={ (event) => handleChange("populationDensity", event) }
                                 label="Population Density"
                             >
                                 <MenuItem value="">
-                                    <em>None</em>
+                                    <em>No Preference</em>
                                 </MenuItem>
                                 <MenuItem value={"Low"}>Low</MenuItem>
                                 <MenuItem value={"Medium"}>Medium</MenuItem>
                                 <MenuItem value={"High"}>High</MenuItem>
                             </Select>
                         </FormControl>
-                        <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+                        <FormControl variant="standard" className='preferences-select'>
                             <InputLabel>Cost of Living</InputLabel>
                             <Select
                                 labelId="col-select"
                                 // This is likely going to cause an error
-                                value={config.costOfLiving}
-                                onChange={ () => handleChange("costOfLiving", this) }
+                                value={currentConfig.costOfLiving}
+                                onChange={ (event) => handleChange("costOfLiving", event) }
                                 label="Cost of Living"
                             >
                                 <MenuItem value="">
-                                    <em>None</em>
+                                    <em>No Preference</em>
                                 </MenuItem>
                                 <MenuItem value={"Low"}>Low</MenuItem>
                                 <MenuItem value={"Medium"}>Medium</MenuItem>
                                 <MenuItem value={"High"}>High</MenuItem>
                             </Select>
                         </FormControl>
-                        <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+                        <FormControl variant="standard" className='preferences-select'>
                             <InputLabel>Number of Jobs Available</InputLabel>
                             <Select
                                 labelId="col-select"
                                 // This is likely going to cause an error
-                                value={config.numberOfJobsAvailable}
-                                onChange={ () => handleChange("numberOfJobsAvailable", this) }
+                                value={currentConfig.numberOfJobsAvailable}
+                                onChange={ (event) => handleChange("numberOfJobsAvailable", event) }
                                 label="Number of Jobs Available"
                             >
                                 <MenuItem value="">
-                                    <em>None</em>
+                                    <em>No Preference</em>
                                 </MenuItem>
                                 <MenuItem value={"Low"}>Low</MenuItem>
                                 <MenuItem value={"Medium"}>Medium</MenuItem>
                                 <MenuItem value={"High"}>High</MenuItem>
                             </Select>
                         </FormControl>
+                        <FormControl variant="standard" className="preferences-slider-text">
+                            <FormLabel>Crime Rate: {currentConfig.crimeRate}</FormLabel>
+                            <Slider
+                                defaultValue={0}
+                                step={5000}
+                                marks
+                                min={0}
+                                max={100000}
+                                valueLabelDisplay="auto"
+                                className='preferences-slider'
+                                onChange={ (event) => handleChange("crimeRate", event) }
+                            />
+                            <FormHelperText>The amount of people affected by crime per 100,000 people</FormHelperText>
+                        </FormControl>
+                        <FormControl variant="standard" className='preferences-select'>
+                            <InputLabel>Walkability/Transability</InputLabel>
+                            <Select
+                                labelId="walkability-transability-select"
+                                // This is likely going to cause an error
+                                value={currentConfig.walkAndTransability}
+                                onChange={ (event) => handleChange("walkAndTransability", event) }
+                                label="Walkability/Transability"
+                            >
+                                <MenuItem value="">
+                                    <em>No Preference</em>
+                                </MenuItem>
+                                <MenuItem value={"Low"}>Low</MenuItem>
+                                <MenuItem value={"Medium"}>Medium</MenuItem>
+                                <MenuItem value={"High"}>High</MenuItem>
+                            </Select>
+                        </FormControl>
+                        <FormControl variant="standard" className='preferences-select'>
+                            <InputLabel>Politics</InputLabel>
+                            <Select
+                                labelId="politics-select"
+                                // This is likely going to cause an error
+                                value={currentConfig.politics}
+                                onChange={ (event) => handleChange("politics", event) }
+                                label="Politics"
+                            >
+                                <MenuItem value="">
+                                    <em>Apolitical/No Preference</em>
+                                </MenuItem>
+                                <MenuItem value={"Democrat"}>Democrat</MenuItem>
+                                <MenuItem value={"Moderate"}>Moderate</MenuItem>
+                                <MenuItem value={"Republican"}>Republican</MenuItem>
+                            </Select>
+                        </FormControl>
+                        <FormControl variant="standard" className='preferences-select'>
+                            <InputLabel>Quality of Education</InputLabel>
+                            <Select
+                                labelId="qoe-select"
+                                // This is likely going to cause an error
+                                value={currentConfig.qualityOfEducation}
+                                onChange={ (event) => handleChange("qualityOfEducation", event) }
+                                label="Quality of Education"
+                            >
+                                <MenuItem value="">
+                                    <em>No Preference</em>
+                                </MenuItem>
+                                <MenuItem value={"Low"}>Low</MenuItem>
+                                <MenuItem value={"Medium"}>Medium</MenuItem>
+                                <MenuItem value={"High"}>High</MenuItem>
+                            </Select>
+                        </FormControl>
+                        <FormControl variant="standard" className='preferences-select'>
+                            <InputLabel>Climate</InputLabel>
+                            <Select
+                                labelId="climate-select"
+                                // This is likely going to cause an error
+                                value={currentConfig.climate}
+                                onChange={ (event) => handleChange("climate", event) }
+                                label="Climate"
+                                MenuProps={{
+                                    PaperProps: {
+                                        style: {
+                                            maxHeight: 200,
+                                        },
+                                    },
+                                }}
+                            >
+                                <MenuItem value="">
+                                    <em>No Preference</em>
+                                </MenuItem>
+                                <MenuItem value={"Rainforest"}>Rainforest</MenuItem>
+                                <MenuItem value={"Monsoon"}>Monsoon</MenuItem>
+                                <MenuItem value={"Savanna"}>Savanna</MenuItem>
+                                <MenuItem value={"Hot Desert"}>Hot Desert</MenuItem>
+                                <MenuItem value={"Cold Desert"}>Cold Desert</MenuItem>
+                                <MenuItem value={"Hot Semi-arid"}>Hot Semi-arid</MenuItem>
+                                <MenuItem value={"Cold semi-arid"}>Cold Semi-arid</MenuItem>
+                                <MenuItem value={"Hot-summer Mediterranean"}>Hot-summer Mediterranean</MenuItem>
+                                <MenuItem value={"Warm-summer Mediterranean"}>Warm-summer Mediterranean</MenuItem>
+                                <MenuItem value={"Cold-summer Mediterranean"}>Cold-summer Mediterranean</MenuItem>
+                                <MenuItem value={"Humid Subtropical"}>Humid Subtropical</MenuItem>
+                                <MenuItem value={"Subtropical Highland"}>Subtropical Highland</MenuItem>
+                                <MenuItem value={"Oceanic"}>Oceanic</MenuItem>
+                                <MenuItem value={"Subpolar Oceanic"}>Subpolar Oceanic</MenuItem>
+                                <MenuItem value={"Hot-summer Mediterranean Continental"}>Hot-summer Mediterranean Continental</MenuItem>
+                                <MenuItem value={"Warm-summer Mediterranean Continental"}>Warm-summer Mediterranean Continental</MenuItem>
+                                <MenuItem value={"Dry-summer Subarctic"}>Dry-summer Subarctic</MenuItem>
+                                <MenuItem value={"Hot-summer Humid Continental"}>Hot-summer Humid Continental</MenuItem>
+                                <MenuItem value={"Hot-summer Humid Continental"}>Warm-summer Humid Continental</MenuItem>
+                                <MenuItem value={"Dry-winter Subarctic"}>Dry-winter Subarctic</MenuItem>
+                                <MenuItem value={"Hot-summer Humid Continental"}>Hot-summer Humid Continental</MenuItem>
+                                <MenuItem value={"Warm-summer Humid Continental"}>Warm-summer Humid Continental</MenuItem>
+                                <MenuItem value={"Subarctic"}>Subarctic</MenuItem>
+                                <MenuItem value={"Tundra"}>Tundra</MenuItem>
+                                <MenuItem value={"Ice-cap"}>Ice-cap</MenuItem>
+                            </Select>
+                        </FormControl>
+                        <FormControl variant="standard" className='preferences-text-field'>
+                            <TextField
+                                label='Average Population Age'
+                                variant='standard'
+                                type='text'
+                                value={currentConfig.avgPopulationAge}
+                                InputProps={{
+                                    inputProps: {
+                                        inputMode: 'numeric'
+                                    },
+                                }}
+                                onChange={ (event) => handleChange("avgPopulationAge", event) }
+                                helperText='Please enter a number between 1 - 100'
+                            >
+                            </TextField>
+                        </FormControl>
                         {/* Add the rest later on, I believe that this should be fine but I might add an object config */}
                         <div className='preferences-form-sibling-set'>
-                            <Button color='error' variant="outlined">
+                            <Button color='error' variant="outlined" onClick={ clearForm }>
                                 Clear
                             </Button>
                             <Button color='primary' variant="outlined">
                                 Submit
                             </Button>
-
                         </div>
                     </CardContent>
                 </Card>
@@ -105,9 +246,8 @@ const ConfigurationForm = ({ config, setConfig, currentConfig } : Props) => {
 }
 
 type Props = {
-    config: CityPreferencesConfiguration,
-    currentConfig: String
-    setConfig: Function
-};
+    currentConfig: CityPreferencesConfiguration,
+    setCurrentConfig: Function
+}
 
 export default ConfigurationForm;

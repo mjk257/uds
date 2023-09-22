@@ -1,6 +1,6 @@
 .preferences-form {
   background-color: #D9D9D9 !important;
-  text-align: left;
+  text-align: center;
   margin-left: 5%;
   margin-right: 5%;
   margin-top: 5%;
@@ -8,7 +8,7 @@
   .config-container {
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
+    justify-content: center;
     flex-wrap: wrap;
   }
   .preferences-form-container {
@@ -24,7 +24,24 @@
           flex-direction: row;
           justify-content: flex-end;
           gap: 10px;
-          padding: 1% 0 0 0;
+          margin: 1% 0 0 0;
+        }
+        .preferences-select {
+          margin: 8px 8px 8px 8px;
+          min-width: 120px;
+          text-align: left;
+        }
+        .preferences-slider-text {
+          margin: 8px 8px 8px 8px;
+          text-align: left;
+          .preferences-slider {
+            width: 97%;
+            margin: auto;
+          }
+        }
+        .preferences-text-field {
+          margin: 8px 8px 8px 8px;
+          min-width: 120px;
         }
       }
     }
