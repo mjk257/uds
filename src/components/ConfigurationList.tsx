@@ -1,9 +1,7 @@
-import React, {useEffect, useState} from "react";
+import React, { useState } from "react";
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 import ConfigurationForm from "./ConfigurationForm";
 import {
-    CityPreferencesConfiguration,
-    defaultCityPreferencesConfiguration,
     defaultCityPreferencesConfigurationSet
 } from "../types/utility-types";
 
@@ -16,7 +14,6 @@ const ConfigurationList = () => {
         if (event.target.value !== currentConfigName) {
             // @ts-ignore
             setCurrentConfig(allConfigs[event.target.value]);
-            // @ts-ignore
             setCurrentConfigName(String(event.target.value));
         }
     }

@@ -11,16 +11,13 @@ import {
     MenuItem,
     Select, Slider, TextField, Typography
 } from "@mui/material";
-import {Configs} from "../types/utility-types";
+import { Configs } from "../types/utility-types";
 
 // Note that some of this stuff might be placeholders for later on
 
 const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, currentConfigName, setAllConfigs } : Props) => {
 
     const handleChange = (property : any, event : any) => {
-        // @ts-ignore
-        console.log(currentConfig);
-        console.log(allConfigs);
         setCurrentConfig({ ...currentConfig, [property]: event.target.value });
     }
 
@@ -32,7 +29,6 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
 
     const clearForm = () => {
         console.log("Entered")
-        // @ts-ignore
         setCurrentConfig(defaultCityPreferencesConfiguration);
     }
 
@@ -47,7 +43,6 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
                             <InputLabel>Population</InputLabel>
                             <Select
                                 labelId="population-select"
-                                // This is likely going to cause an error
                                 value={currentConfig.population}
                                 onChange={ (event) => handleChange("population", event) }
                                 label="Population"
@@ -64,7 +59,6 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
                             <InputLabel>Population Density</InputLabel>
                             <Select
                                 labelId="population-density-select"
-                                // This is likely going to cause an error
                                 value={currentConfig.populationDensity}
                                 onChange={ (event) => handleChange("populationDensity", event) }
                                 label="Population Density"
@@ -81,7 +75,6 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
                             <InputLabel>Cost of Living</InputLabel>
                             <Select
                                 labelId="col-select"
-                                // This is likely going to cause an error
                                 value={currentConfig.costOfLiving}
                                 onChange={ (event) => handleChange("costOfLiving", event) }
                                 label="Cost of Living"
@@ -98,7 +91,6 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
                             <InputLabel>Number of Jobs Available</InputLabel>
                             <Select
                                 labelId="col-select"
-                                // This is likely going to cause an error
                                 value={currentConfig.numberOfJobsAvailable}
                                 onChange={ (event) => handleChange("numberOfJobsAvailable", event) }
                                 label="Number of Jobs Available"
@@ -129,7 +121,6 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
                             <InputLabel>Walkability/Transability</InputLabel>
                             <Select
                                 labelId="walkability-transability-select"
-                                // This is likely going to cause an error
                                 value={currentConfig.walkAndTransability}
                                 onChange={ (event) => handleChange("walkAndTransability", event) }
                                 label="Walkability/Transability"
@@ -146,7 +137,6 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
                             <InputLabel>Politics</InputLabel>
                             <Select
                                 labelId="politics-select"
-                                // This is likely going to cause an error
                                 value={currentConfig.politics}
                                 onChange={ (event) => handleChange("politics", event) }
                                 label="Politics"
@@ -163,7 +153,6 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
                             <InputLabel>Quality of Education</InputLabel>
                             <Select
                                 labelId="qoe-select"
-                                // This is likely going to cause an error
                                 value={currentConfig.qualityOfEducation}
                                 onChange={ (event) => handleChange("qualityOfEducation", event) }
                                 label="Quality of Education"
@@ -180,7 +169,6 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
                             <InputLabel>Climate</InputLabel>
                             <Select
                                 labelId="climate-select"
-                                // This is likely going to cause an error
                                 value={currentConfig.climate}
                                 onChange={ (event) => handleChange("climate", event) }
                                 label="Climate"
