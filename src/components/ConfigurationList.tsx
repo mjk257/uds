@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Container, ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { Container, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
 import ConfigurationForm from "./ConfigurationForm";
 import {
     defaultCityPreferencesConfigurationSet
@@ -29,7 +29,9 @@ const ConfigurationList = () => {
 
     return (
         <div>
-            <h2>Configurations</h2>
+            <Typography variant='h4' align='center' className='configurations-header'>
+                Configurations
+            </Typography>
             <Container maxWidth='xl'>
                 <ToggleButtonGroup color="primary" value={ currentConfigName } exclusive
                                    aria-label={'config-settings'} onChange={ handleChange }>
