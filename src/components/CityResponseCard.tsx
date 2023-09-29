@@ -17,6 +17,19 @@ The following Props will be needed in the future:
 // This will likely take in props later on, but the base styling will be set up
 const CityResponseCard = () => {
 
+    const accordionDetails = [
+        { title: 'Population' },
+        { title: 'Population Density' },
+        { title: 'Cost of Living' },
+        { title: 'Number of Jobs' },
+        { title: 'Crime Rate' },
+        { title: 'Walkability/Transability' },
+        { title: 'Politics' },
+        { title: 'Quality of Education' },
+        { title: 'Climate' },
+        { title: 'Average Population Age' }
+    ];
+
     return (
         <Card className='city-response'>
             <CardHeader title='Insert City Name Prop Here' titleTypographyProps={{ align: 'left' }} />
@@ -29,36 +42,13 @@ const CityResponseCard = () => {
                         <Typography>City Details</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
-                        <Typography>
-                            Insert Population Here
-                        </Typography>
-                        <Typography>
-                            Insert Population Density Here
-                        </Typography>
-                        <Typography>
-                            Insert Cost of Living Here
-                        </Typography>
-                        <Typography>
-                            Insert Number of Jobs Here
-                        </Typography>
-                        <Typography>
-                            Insert Crime Rate Here
-                        </Typography>
-                        <Typography>
-                            Insert Walkability/Transability Here
-                        </Typography>
-                        <Typography>
-                            Insert Politics Here
-                        </Typography>
-                        <Typography>
-                            Insert Quality of Education Here
-                        </Typography>
-                        <Typography>
-                            Insert Climate Here
-                        </Typography>
-                        <Typography>
-                            Insert Average Population Age Here
-                        </Typography>
+                        { accordionDetails.map((item, idx) => {
+                            return (
+                                <Typography key={ idx }>
+                                    { item?.title }
+                                </Typography>
+                            )
+                        })}
                     </AccordionDetails>
                 </Accordion>
             </CardContent>
