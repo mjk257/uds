@@ -1,15 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 import { Container, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
 import ConfigurationForm from "./ConfigurationForm";
 import {
+    CityPreferencesConfiguration, Configs,
     defaultCityPreferencesConfigurationSet
 } from "../types/utility-types";
+import {ConfigFn} from "@testing-library/react";
 
-const ConfigurationList = () => {
-
-    const [allConfigs, setAllConfigs ]= useState(defaultCityPreferencesConfigurationSet);
-    const [currentConfig, setCurrentConfig] = useState(allConfigs.config1);
-    const [currentConfigName, setCurrentConfigName] = useState('config1');
+const ConfigurationList = ({ setCurrentConfig, allConfigs, currentConfigName, setCurrentConfigName } : Props) => {
 
     const toggleButtonConfigurations = [
         { title: "Config 1", value: "config1", onChange: () => setCurrentConfig(allConfigs.config1) },
@@ -43,11 +41,16 @@ const ConfigurationList = () => {
                         )
                     })}
                 </ToggleButtonGroup>
-                <ConfigurationForm currentConfig={ currentConfig } setCurrentConfig={ setCurrentConfig } allConfigs={ allConfigs }
-                                   currentConfigName={ currentConfigName } setAllConfigs={ setAllConfigs } />
             </Container>
         </div>
     );
 };
+
+type Props = {
+    setCurrentConfig: Function,
+    allConfigs: Configs,
+    currentConfigName: string,
+    setCurrentConfigName: Function
+}
 
 export default ConfigurationList;
