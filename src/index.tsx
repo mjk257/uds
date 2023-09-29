@@ -6,13 +6,15 @@ import reportWebVitals from './reportWebVitals';
 import CityPreferencesForm from "./components/CityPreferencesForm";
 
 import "./styles/index.scss";
+import Header from "./components/Header";
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <CityPreferencesForm />
+      <Header />
+      <CityPreferencesForm />
   </React.StrictMode>
 );
 
