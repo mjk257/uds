@@ -1,7 +1,11 @@
 import pandas as pd
 import requests
 import time
+import os
+from dotenv import load_dotenv
 from pymongo import MongoClient
+
+load_dotenv()
 
 # method for formatting the state column
 def transform(x):
@@ -9,13 +13,15 @@ def transform(x):
 
 # url for cities api
 api_url = "https://countries-cities.p.rapidapi.com/location/country/US/city/list"
+api_key = os.getenv("RAPID_API_KEY")
 
 # url for atlas connection string (need to fill in credentials)
-db_url = "mongodb+srv://admin:<password>@cluster0.qcqwyum.mongodb.net/?retryWrites=true&w=majority"
+db_password = os.getenv("MONGODB_PASSWORD")
+db_url = "mongodb+srv://admin:" + db_password + "@cluster0.qcqwyum.mongodb.net/?retryWrites=true&w=majority"
 
 # headers for api request
 headers = {
-	"X-RapidAPI-Key": "5dbacafc35msh9a01b02148a72f9p12fda1jsn167dab8a827c",
+	"X-RapidAPI-Key": api_key,
 	"X-RapidAPI-Host": "countries-cities.p.rapidapi.com"
 }
 
