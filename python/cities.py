@@ -11,11 +11,11 @@ load_dotenv("../.env")
 def transform(x):
     return x['code'][3:5]
 
-# url for cities api
+# variables for rapidapi cities api
 api_url = "https://countries-cities.p.rapidapi.com/location/country/US/city/list"
 api_key = os.getenv("RAPID_API_KEY")
 
-# url for atlas connection string (need to fill in credentials)
+# variables for atlas connection
 db_username = os.getenv("MONGODB_USER")
 db_password = os.getenv("MONGODB_PASSWORD")
 db_url = "mongodb+srv://" + db_username + ":" + db_password + "@cluster0.bno5m.mongodb.net/?retryWrites=true&w=majority"
@@ -49,7 +49,7 @@ df['state'] = df['division'].apply(transform)
 df = df.drop(['division', 'country', 'geonameid'], axis=1)
 df.reset_index(inplace = True, drop = True)
 
-# import data into MongoDB collection
+# import data into MongoDB collection, only insert if changes in data
 client = MongoClient(db_url)
 cities = client['uds']['cities']
 for row in df.to_dict("records"):
