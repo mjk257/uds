@@ -5,7 +5,7 @@ import os
 from dotenv import load_dotenv
 from pymongo import MongoClient
 
-load_dotenv()
+load_dotenv("../.env")
 
 # method for formatting the state column
 def transform(x):
@@ -16,8 +16,9 @@ api_url = "https://countries-cities.p.rapidapi.com/location/country/US/city/list
 api_key = os.getenv("RAPID_API_KEY")
 
 # url for atlas connection string (need to fill in credentials)
+db_username = os.getenv("MONGODB_USER")
 db_password = os.getenv("MONGODB_PASSWORD")
-db_url = "mongodb+srv://admin:" + db_password + "@cluster0.qcqwyum.mongodb.net/?retryWrites=true&w=majority"
+db_url = "mongodb+srv://" + db_username + ":" + db_password + "@cluster0.bno5m.mongodb.net/?retryWrites=true&w=majority"
 
 # headers for api request
 headers = {
@@ -28,13 +29,13 @@ headers = {
 # api limit of 1 request per second so wait between requests
 # note that currently 341 cities with >100,000 and 100 results per page with free model
 # so 4 requests but could increase in the future
-response1 = requests.get(url, headers=headers, params={"page": "1", "population":"100000"})
+response1 = requests.get(api_url, headers=headers, params={"page": "1", "population":"100000"})
 time.sleep(2)
-response2 = requests.get(url, headers=headers, params={"page": "2", "population":"100000"})
+response2 = requests.get(api_url, headers=headers, params={"page": "2", "population":"100000"})
 time.sleep(2)
-response3 = requests.get(url, headers=headers, params={"page": "3", "population":"100000"})
+response3 = requests.get(api_url, headers=headers, params={"page": "3", "population":"100000"})
 time.sleep(2)
-response4 = requests.get(url, headers=headers, params={"page": "4", "population":"100000"})
+response4 = requests.get(api_url, headers=headers, params={"page": "4", "population":"100000"})
 
 # convert api responses to pandas dataframes
 df1 = pd.DataFrame.from_dict(response1.json()['cities'])
@@ -50,5 +51,6 @@ df.reset_index(inplace = True, drop = True)
 
 # import data into MongoDB collection
 client = MongoClient(db_url)
-db = client['uds']
-db['cities'].insert_many(df.to_dict("records"))
+cities = client['uds']['cities']
+for row in df.to_dict("records"):
+    cities.replace_one({'name': row.get('name'), 'state': row.get('state')}, row, upsert=True)
