@@ -1,0 +1,64 @@
+.preferences-form {
+  background-color: #D9D9D9 !important;
+  text-align: center;
+  margin-left: 5%;
+  margin-right: 5%;
+  margin-top: 5%;
+  border: 1px solid;
+  .configurations-header {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-weight: bold;
+  }
+  .preferences-form-container {
+    padding: 5% 5% 5% 5%;
+    .preferences-form-card {
+      text-align: center;
+      .preferences-form-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        .preferences-form-sibling-set {
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-end;
+          gap: 10px;
+          margin: 1% 0 0 0;
+        }
+        .preferences-select {
+          margin: 8px 8px 8px 8px;
+          min-width: 120px;
+          text-align: left;
+        }
+        .preferences-slider-text {
+          margin: 8px 8px 8px 8px;
+          text-align: left;
+          .preferences-slider {
+            width: 97%;
+            margin: auto;
+          }
+        }
+        .preferences-text-field {
+          margin: 8px 8px 8px 8px;
+          min-width: 120px;
+        }
+      }
+    }
+  }
+}
+
+.city-response {
+  background-color: whitesmoke !important;
+  margin: 5% 5% 5% 5%;
+  border: 1px solid;
+  .city-response-content {
+    border-radius: 10em;
+  }
+  .city-response-details {
+    margin-top: 20px;
+  }
+}
+
+.header-bar {
+  background-color: black !important;
+}
