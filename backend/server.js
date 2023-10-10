@@ -1,7 +1,7 @@
-require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const app = express();
+require('dotenv').config({path: __dirname + '/../.env'});
 const port = 5000;
 const dbConnection = require('./dbConn.js');
 const City = require('./City.js');
@@ -24,7 +24,7 @@ app.get('/', (req, res) => {
 app.get('/api/cities', (req, res) => {
   City.find({}).then(cities => {
     res.json(cities)
-  })
+  });
 });
 
 // Api route, get city info given id
@@ -33,11 +33,12 @@ app.get('/api/cities/:id', (req, res) => {
 
   City.findById(id).then(city => {
     res.json(city)
-  })
+  });
 });
 
 // Api route, search for cities with given search criteria
 app.post('/api/search', (req, res) => {
+  res.sendStatus(123);
   
   const searchCriteria = req.body;
 
