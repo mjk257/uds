@@ -5,6 +5,7 @@ from pymongo import MongoClient
 
 load_dotenv("../.env")
 
+# API url
 api = "http://climateapi.scottpinkelman.com/api/v1/location/"
 
 # variables for atlas connection
@@ -15,6 +16,7 @@ db_url = "mongodb+srv://" + db_username + ":" + db_password + "@cluster0.bno5m.m
 client = MongoClient(db_url)
 cities = client['uds']['cities']
 
+# Call API and add climate zone and zone description
 for city in cities.find():
     response = requests.get(api + str(city['latitude']) + "/" + str(city['longitude'])).json()['return_values'][0]
     query = { "_id": city["_id"] }
