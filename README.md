@@ -44,3 +44,14 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+
+# Data Ingestion
+
+To ingest new data, first navigate to the python directory and run
+### `pip install -r requirements.txt`
+
+Then, if using PowerShell, in the same directory run
+### ` ./cities.py ; ./rpp.py ; ./climate.py`
+
+to run the data ingestion scripts in the optimal order. You can also run an individual script, however, note that running the `cities.py` script will overwrite all the other attributes in the database.
