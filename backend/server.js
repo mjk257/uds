@@ -1,7 +1,10 @@
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const app = express();
 const port = 5000;
+const dbConnection = require('./dbConn.js');
+const City = require('./City.js');
 
 /* NOTE: the 'build' directory is the React build, you have to generate it 
    yourself using 'npm run build' */
@@ -19,25 +22,18 @@ app.get('/', (req, res) => {
 
 // Api route, get list of all cities
 app.get('/api/cities', (req, res) => {
-
-  testCities = [{id: 1, name: 'Clevland'}, {id: 2, name: 'New York'}, {id: 3, name: 'Seattle'}]
-
-  /* CALL TO DATABASE */
-
-  res.json(testCities)
+  City.find({}).then(cities => {
+    res.json(cities)
+  })
 });
 
 // Api route, get city info given id
 app.get('/api/cities/:id', (req, res) => {
-
   const {id} = req.params;
-  testCities = [{id: 1, name: 'Cleveland', population: '367,991', avg_salary: 21507}, {id: 2, name: 'New York'}, {id: 3, name: 'Seattle'}]
 
-  /* CALL TO DATABASE*/
-
-  const city = testCities.find(c => c.id == id);
-
-  res.json(city);
+  City.findById(id).then(city => {
+    res.json(city)
+  })
 });
 
 // Api route, search for cities with given search criteria
