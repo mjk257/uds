@@ -5,10 +5,8 @@ from pymongo import MongoClient
 
 load_dotenv("../.env")
 
-# variables for atlas connection
-db_username = os.getenv("MONGODB_USER")
-db_password = os.getenv("MONGODB_PASSWORD")
-db_url = "mongodb+srv://" + db_username + ":" + db_password + "@cluster0.bno5m.mongodb.net/?retryWrites=true&w=majority"
+# DB connection string
+db_url = os.getenv("MONGODB_URL")
 
 # Clean initial excel
 df = pd.read_excel("https://www.bea.gov/sites/default/files/2022-12/rpp1222.xlsx", sheet_name="Table 4", skiprows=[0, 1, 2, 3])
@@ -24,7 +22,7 @@ df = df.drop(['city'], axis=1)
 df = df.rename({0: "city", 1: "state"}, axis=1)
 df.reset_index(inplace = True, drop = True)
 
-# Access DB collection
+# Connect to DB
 client = MongoClient(db_url)
 cities = client['uds']['cities']
 

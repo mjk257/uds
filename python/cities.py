@@ -3,21 +3,16 @@ import requests
 import os
 from dotenv import load_dotenv
 from pymongo import MongoClient
+from abbreviate_state import *
 
 load_dotenv("../.env")
 
 # variables for atlas connection
-db_username = os.getenv("MONGODB_USER")
-db_password = os.getenv("MONGODB_PASSWORD")
-db_url = "mongodb+srv://" + db_username + ":" + db_password + "@cluster0.bno5m.mongodb.net/?retryWrites=true&w=majority"
+db_url = os.getenv("MONGODB_URL")
 
-# connect to DB
+# Connect to DB
 client = MongoClient(db_url)
 cities = client['uds']['cities']
-
-# function to map state name to abbreviation
-def abbreviate(x):
-    return us_state_to_abbrev.get(x)
 
 # function to clean city name from census data
 def clean_name(x):
@@ -34,67 +29,6 @@ def clean_name(x):
     if("CDP" in x):
         return x.split("Urban ")[1].split(" CDP")[0]
     return x
-
-# dictionary for state name to abbreviation mappings
-us_state_to_abbrev = {
-    "Alabama": "AL",
-    "Alaska": "AK",
-    "Arizona": "AZ",
-    "Arkansas": "AR",
-    "California": "CA",
-    "Colorado": "CO",
-    "Connecticut": "CT",
-    "Delaware": "DE",
-    "Florida": "FL",
-    "Georgia": "GA",
-    "Hawaii": "HI",
-    "Idaho": "ID",
-    "Illinois": "IL",
-    "Indiana": "IN",
-    "Iowa": "IA",
-    "Kansas": "KS",
-    "Kentucky": "KY",
-    "Louisiana": "LA",
-    "Maine": "ME",
-    "Maryland": "MD",
-    "Massachusetts": "MA",
-    "Michigan": "MI",
-    "Minnesota": "MN",
-    "Mississippi": "MS",
-    "Missouri": "MO",
-    "Montana": "MT",
-    "Nebraska": "NE",
-    "Nevada": "NV",
-    "New Hampshire": "NH",
-    "New Jersey": "NJ",
-    "New Mexico": "NM",
-    "New York": "NY",
-    "North Carolina": "NC",
-    "North Dakota": "ND",
-    "Ohio": "OH",
-    "Oklahoma": "OK",
-    "Oregon": "OR",
-    "Pennsylvania": "PA",
-    "Rhode Island": "RI",
-    "South Carolina": "SC",
-    "South Dakota": "SD",
-    "Tennessee": "TN",
-    "Texas": "TX",
-    "Utah": "UT",
-    "Vermont": "VT",
-    "Virginia": "VA",
-    "Washington": "WA",
-    "West Virginia": "WV",
-    "Wisconsin": "WI",
-    "Wyoming": "WY",
-    "District of Columbia": "DC",
-    "American Samoa": "AS",
-    "Guam": "GU",
-    "Northern Mariana Islands": "MP",
-    "Puerto Rico": "PR",
-    "United States Minor Outlying Islands": "UM",
-    "U.S. Virgin Islands": "VI",
-}
 
 # census API call
 response = requests.get("http://api.census.gov/data/2019/pep/population?get=NAME,DENSITY,POP&for=place:*&key=25ec91bd81fdfa691c08dbaf06adc71c3a2918d6")

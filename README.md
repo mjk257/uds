@@ -51,6 +51,10 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 To ingest new data, first navigate to the python directory and run
 ### `pip install -r requirements.txt`
 
+Next, ensure your .env file is setup correctly either with the production Atlas connection string or
+`mongodb://localhost:27017`
+for local connection.
+
 Then, if using PowerShell, in the same directory run
 ### ` ./cities.py ; ./rpp.py ; ./climate.py`
 
