@@ -1,56 +1,68 @@
 import pandas as pd
 import requests
-import time
 import os
 from dotenv import load_dotenv
 from pymongo import MongoClient
+from abbreviate_state import *
 
 load_dotenv("../.env")
 
-# method for formatting the state column
-def transform(x):
-    return x['code'][3:5]
-
-# variables for rapidapi cities api
-api_url = "https://countries-cities.p.rapidapi.com/location/country/US/city/list"
-api_key = os.getenv("RAPID_API_KEY")
-
 # variables for atlas connection
-db_username = os.getenv("MONGODB_USER")
-db_password = os.getenv("MONGODB_PASSWORD")
-db_url = "mongodb+srv://" + db_username + ":" + db_password + "@cluster0.bno5m.mongodb.net/?retryWrites=true&w=majority"
+db_url = os.getenv("MONGODB_URL")
 
-# headers for api request
-headers = {
-	"X-RapidAPI-Key": api_key,
-	"X-RapidAPI-Host": "countries-cities.p.rapidapi.com"
-}
-
-# api limit of 1 request per second so wait between requests
-# note that currently 341 cities with >100,000 and 100 results per page with free model
-# so 4 requests but could increase in the future
-response1 = requests.get(api_url, headers=headers, params={"page": "1", "population":"100000"})
-time.sleep(2)
-response2 = requests.get(api_url, headers=headers, params={"page": "2", "population":"100000"})
-time.sleep(2)
-response3 = requests.get(api_url, headers=headers, params={"page": "3", "population":"100000"})
-time.sleep(2)
-response4 = requests.get(api_url, headers=headers, params={"page": "4", "population":"100000"})
-
-# convert api responses to pandas dataframes
-df1 = pd.DataFrame.from_dict(response1.json()['cities'])
-df2 = pd.DataFrame.from_dict(response2.json()['cities'])
-df3 = pd.DataFrame.from_dict(response3.json()['cities'])
-df4 = pd.DataFrame.from_dict(response4.json()['cities'])
-df = pd.concat([df1, df2, df3, df4])
-
-# format state column and drop unneeded data
-df['state'] = df['division'].apply(transform)
-df = df.drop(['division', 'country', 'geonameid'], axis=1)
-df.reset_index(inplace = True, drop = True)
-
-# import data into MongoDB collection, only insert if changes in data
+# Connect to DB
 client = MongoClient(db_url)
 cities = client['uds']['cities']
+
+# function to clean city name from census data
+def clean_name(x):
+    if("-" in x):
+        return x.split("-")[0]
+    if("/" in x):
+        return x.split("/")[0]
+    if("city" in x):
+        return x.split(" city")[0]
+    if("town" in x):
+        return x.split(" town")[0]
+    if("municipality" in x):
+        return x.split(" municipality")[0]
+    if("CDP" in x):
+        return x.split("Urban ")[1].split(" CDP")[0]
+    return x
+
+# census API call
+response = requests.get("http://api.census.gov/data/2019/pep/population?get=NAME,DENSITY,POP&for=place:*&key=25ec91bd81fdfa691c08dbaf06adc71c3a2918d6")
+
+# clean census data
+df = pd.DataFrame(response.json(), columns=['name', 'density', 'population', '0', '1'])
+df = df.drop(['0', '1'], axis=1)
+df = df.drop(0, axis=0)
+df['population'] = df['population'].astype(int)
+df = df[df['population'] > 100000]
+df = df.sort_values('name')
+df1 = df['name'].str.split(', ', expand=True)
+df1 = df1.sort_values(0)
+df = pd.concat([df, df1], axis=1)
+df = df.drop(['name'], axis=1)
+df = df.rename({0: "name", 1: "state"}, axis=1)
+df['state'] = df['state'].apply(abbreviate)
+df['name'] = df['name'].apply(clean_name)
+df = df.sort_values('name')
+df.reset_index(inplace = True, drop = True)
+
+# add columns for latitude and longitude
+df.insert(4, column='latitude', value=0)
+df.insert(4, column='longitude', value=0)
+
+# call geocoding API
+for i, row in df.iterrows():
+    api_url = "https://geocode.maps.co/search?city=" + df.at[i, 'name'].replace(" ", "+") + "&state=" + df.at[i, 'state'] + "&country=US"
+    coordinates = requests.get(api_url)
+    while coordinates.status_code != 200:
+        coordinates = requests.get(api_url)
+    df.at[i, 'latitude'] = coordinates.json()[0]['lat']
+    df.at[i, 'longitude'] = coordinates.json()[0]['lon']
+
+# add to database
 for row in df.to_dict("records"):
     cities.replace_one({'name': row.get('name'), 'state': row.get('state')}, row, upsert=True)

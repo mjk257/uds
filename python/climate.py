@@ -8,11 +8,10 @@ load_dotenv("../.env")
 # API url
 api = "http://climateapi.scottpinkelman.com/api/v1/location/"
 
-# variables for atlas connection
-db_username = os.getenv("MONGODB_USER")
-db_password = os.getenv("MONGODB_PASSWORD")
-db_url = "mongodb+srv://" + db_username + ":" + db_password + "@cluster0.bno5m.mongodb.net/?retryWrites=true&w=majority"
+# DB connection string
+db_url = os.getenv("MONGODB_URL")
 
+# Connect to DB
 client = MongoClient(db_url)
 cities = client['uds']['cities']
 

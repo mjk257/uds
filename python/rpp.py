@@ -5,14 +5,8 @@ from pymongo import MongoClient
 
 load_dotenv("../.env")
 
-# variables for atlas connection
-db_username = os.getenv("MONGODB_USER")
-db_password = os.getenv("MONGODB_PASSWORD")
-db_url = "mongodb+srv://" + db_username + ":" + db_password + "@cluster0.bno5m.mongodb.net/?retryWrites=true&w=majority"
-
-# Function to remove dashed cities/states
-def transform(x):
-    return x.split('-')[0]
+# DB connection string
+db_url = os.getenv("MONGODB_URL")
 
 # Clean initial excel
 df = pd.read_excel("https://www.bea.gov/sites/default/files/2022-12/rpp1222.xlsx", sheet_name="Table 4", skiprows=[0, 1, 2, 3])
@@ -27,18 +21,18 @@ df = pd.concat([df, df1], axis=1)
 df = df.drop(['city'], axis=1)
 df = df.rename({0: "city", 1: "state"}, axis=1)
 df.reset_index(inplace = True, drop = True)
-df['city'] = df['city'].apply(transform)
-df['state'] = df['state'].apply(transform)
 
-# Access DB collection
+# Connect to DB
 client = MongoClient(db_url)
 cities = client['uds']['cities']
 
 # Add RPP
-for row in df.to_dict("records"):
-    query = {'name': row.get('city'), 'state': row.get('state')}
-    values = { "$set": { "rpp": row.get("rpp")}}
-    cities.update_one(query, values)
+for city in cities.find():
+    row = df[df['city'].str.contains("(?<![A-z])" + city['name']) & df['state'].str.contains(city['state'])]
+    if not row.empty:
+        query = {'name': city['name'], 'state': city['state']}
+        values = { "$set": { "rpp": row.values[0][0]}}
+        cities.update_one(query, values)
 
 # Remove cities without RPP
 cities.delete_many({ "rpp": {"$exists": False} })
