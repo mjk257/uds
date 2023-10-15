@@ -13,7 +13,8 @@ describe("Testing ConfigurationList component", () => {
         setCurrentConfig: jest.fn(),
         allConfigs: defaultCityPreferencesConfigurationSet,
         currentConfigName: 'config1',
-        setAllConfigs: jest.fn()
+        setAllConfigs: jest.fn(),
+        setReturnedCities: jest.fn()
     }
 
     test("renders ConfigurationList header and configuration buttons", () => {
