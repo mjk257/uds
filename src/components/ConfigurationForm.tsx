@@ -4,7 +4,7 @@ import {
     Button,
     Card,
     CardContent,
-    CardHeader,
+    CardHeader, Chip,
     Divider,
     FormControl, FormHelperText, FormLabel, InputBaseComponentProps,
     InputLabel,
@@ -12,13 +12,27 @@ import {
     Select, Slider, TextField, TextFieldVariants, Typography
 } from "@mui/material";
 import { Configs } from "../types/utility-types";
+import { JSX } from "react/jsx-runtime";
 
 // Note that some of this stuff might be placeholders for later on
 
-const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, currentConfigName, setAllConfigs } : Props) => {
+const ConfigurationForm = ({currentConfig, setCurrentConfig, allConfigs, currentConfigName, setAllConfigs}: Props) => {
 
-    const handleChange = (property : any, event : any) => {
-        setCurrentConfig({ ...currentConfig, [property]: event.target.value });
+    const handleChange = (property: any, event: any) => {
+        if (property === 'priorityAttributes') {
+            //@ts-ignore
+            let newPriorityAttributes = currentConfig[property];
+            const attribute = event.target.value;
+            if (newPriorityAttributes.includes(attribute)) {
+                newPriorityAttributes = newPriorityAttributes.filter((item: any) => item !== attribute);
+            } else {
+                newPriorityAttributes.push(attribute);
+            }
+            console.log(newPriorityAttributes);
+            setCurrentConfig({...currentConfig, [property]: newPriorityAttributes});
+        } else {
+            setCurrentConfig({...currentConfig, [property]: event.target.value});
+        }
     }
 
     useEffect(() => {
@@ -197,6 +211,19 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
         }
     ]
 
+    const priorityAttributeBtns = [
+        { title: "Population", value: "population" },
+        { title: "Population Density", value: "populationDensity" },
+        { title: "Cost of Living", value: "costOfLiving" },
+        { title: "Number of Jobs Available", value: "numberOfJobsAvailable" },
+        { title: "Crime Rate", value: "crimeRate" },
+        { title: 'Walkability/Transability', value: "walkAndTransability" },
+        { title: "Politics", value: "politics" },
+        { title: "Quality of Education", value: "qualityOfEducation" },
+        { title: "Climate", value: "climate" },
+        { title: "Average Population Age", value: "avgPopulationAge" }
+    ]
+
     return  (
         <>
             <div className='preferences-form-container'>
@@ -259,6 +286,33 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
                                 )
                             }
                         })}
+                        <br />
+                        <Divider />
+                        <br />
+                        <Typography variant='h5' className='preferences-form-priority-attributes-header'>
+                            Select the 3 - 5 attributes which you value the most!
+                        </Typography>
+                        <br />
+                        <Divider />
+                        <br />
+                        <FormControl variant='standard'>
+                            { priorityAttributeBtns.map((btn, index) => {
+                                return (
+                                    <Button
+                                          key={ index }
+                                          variant={ currentConfig.priorityAttributes.includes(btn.value) ? 'contained' : 'outlined' }
+                                          // @ts-ignore
+                                          disabled={ currentConfig[btn.value] === '' }
+                                          color='primary'
+                                          value={ btn.value }
+                                          className='preferences-form-priority-attributes'
+                                          onClick={ (event) => handleChange('priorityAttributes', event) }
+                                          >
+                                        { btn.title }
+                                    </Button>
+                                )
+                            })}
+                        </FormControl>
                         <div className='preferences-form-sibling-set'>
                             <Button color='error' variant="outlined" onClick={ clearForm }>
                                 Clear
