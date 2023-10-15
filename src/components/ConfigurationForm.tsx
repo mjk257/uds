@@ -30,7 +30,10 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
             }
             setCurrentConfig({...currentConfig, [property]: newPriorityAttributes});
         } else {
-            setCurrentConfig({...currentConfig, [property]: event.target.value});
+            // Not sure why, but items which are numbers are not being converted after being passed through
+            // handleChange, so I'm doing the conversion manually for now. Will fix later on
+            const value = isNaN(event.target.value) ? event.target.value : Number(event.target.value);
+            setCurrentConfig({...currentConfig, [property]: value });
         }
     }
 
@@ -329,9 +332,7 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
                                                 <FormLabel id="demo-row-radio-buttons-group-label">{ input?.groupLabel }</FormLabel>
                                                 <RadioGroup key={ index } row name={ input?.groupValue + "group" } onChange={ input?.onChange }
                                                             value={ input?.groupValue } defaultValue={ input?.values?.na }>
-                                                    {/* @ts-ignore */ }
                                                     <FormControlLabel control={<Radio />} label={ input?.labels?.yes } value={ input?.values?.yes } />
-                                                    {/* @ts-ignore */ }
                                                     <FormControlLabel control={<Radio />} label={ input?.labels?.na } value={ input?.values?.na } />
                                                 </RadioGroup>
                                             </>

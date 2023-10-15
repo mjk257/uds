@@ -6,7 +6,7 @@ export type CityPreferencesConfiguration = {
     crimeRate: number | string,
     walkAndTransability: string | number,
     politics: string,
-    qualityOfEducation: string,
+    qualityOfEducation: string | number,
     climate: string,
     avgPopulationAge: number | string
     priorityAttributes: string[]
