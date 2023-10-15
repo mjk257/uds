@@ -142,6 +142,7 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
         {
             componentType: "radio",
             groupLabel: "Low Cost of Living?",
+            groupValue: currentConfig.costOfLiving,
             labels: { na: "No Preference", yes: "Matters" },
             values: { na: "", yes: 1000 },
             onChange: (event: any) => handleChange("costOfLiving", event)
@@ -149,6 +150,7 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
         {
             componentType: "radio",
             groupLabel: "Low Crime Rate?",
+            groupValue: currentConfig.crimeRate,
             values: { na: "", yes: 10000 },
             labels: { na: "No Preference", yes: "Matters" },
             onChange: (event: any) => handleChange("crimeRate", event),
@@ -157,6 +159,7 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
         {
             componentType: "radio",
             groupLabel: "High Walkability/Transability?",
+            groupValue: currentConfig.walkAndTransability,
             values: { na: "", yes: "high" },
             labels: { na: "No Preference", yes: "Matters" },
             onChange: (event: any) => handleChange("walkAndTransability", event),
@@ -164,6 +167,7 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
         {
             componentType: "radio",
             groupLabel: "High Quality of Education?",
+            groupValue: currentConfig.qualityOfEducation,
             values: { na: "", yes: "high" },
             labels: { na: "No Preference", yes: "Matters" },
             onChange: (event: any) => handleChange("qualityOfEducation", event),
@@ -337,11 +341,12 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
                                         { input?.componentType === 'radio' &&
                                             <>
                                                 <FormLabel id="demo-row-radio-buttons-group-label">{ input?.groupLabel }</FormLabel>
-                                                <RadioGroup row name={ input?.value + "group" } onChange={ input?.onChange } defaultValue={ input?.values?.na }>
+                                                <RadioGroup key={ index } row name={ input?.groupValue + "group" } onChange={ input?.onChange }
+                                                            value={ input?.groupValue } defaultValue={ input?.values?.na }>
                                                     {/* @ts-ignore */ }
-                                                    <FormControlLabel control={<Radio />} label={ input?.labels?.yes } value={ input?.values?.yes } onChange={ input?.onChange } />
+                                                    <FormControlLabel control={<Radio />} label={ input?.labels?.yes } value={ input?.values?.yes } />
                                                     {/* @ts-ignore */ }
-                                                    <FormControlLabel control={<Radio />} label={ input?.labels?.na } value={ input?.values?.na } onChange={ input?.onChange } />
+                                                    <FormControlLabel control={<Radio />} label={ input?.labels?.na } value={ input?.values?.na } />
                                                 </RadioGroup>
                                             </>
                                         }
