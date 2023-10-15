@@ -4,9 +4,9 @@ import {
     Button,
     Card,
     CardContent,
-    CardHeader, Chip,
+    CardHeader, Checkbox, Chip,
     Divider,
-    FormControl, FormHelperText, FormLabel, InputBaseComponentProps,
+    FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel, InputBaseComponentProps,
     InputLabel,
     MenuItem,
     Select, Slider, TextField, TextFieldVariants, Typography
@@ -26,9 +26,8 @@ const ConfigurationForm = ({currentConfig, setCurrentConfig, allConfigs, current
             if (newPriorityAttributes.includes(attribute)) {
                 newPriorityAttributes = newPriorityAttributes.filter((item: any) => item !== attribute);
             } else {
-                newPriorityAttributes.push(attribute);
+                newPriorityAttributes = newPriorityAttributes.concat(attribute);
             }
-            console.log(newPriorityAttributes);
             setCurrentConfig({...currentConfig, [property]: newPriorityAttributes});
         } else {
             setCurrentConfig({...currentConfig, [property]: event.target.value});
@@ -211,7 +210,7 @@ const ConfigurationForm = ({currentConfig, setCurrentConfig, allConfigs, current
         }
     ]
 
-    const priorityAttributeBtns = [
+    const priorityAttributeCheckboxes = [
         { title: "Population", value: "population" },
         { title: "Population Density", value: "populationDensity" },
         { title: "Cost of Living", value: "costOfLiving" },
@@ -286,32 +285,29 @@ const ConfigurationForm = ({currentConfig, setCurrentConfig, allConfigs, current
                                 )
                             }
                         })}
-                        <br />
+                        <br/>
                         <Divider />
-                        <br />
-                        <Typography variant='h5' className='preferences-form-priority-attributes-header'>
-                            Select the 3 - 5 attributes which you value the most!
-                        </Typography>
-                        <br />
-                        <Divider />
-                        <br />
-                        <FormControl variant='standard'>
-                            { priorityAttributeBtns.map((btn, index) => {
-                                return (
-                                    <Button
-                                          key={ index }
-                                          variant={ currentConfig.priorityAttributes.includes(btn.value) ? 'contained' : 'outlined' }
-                                          // @ts-ignore
-                                          disabled={ currentConfig[btn.value] === '' }
-                                          color='primary'
-                                          value={ btn.value }
-                                          className='preferences-form-priority-attributes'
-                                          onClick={ (event) => handleChange('priorityAttributes', event) }
-                                          >
-                                        { btn.title }
-                                    </Button>
-                                )
-                            })}
+                        <FormControl variant='standard'
+                                     error={ currentConfig.priorityAttributes.length < 3 || currentConfig.priorityAttributes.length > 5 }>
+                            <FormLabel className='preferences-form-priority-attributes-label'>Select the 3 - 5 Attributes Which you Value Most!</FormLabel>
+                            <FormGroup>
+                                { priorityAttributeCheckboxes.map((checkbox, index) => {
+                                    return (
+                                        <>
+                                            <FormControlLabel control={
+                                                    <Checkbox key={ index }
+                                                        checked={ currentConfig.priorityAttributes.includes(checkbox.value) }
+                                                              onChange={ (event) =>
+                                                                  handleChange("priorityAttributes", event) }
+                                                              name={ checkbox.title}
+                                                              value={ checkbox.value } />
+                                                }
+                                                label={ checkbox.title } />
+                                        </>
+                                    )
+                                })}
+                            </FormGroup>
+                            <FormHelperText>You can display an error</FormHelperText>
                         </FormControl>
                         <div className='preferences-form-sibling-set'>
                             <Button color='error' variant="outlined" onClick={ clearForm }>

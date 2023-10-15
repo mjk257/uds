@@ -42,11 +42,9 @@
           margin: 8px 8px 8px 8px;
           min-width: 120px;
         }
-        .preferences-form-priority-attributes {
-          display: flex;
-          flex-direction: row;
-          gap: 10px;
-          margin: 1% 0 0 0;
+        .preferences-form-priority-attributes-label {
+          margin: 15px 0 8px 0 !important;
+          text-align: left;
         }
       }
     }
