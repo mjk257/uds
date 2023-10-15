@@ -3,12 +3,13 @@ export type CityPreferencesConfiguration = {
     populationDensity: string,
     costOfLiving: string,
     numberOfJobsAvailable: string,
-    crimeRate: number,
+    crimeRate: number | string,
     walkAndTransability: string,
     politics: string,
     qualityOfEducation: string,
     climate: string,
-    avgPopulationAge: number
+    avgPopulationAge: number | string
+    priorityAttributes: string[]
 };
 
 export type Configs = {
@@ -24,74 +25,20 @@ export const defaultCityPreferencesConfiguration : CityPreferencesConfiguration 
     populationDensity: "",
     costOfLiving: "",
     numberOfJobsAvailable: "",
-    crimeRate: 0,
+    crimeRate: '',
     walkAndTransability: "",
     politics: "",
     qualityOfEducation: "",
     climate: "",
-    avgPopulationAge: 1
+    avgPopulationAge: '',
+    priorityAttributes: []
 };
 
 export const defaultCityPreferencesConfigurationSet : Configs = {
-    "config1": {
-        population: "",
-        populationDensity: "",
-        costOfLiving: "",
-        numberOfJobsAvailable: "",
-        crimeRate: 0,
-        walkAndTransability: "",
-        politics: "",
-        qualityOfEducation: "",
-        climate: "",
-        avgPopulationAge: 1
-    },
-    "config2": {
-        population: "",
-        populationDensity: "",
-        costOfLiving: "",
-        numberOfJobsAvailable: "",
-        crimeRate: 0,
-        walkAndTransability: "",
-        politics: "",
-        qualityOfEducation: "",
-        climate: "",
-        avgPopulationAge: 1
-    },
-    "config3": {
-        population: "",
-        populationDensity: "",
-        costOfLiving: "",
-        numberOfJobsAvailable: "",
-        crimeRate: 0,
-        walkAndTransability: "",
-        politics: "",
-        qualityOfEducation: "",
-        climate: "",
-        avgPopulationAge: 1
-    },
-    "config4": {
-        population: "",
-        populationDensity: "",
-        costOfLiving: "",
-        numberOfJobsAvailable: "",
-        crimeRate: 0,
-        walkAndTransability: "",
-        politics: "",
-        qualityOfEducation: "",
-        climate: "",
-        avgPopulationAge: 1
-    },
-    "config5": {
-        population: "",
-        populationDensity: "",
-        costOfLiving: "",
-        numberOfJobsAvailable: "",
-        crimeRate: 0,
-        walkAndTransability: "",
-        politics: "",
-        qualityOfEducation: "",
-        climate: "",
-        avgPopulationAge: 1
-    }
+    "config1": defaultCityPreferencesConfiguration,
+    "config2": defaultCityPreferencesConfiguration,
+    "config3": defaultCityPreferencesConfiguration,
+    "config4": defaultCityPreferencesConfiguration,
+    "config5": defaultCityPreferencesConfiguration
 };
 

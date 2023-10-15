@@ -4,21 +4,34 @@ import {
     Button,
     Card,
     CardContent,
-    CardHeader,
+    CardHeader, Checkbox, Chip,
     Divider,
-    FormControl, FormHelperText, FormLabel, InputBaseComponentProps,
+    FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel, InputBaseComponentProps,
     InputLabel,
     MenuItem,
     Select, Slider, TextField, TextFieldVariants, Typography
 } from "@mui/material";
 import { Configs } from "../types/utility-types";
+import { JSX } from "react/jsx-runtime";
 
 // Note that some of this stuff might be placeholders for later on
 
-const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, currentConfigName, setAllConfigs } : Props) => {
+const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, currentConfigName, setAllConfigs, setReturnedCities }: Props) => {
 
-    const handleChange = (property : any, event : any) => {
-        setCurrentConfig({ ...currentConfig, [property]: event.target.value });
+    const handleChange = (property: any, event: any) => {
+        if (property === 'priorityAttributes') {
+            //@ts-ignore
+            let newPriorityAttributes = currentConfig[property];
+            const attribute = event.target.value;
+            if (newPriorityAttributes.includes(attribute)) {
+                newPriorityAttributes = newPriorityAttributes.filter((item: any) => item !== attribute);
+            } else {
+                newPriorityAttributes = newPriorityAttributes.concat(attribute);
+            }
+            setCurrentConfig({...currentConfig, [property]: newPriorityAttributes});
+        } else {
+            setCurrentConfig({...currentConfig, [property]: event.target.value});
+        }
     }
 
     useEffect(() => {
@@ -31,12 +44,88 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
     }
 
     const submitForm = () => {
-        console.log("Not implemented yet, will be done once API stuff is finished");
+        // 1.) send the data to the search function and await its response
+        // 2.) recieve the data in some form
+            // a.) Right now, I just have a mock for what it might look like
+        const mockResponse = [
+            {
+                summary: "New York City is a city in the United States. " +
+                    "It is the largest city in the United States. " +
+                    "It is also the most populous city in the United States. " +
+                    "It is also the most densely populated city in the United States. " +
+                    "It is also the most expensive city in the United States. " +
+                    "It is also the most dangerous city in the United States. " +
+                    "It is also the most walkable city in the United States. " +
+                    "It is also the most democratic city in the United States. " +
+                    "It is also the most educated city in the United States. " +
+                    "It is also the most humid-subtropical city in the United States. " +
+                    "It is also the youngest city in the United States.",
+                name: "New York City",
+                population: 8398748,
+                populationDensity: 10933,
+                costOfLiving: "high",
+                numberOfJobsAvailable: 100000,
+                crimeRate: 45000,
+                walkAndTransability: "high",
+                politics: "democrat",
+                qualityOfEducation: "high",
+                climate: "humid-subtropical",
+                avgPopulationAge: 35
+            },
+            {
+                summary: "Los Angeles is a city in the United States. " +
+                    "It is the second largest city in the United States. " +
+                    "It is also the second most populous city in the United States. " +
+                    "It is also the second most densely populated city in the United States. " +
+                    "It is also the second most expensive city in the United States. " +
+                    "It is also the second most dangerous city in the United States. " +
+                    "It is also the second most walkable city in the United States. " +
+                    "It is also the second most democratic city in the United States. " +
+                    "It is also the second most educated city in the United States. " +
+                    "It is also the second most humid-subtropical city in the United States. " +
+                    "It is also the second youngest city in the United States.",
+                name: "Los Angeles",
+                population: 3990456,
+                populationDensity: 3276,
+                costOfLiving: "high",
+                numberOfJobsAvailable: 100000,
+                crimeRate: 45000,
+                walkAndTransability: "high",
+                politics: "democrat",
+                qualityOfEducation: "high",
+                climate: "humid-subtropical",
+                avgPopulationAge: 35
+            },
+            {
+                summary: "Chicago is a city in the United States. " +
+                    "It is the third largest city in the United States. " +
+                    "It is also the third most populous city in the United States. " +
+                    "It is also the third most densely populated city in the United States. " +
+                    "It is also the third most expensive city in the United States. " +
+                    "It is also the third most dangerous city in the United States. " +
+                    "It is also the third most walkable city in the United States. " +
+                    "It is also the third most democratic city in the United States. " +
+                    "It is also the third most educated city in the United States. " +
+                    "It is also the third most humid-subtropical city in the United States. " +
+                    "It is also the third youngest city in the United States.",
+                name: "Chicago",
+                population: 2705994,
+                populationDensity: 4574,
+                costOfLiving: "high",
+                numberOfJobsAvailable: 100000,
+                crimeRate: 45000,
+                walkAndTransability: "high",
+                politics: "democrat",
+                qualityOfEducation: "high",
+                climate: "humid-subtropical",
+                avgPopulationAge: 35
+            }
+        ]
+        setReturnedCities(mockResponse);
     }
 
     const formInputs = [
         {
-            inputComponent: "select",
             inputLabel: "Population",
             value: currentConfig.population,
             onChange: (event: any) => handleChange("population", event),
@@ -49,7 +138,6 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
             ]
         },
         {
-            inputComponent: "select",
             inputLabel: "Population Density",
             value: currentConfig.populationDensity,
             onChange: (event: any) => handleChange("populationDensity", event),
@@ -62,7 +150,6 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
             ]
         },
         {
-            inputComponent: "select",
             inputLabel: "Cost of Living",
             value: currentConfig.costOfLiving,
             onChange: (event: any) => handleChange("costOfLiving", event),
@@ -75,7 +162,6 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
             ]
         },
         {
-            inputComponent: "select",
             inputLabel: "Number of Jobs Available",
             value: currentConfig.numberOfJobsAvailable,
             onChange: (event: any) => handleChange("numberOfJobsAvailable", event),
@@ -89,20 +175,26 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
             ]
         },
         {
-            inputComponent: "slider",
             inputLabel: "Crime Rate",
-            defaultValue: 0,
-            step: 5000,
-            marks: true,
-            min: 0,
-            max: 100000,
-            valueLabelDisplay: "auto",
-            className: 'preferences-slider',
+            value: currentConfig.crimeRate,
             onChange: (event: any) => handleChange("crimeRate", event),
-            helperText: "The amount of people affected by crime per 100,000 people"
+            label: "Crime Rate",
+            menuItems: [
+                {title: "No Preference", value: ""},
+                {title: "<10,000", value: 5000},
+                {title: "10,000 - 19,999", value: 15000},
+                {title: "20,000 - 29,999", value: 25000},
+                {title: "30,000 - 39,999", value: 35000},
+                {title: "40,000 - 49,999", value: 45000},
+                {title: "50,000 - 59,999", value: 55000},
+                {title: "60,000 - 69,999", value: 65000},
+                {title: "70,000 - 79,999", value: 75000},
+                {title: "80,000 - 89,999", value: 85000},
+                {title: "90,000", value: 95000},
+            ],
+            helperText: "The amount of people affected by crime per 100,000 people."
         },
         {
-            inputComponent: "select",
             inputLabel: "Walkability/Transability",
             value: currentConfig.walkAndTransability,
             onChange: (event: any) => handleChange("walkAndTransability", event),
@@ -115,7 +207,6 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
             ]
         },
         {
-            inputComponent: "select",
             inputLabel: "Politics",
             value: currentConfig.politics,
             onChange: (event: any) => handleChange("politics", event),
@@ -128,7 +219,6 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
             ]
         },
         {
-            inputComponent: "select",
             inputLabel: "Quality of Education",
             value: currentConfig.qualityOfEducation,
             onChange: (event: any) => handleChange("qualityOfEducation", event),
@@ -141,7 +231,6 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
             ]
         },
         {
-            inputComponent: "select",
             inputLabel: "Climate",
             value: currentConfig.climate,
             onChange: (event: any) => handleChange("climate", event),
@@ -183,18 +272,36 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
             ]
         },
         {
-            inputComponent: "textField",
-            label: "Average Population Age",
-            variant: 'standard',
-            type: 'text',
+            inputLabel: "Average Population Age",
             value: currentConfig.avgPopulationAge,
-            inputProps: {
-                inputMode: 'numeric'
-            },
             onChange: (event: any) => handleChange("avgPopulationAge", event),
-            helperText: "Please enter a number between 1 - 100",
-            error: currentConfig.avgPopulationAge < 1 || currentConfig.avgPopulationAge > 100 || String(currentConfig.avgPopulationAge).match('^\\D+$')
+            label: "Average Population Age",
+            menuItems: [
+                {title: "No Preference", value: ""},
+                {title: "<20", value: 15},
+                {title: "20 - 29", value: 25},
+                {title: "30 - 39", value: 35},
+                {title: "40 - 49", value: 45},
+                {title: "50 - 59", value: 55},
+                {title: "60 - 69", value: 65},
+                {title: "70 - 79", value: 75},
+                {title: "80 - 89", value: 85},
+                {title: "90+", value: 95}
+            ]
         }
+    ]
+
+    const priorityAttributeCheckboxes = [
+        { title: "Population", value: "population" },
+        { title: "Population Density", value: "populationDensity" },
+        { title: "Cost of Living", value: "costOfLiving" },
+        { title: "Number of Jobs Available", value: "numberOfJobsAvailable" },
+        { title: "Crime Rate", value: "crimeRate" },
+        { title: 'Walkability/Transability', value: "walkAndTransability" },
+        { title: "Politics", value: "politics" },
+        { title: "Quality of Education", value: "qualityOfEducation" },
+        { title: "Climate", value: "climate" },
+        { title: "Average Population Age", value: "avgPopulationAge" }
     ]
 
     return  (
@@ -205,7 +312,6 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
                     <Divider />
                     <CardContent className='preferences-form-content'>
                         { formInputs.map((input, index) => {
-                            if (input.inputComponent === "select") {
                                 return (
                                     <FormControl variant="standard" className='preferences-select' key={ index }>
                                         <InputLabel id={ input.inputLabel }>{ input.label }</InputLabel>
@@ -223,47 +329,42 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
                                                 )
                                             }) }
                                         </Select>
+                                        { input?.helperText && <FormHelperText>{ input?.helperText }</FormHelperText> }
                                     </FormControl>
                                 )
-                            } else if (input.inputComponent === "slider") {
-                                return (
-                                    <FormControl className='preferences-slider-text' key={ index }>
-                                        <FormLabel component="legend">{ input.inputLabel }: { currentConfig.crimeRate }</FormLabel>
-                                        <Slider
-                                            defaultValue={ input?.defaultValue }
-                                            step={ input?.step }
-                                            marks={ input?.marks }
-                                            min={ input?.min }
-                                            max={ input?.max }
-                                            valueLabelDisplay={ input?.valueLabelDisplay as "auto" }
-                                            className={ input?.className }
-                                            onChange={ input?.onChange }
-                                        />
-                                        <FormHelperText>{ input.helperText }</FormHelperText>
-                                    </FormControl>
-                                )
-                            } else if (input.inputComponent === "textField") {
-                                return (
-                                    <FormControl variant='standard' className='preferences-text-field'>
-                                        <TextField
-                                            label={ input?.label }
-                                            variant={ input?.variant as TextFieldVariants }
-                                            type={ input?.type }
-                                            value={ input?.value }
-                                            inputProps={ input?.inputProps as InputBaseComponentProps }
-                                            onChange={ input?.onChange }
-                                            helperText={ input?.helperText }
-                                            error={ input?.error as boolean }
-                                        />
-                                    </FormControl>
-                                )
-                            }
-                        })}
+                            })}
+                        <br/>
+                        <Divider />
+                        <FormControl variant='standard'
+                                     error={ currentConfig.priorityAttributes.length < 3 || currentConfig.priorityAttributes.length > 5 }>
+                            <FormLabel className='preferences-form-priority-attributes-label'>Select the 3 - 5 Attributes Which you Value Most!</FormLabel>
+                            <FormGroup>
+                                { priorityAttributeCheckboxes.map((checkbox, index) => {
+                                    return (
+                                        <>
+                                            <FormControlLabel control={
+                                                    <Checkbox key={ index }
+                                                              //@ts-ignore
+                                                              disabled={ currentConfig[checkbox.value] === '' }
+                                                              checked={ currentConfig.priorityAttributes.includes(checkbox.value) }
+                                                              onChange={ (event) => handleChange("priorityAttributes", event) }
+                                                              name={ checkbox.title}
+                                                              value={ checkbox.value } />
+                                                }
+                                                label={ checkbox.title } />
+                                        </>
+                                    )
+                                })}
+                            </FormGroup>
+                            {(currentConfig.priorityAttributes.length < 3 || currentConfig.priorityAttributes.length > 5) &&
+                                <FormHelperText>Please select between 3 - 5 values!</FormHelperText>}
+                        </FormControl>
                         <div className='preferences-form-sibling-set'>
                             <Button color='error' variant="outlined" onClick={ clearForm }>
                                 Clear
                             </Button>
-                            <Button color='primary' variant="outlined" onClick={ submitForm }>
+                            <Button color='primary' variant="outlined" onClick={ submitForm }
+                                    disabled={ currentConfig.priorityAttributes.length < 3 || currentConfig.priorityAttributes.length > 5 }>
                                 Submit
                             </Button>
                         </div>
@@ -279,7 +380,8 @@ type Props = {
     setCurrentConfig: Function,
     allConfigs: Configs,
     currentConfigName: String,
-    setAllConfigs: Function
+    setAllConfigs: Function,
+    setReturnedCities: Function
 }
 
 export default ConfigurationForm;

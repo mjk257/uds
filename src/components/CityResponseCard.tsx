@@ -15,26 +15,26 @@ The following Props will be needed in the future:
  */
 
 // This will likely take in props later on, but the base styling will be set up
-const CityResponseCard = () => {
+const CityResponseCard = ({ cityDetails } : Props) => {
 
     const accordionDetails = [
-        { title: 'Population' },
-        { title: 'Population Density' },
-        { title: 'Cost of Living' },
-        { title: 'Number of Jobs' },
-        { title: 'Crime Rate' },
-        { title: 'Walkability/Transability' },
-        { title: 'Politics' },
-        { title: 'Quality of Education' },
-        { title: 'Climate' },
-        { title: 'Average Population Age' }
+        { title: 'Population', value: cityDetails?.population },
+        { title: 'Population Density', value: cityDetails?.populationDensity },
+        { title: 'Cost of Living', value: cityDetails?.costOfLiving },
+        { title: 'Number of Jobs', value: cityDetails?.numberOfJobsAvailable },
+        { title: 'Crime Rate', value: cityDetails?.crimeRate },
+        { title: 'Walkability/Transability', value: cityDetails?.walkAndTransability },
+        { title: 'Politics', value: cityDetails?.politics },
+        { title: 'Quality of Education', value: cityDetails?.qualityOfEducation },
+        { title: 'Climate', value: cityDetails?.climate },
+        { title: 'Average Population Age', value: cityDetails?.avgPopulationAge }
     ];
 
     return (
         <Card className='city-response'>
-            <CardHeader title='Insert City Name Prop Here' titleTypographyProps={{ align: 'left' }} />
+            <CardHeader title={ cityDetails?.name } titleTypographyProps={{ align: 'left' }} />
             <CardContent className='city-response-content'>
-                Insert Chat GPT Summary Here
+                { cityDetails?.summary }
                 <Accordion className='city-response-details'>
                     <AccordionSummary
                         expandIcon={ <Icon style={{ color: 'black !important' }}><ExpandMore /></Icon> }
@@ -45,7 +45,7 @@ const CityResponseCard = () => {
                         { accordionDetails.map((item, idx) => {
                             return (
                                 <Typography key={ idx }>
-                                    { item?.title }
+                                    { `${item.title}: ${item.value}` }
                                 </Typography>
                             )
                         })}
@@ -54,6 +54,10 @@ const CityResponseCard = () => {
             </CardContent>
         </Card>
     )
+}
+
+type Props = {
+    cityDetails: any
 }
 
 export default CityResponseCard;

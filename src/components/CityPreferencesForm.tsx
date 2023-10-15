@@ -14,6 +14,7 @@ export const CityPreferencesForm = () => {
     const [allConfigs, setAllConfigs ]= useState(defaultCityPreferencesConfigurationSet);
     const [currentConfig, setCurrentConfig] = useState(allConfigs.config1);
     const [currentConfigName, setCurrentConfigName] = useState('config1');
+    const [returnedCities, setReturnedCities] = useState([]);
 
     return (
         <div>
@@ -23,13 +24,16 @@ export const CityPreferencesForm = () => {
                         <ConfigurationList setCurrentConfig={ setCurrentConfig } allConfigs={ allConfigs }
                                            currentConfigName={ currentConfigName } setCurrentConfigName={ setCurrentConfigName }/>
                         <ConfigurationForm currentConfig={ currentConfig } setCurrentConfig={ setCurrentConfig } allConfigs={ allConfigs }
-                                           currentConfigName={ currentConfigName } setAllConfigs={ setAllConfigs } />
+                                           currentConfigName={ currentConfigName } setAllConfigs={ setAllConfigs } setReturnedCities={ setReturnedCities } />
                     </CardContent>
                 </Card>
             </Container>
             {/* Note that in the future this will be rendered dynamically, but right now is just showing for reference */}
             <Container maxWidth='xl'>
-                <CityResponseCard />
+                {returnedCities &&
+                    returnedCities.map((city, idx) => {
+                        return <CityResponseCard cityDetails={ city } key={ idx }/>
+                })}
             </Container>
         </div>
     )
