@@ -2,38 +2,19 @@ const City = require('../models/City');
 
 // Takes in cities and searchCriteria and returns ranked list of top 10 cities
 function citySearch(cities, searchCriteria) {
-    let topCities = {}; // Dictionary of top "numResults" city objects mapping rank (1-10) to city object
-    let topScores = {}; // Dictionary of top "numResults" city scores mapping rank (1-10) to city score
     const numResults = 10; // Number of cities to return
     cityScores = getCityScores(cities, searchCriteria); // Get city scores
-    
 
-    // Initialize top results dictionary values as null/-1
+    // Combine cities and cityScores into an array of tuples
+    const combinedData = cities.map((city, index) => [city, cityScores[index]]);
+
+    // Sort the array of tuples by scores in descending order
+    combinedData.sort((a, b) => b[1] - a[1]);
+
+    //console.log(combinedData);
+
     for (let i = 0; i < numResults; i++) {
-        topCities[i+1] = null;
-        topScores[i+1] = -1;
-    }
-
-    // Get top 10 cityScores and respective cities
-    for (let i = 0; i < cityScores.length; i++) {
-        let cityScore = cityScores[i];
-        let city = cities[i];
-
-        for (let i = 1; i < numResults+1; i++) {
-            if (cityScore > topScores[i]) {
-                tempScore = topScores[i];
-                tempCity = topCities[i];
-
-                topScores[i] = cityScore;
-                topCities[i] = city;
-
-                if (tempCity == null)
-                    break;
-
-                cityScore = tempScore;
-                city = tempCity;
-            }
-        }
+        topCities[i+1] = combinedData[i][0]
     }
 
     return topCities;
@@ -43,7 +24,7 @@ function getAttributeValue(city, criteriaName) {
     // Get city attribute value from criteria name
     switch (criteriaName) {
         case "density":
-            return city.density;
+            return parseFloat(city.density);
         case "col":
             return city.rpp;
         default:
