@@ -3,12 +3,12 @@ export type CityPreferencesConfiguration = {
     populationDensity: string,
     costOfLiving: string,
     numberOfJobsAvailable: string,
-    crimeRate: number,
+    crimeRate: number | string,
     walkAndTransability: string,
     politics: string,
     qualityOfEducation: string,
     climate: string,
-    avgPopulationAge: number
+    avgPopulationAge: number | string
     priorityAttributes: string[]
 };
 
@@ -25,12 +25,12 @@ export const defaultCityPreferencesConfiguration : CityPreferencesConfiguration 
     populationDensity: "",
     costOfLiving: "",
     numberOfJobsAvailable: "",
-    crimeRate: 0,
+    crimeRate: '',
     walkAndTransability: "",
     politics: "",
     qualityOfEducation: "",
     climate: "",
-    avgPopulationAge: 1,
+    avgPopulationAge: '',
     priorityAttributes: []
 };
 

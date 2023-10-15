@@ -49,7 +49,6 @@ const ConfigurationForm = ({currentConfig, setCurrentConfig, allConfigs, current
 
     const formInputs = [
         {
-            inputComponent: "select",
             inputLabel: "Population",
             value: currentConfig.population,
             onChange: (event: any) => handleChange("population", event),
@@ -62,7 +61,6 @@ const ConfigurationForm = ({currentConfig, setCurrentConfig, allConfigs, current
             ]
         },
         {
-            inputComponent: "select",
             inputLabel: "Population Density",
             value: currentConfig.populationDensity,
             onChange: (event: any) => handleChange("populationDensity", event),
@@ -75,7 +73,6 @@ const ConfigurationForm = ({currentConfig, setCurrentConfig, allConfigs, current
             ]
         },
         {
-            inputComponent: "select",
             inputLabel: "Cost of Living",
             value: currentConfig.costOfLiving,
             onChange: (event: any) => handleChange("costOfLiving", event),
@@ -88,7 +85,6 @@ const ConfigurationForm = ({currentConfig, setCurrentConfig, allConfigs, current
             ]
         },
         {
-            inputComponent: "select",
             inputLabel: "Number of Jobs Available",
             value: currentConfig.numberOfJobsAvailable,
             onChange: (event: any) => handleChange("numberOfJobsAvailable", event),
@@ -102,20 +98,26 @@ const ConfigurationForm = ({currentConfig, setCurrentConfig, allConfigs, current
             ]
         },
         {
-            inputComponent: "slider",
             inputLabel: "Crime Rate",
-            defaultValue: 0,
-            step: 5000,
-            marks: true,
-            min: 0,
-            max: 100000,
-            valueLabelDisplay: "auto",
-            className: 'preferences-slider',
+            value: currentConfig.crimeRate,
             onChange: (event: any) => handleChange("crimeRate", event),
-            helperText: "The amount of people affected by crime per 100,000 people"
+            label: "Crime Rate",
+            menuItems: [
+                {title: "No Preference", value: 50000},
+                {title: "<10,000", value: 5000},
+                {title: "10,000 - 19,999", value: 15000},
+                {title: "20,000 - 29,999", value: 25000},
+                {title: "30,000 - 39,999", value: 35000},
+                {title: "40,000 - 49,999", value: 45000},
+                {title: "50,000 - 59,999", value: 55000},
+                {title: "60,000 - 69,999", value: 65000},
+                {title: "70,000 - 79,999", value: 75000},
+                {title: "80,000 - 89,999", value: 85000},
+                {title: "90,000", value: 95000},
+            ],
+            helperText: "The amount of people affected by crime per 100,000 people."
         },
         {
-            inputComponent: "select",
             inputLabel: "Walkability/Transability",
             value: currentConfig.walkAndTransability,
             onChange: (event: any) => handleChange("walkAndTransability", event),
@@ -128,7 +130,6 @@ const ConfigurationForm = ({currentConfig, setCurrentConfig, allConfigs, current
             ]
         },
         {
-            inputComponent: "select",
             inputLabel: "Politics",
             value: currentConfig.politics,
             onChange: (event: any) => handleChange("politics", event),
@@ -141,7 +142,6 @@ const ConfigurationForm = ({currentConfig, setCurrentConfig, allConfigs, current
             ]
         },
         {
-            inputComponent: "select",
             inputLabel: "Quality of Education",
             value: currentConfig.qualityOfEducation,
             onChange: (event: any) => handleChange("qualityOfEducation", event),
@@ -154,7 +154,6 @@ const ConfigurationForm = ({currentConfig, setCurrentConfig, allConfigs, current
             ]
         },
         {
-            inputComponent: "select",
             inputLabel: "Climate",
             value: currentConfig.climate,
             onChange: (event: any) => handleChange("climate", event),
@@ -196,17 +195,22 @@ const ConfigurationForm = ({currentConfig, setCurrentConfig, allConfigs, current
             ]
         },
         {
-            inputComponent: "textField",
-            label: "Average Population Age",
-            variant: 'standard',
-            type: 'text',
+            inputLabel: "Average Population Age",
             value: currentConfig.avgPopulationAge,
-            inputProps: {
-                inputMode: 'numeric'
-            },
-            onChange: (event: any) => handleChange("avgPopulationAge", event),
-            helperText: "Please enter a number between 1 - 100",
-            error: currentConfig.avgPopulationAge < 1 || currentConfig.avgPopulationAge > 100 || String(currentConfig.avgPopulationAge).match('^\\D+$')
+            onChange: (event: any) => handleChange("averagePopulationAge", event),
+            label: "Average Population Age",
+            menuItems: [
+                {title: "No Preference", value: ""},
+                {title: "<20", value: 15},
+                {title: "20 - 29", value: 25},
+                {title: "30 - 39", value: 35},
+                {title: "40 - 49", value: 45},
+                {title: "50 - 59", value: 55},
+                {title: "60 - 69", value: 65},
+                {title: "70 - 79", value: 75},
+                {title: "80 - 89", value: 85},
+                {title: "90+", value: 95}
+            ]
         }
     ]
 
@@ -231,7 +235,6 @@ const ConfigurationForm = ({currentConfig, setCurrentConfig, allConfigs, current
                     <Divider />
                     <CardContent className='preferences-form-content'>
                         { formInputs.map((input, index) => {
-                            if (input.inputComponent === "select") {
                                 return (
                                     <FormControl variant="standard" className='preferences-select' key={ index }>
                                         <InputLabel id={ input.inputLabel }>{ input.label }</InputLabel>
@@ -249,42 +252,10 @@ const ConfigurationForm = ({currentConfig, setCurrentConfig, allConfigs, current
                                                 )
                                             }) }
                                         </Select>
+                                        { input?.helperText && <FormHelperText>{ input?.helperText }</FormHelperText> }
                                     </FormControl>
                                 )
-                            } else if (input.inputComponent === "slider") {
-                                return (
-                                    <FormControl className='preferences-slider-text' key={ index }>
-                                        <FormLabel component="legend">{ input.inputLabel }: { currentConfig.crimeRate }</FormLabel>
-                                        <Slider
-                                            defaultValue={ input?.defaultValue }
-                                            step={ input?.step }
-                                            marks={ input?.marks }
-                                            min={ input?.min }
-                                            max={ input?.max }
-                                            valueLabelDisplay={ input?.valueLabelDisplay as "auto" }
-                                            className={ input?.className }
-                                            onChange={ input?.onChange }
-                                        />
-                                        <FormHelperText>{ input.helperText }</FormHelperText>
-                                    </FormControl>
-                                )
-                            } else if (input.inputComponent === "textField") {
-                                return (
-                                    <FormControl variant='standard' className='preferences-text-field'>
-                                        <TextField
-                                            label={ input?.label }
-                                            variant={ input?.variant as TextFieldVariants }
-                                            type={ input?.type }
-                                            value={ input?.value }
-                                            inputProps={ input?.inputProps as InputBaseComponentProps }
-                                            onChange={ input?.onChange }
-                                            helperText={ input?.helperText }
-                                            error={ input?.error as boolean }
-                                        />
-                                    </FormControl>
-                                )
-                            }
-                        })}
+                            })}
                         <br/>
                         <Divider />
                         <FormControl variant='standard'
@@ -307,7 +278,8 @@ const ConfigurationForm = ({currentConfig, setCurrentConfig, allConfigs, current
                                     )
                                 })}
                             </FormGroup>
-                            <FormHelperText>You can display an error</FormHelperText>
+                            {(currentConfig.priorityAttributes.length < 3 || currentConfig.priorityAttributes.length > 5) &&
+                                <FormHelperText>Please select between 3 - 5 values!</FormHelperText>}
                         </FormControl>
                         <div className='preferences-form-sibling-set'>
                             <Button color='error' variant="outlined" onClick={ clearForm }>
