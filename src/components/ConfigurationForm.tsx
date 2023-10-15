@@ -8,7 +8,7 @@ import {
     Divider,
     FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel, InputBaseComponentProps,
     InputLabel,
-    MenuItem,
+    MenuItem, Radio, RadioGroup,
     Select, Slider, TextField, TextFieldVariants, Typography
 } from "@mui/material";
 import { Configs } from "../types/utility-types";
@@ -64,7 +64,7 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
                 population: 8398748,
                 populationDensity: 10933,
                 costOfLiving: "high",
-                numberOfJobsAvailable: 100000,
+                preferredJobIndustry: 100000,
                 crimeRate: 45000,
                 walkAndTransability: "high",
                 politics: "democrat",
@@ -88,7 +88,7 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
                 population: 3990456,
                 populationDensity: 3276,
                 costOfLiving: "high",
-                numberOfJobsAvailable: 100000,
+                preferredJobIndustry: 100000,
                 crimeRate: 45000,
                 walkAndTransability: "high",
                 politics: "democrat",
@@ -112,7 +112,7 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
                 population: 2705994,
                 populationDensity: 4574,
                 costOfLiving: "high",
-                numberOfJobsAvailable: 100000,
+                preferredJobIndustry: 100000,
                 crimeRate: 45000,
                 walkAndTransability: "high",
                 politics: "democrat",
@@ -124,89 +124,100 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
         setReturnedCities(mockResponse);
     }
 
+    // Idk if we want this, but i'll keep it for reference
+    const formInputDefaultValues = {
+        costOfLiving: 1500,
+        crimeRate: 50000,
+        walkAndTransability: 50,
+        qualityOfEducation: 50,
+        population: 450000,
+        populationDensity: 3000,
+        climate: "humid subtropical",
+        preferredJobIndustry: "computers-and-it",
+        politics: "republican",
+        avgPopulationAge: 30
+    };
+
     const formInputs = [
         {
+            componentType: "radio",
+            groupLabel: "Low Cost of Living?",
+            labels: { na: "No Preference", yes: "Matters" },
+            values: { na: "", yes: 1000 },
+            onChange: (event: any) => handleChange("costOfLiving", event)
+        },
+        {
+            componentType: "radio",
+            groupLabel: "Low Crime Rate?",
+            values: { na: "", yes: 10000 },
+            labels: { na: "No Preference", yes: "Matters" },
+            onChange: (event: any) => handleChange("crimeRate", event),
+            helperText: "The amount of people affected by crime per 100,000 people."
+        },
+        {
+            componentType: "radio",
+            groupLabel: "High Walkability/Transability?",
+            values: { na: "", yes: "high" },
+            labels: { na: "No Preference", yes: "Matters" },
+            onChange: (event: any) => handleChange("walkAndTransability", event),
+        },
+        {
+            componentType: "radio",
+            groupLabel: "High Quality of Education?",
+            values: { na: "", yes: "high" },
+            labels: { na: "No Preference", yes: "Matters" },
+            onChange: (event: any) => handleChange("qualityOfEducation", event),
+        },
+        {
+            componentType: "select",
             inputLabel: "Population",
             value: currentConfig.population,
             onChange: (event: any) => handleChange("population", event),
             label: "Population",
             menuItems: [
                 {title: "No Preference", value: ""},
-                {title: "Low", value: "low"},
-                {title: "Medium", value: "medium"},
-                {title: "High", value: "high"}
+                {title: "Low (<300,000 people)", value: 150000},
+                {title: "Medium (300,000 - 599,999 people)", value: 450000},
+                {title: "High (>600,000 people)", value: 1000000}
             ]
         },
         {
+            componentType: "select",
             inputLabel: "Population Density",
             value: currentConfig.populationDensity,
             onChange: (event: any) => handleChange("populationDensity", event),
             label: "Population Density",
             menuItems: [
                 {title: "No Preference", value: ""},
-                {title: "Low", value: "low"},
-                {title: "Medium", value: "medium"},
-                {title: "High", value: "high"}
+                {title: "Low (<2,500 people per square mile)", value: 2000},
+                {title: "Medium (2,500 - 5,500 people per square mile)", value: 4000},
+                {title: "High (>5,500 people per square mile)", value: 7000}
             ]
         },
         {
-            inputLabel: "Cost of Living",
-            value: currentConfig.costOfLiving,
-            onChange: (event: any) => handleChange("costOfLiving", event),
-            label: "Cost of Living",
+            componentType: "select",
+            inputLabel: "Preferred Job Industry",
+            value: currentConfig.preferredJobIndustry,
+            onChange: (event: any) => handleChange("preferredJobIndustry", event),
+            label: "Preferred Job Industry",
             menuItems: [
                 {title: "No Preference", value: ""},
-                {title: "Low", value: "low"},
-                {title: "Medium", value: "medium"},
-                {title: "High", value: "high"}
+                {title: "Software Developers (Computers and IT)", value: "computers-and-it"},
+                {title: "Receptionists and Information Clerks (Office and Administrative Support)", value: "administrative-support"},
+                {title: "Marketing Managers/Sales Managers/Chief Executives (Management)", value: "management"},
+                {title: "Accountants and Auditors/Financial and Investment Analysts (Business/Financial)", value: "business-and-financial"},
+                {title: "Chemical Engineers/Aerospace Engineers (Engineering)", value: "engineering"},
+                {title: "Fashion Designers/Graphic Designers (Arts & Design)", value: "arts-and-design"},
+                {title: "Secondary School Teachers/Elementary School Teachers (Education, Training, & Library)", value: "education-training-and-library"},
+                {title: "Registered Nurses/Physicians, All Other (Healthcare)", value: "healthcare"},
+                {title: "Actors/Coaches and Scouts (Entertainment/Sports)", value: "entertainment-and-sports"},
+                {title: "Lawyers/Judges, Magistrate Judges, and Magistrates (Legal)", value: "legal"},
+                {title: "Social Workers/Counselors, All Other (Community & Social Services)", value: "community-and-social-services"},
+                {title: "All Other Industries", value: "other"}
             ]
         },
         {
-            inputLabel: "Number of Jobs Available",
-            value: currentConfig.numberOfJobsAvailable,
-            onChange: (event: any) => handleChange("numberOfJobsAvailable", event),
-            label: "Number of Jobs Available",
-            menuItems: [
-                {title: "No Preference", value: ""},
-                {title: "<1,000", value: "low"},
-                {title: ">1,000 - 9,999", value: "medium-low"},
-                {title: "10,000 - 24,999", value: "medium-high"},
-                {title: "25,000+", value: "high"}
-            ]
-        },
-        {
-            inputLabel: "Crime Rate",
-            value: currentConfig.crimeRate,
-            onChange: (event: any) => handleChange("crimeRate", event),
-            label: "Crime Rate",
-            menuItems: [
-                {title: "No Preference", value: ""},
-                {title: "<10,000", value: 5000},
-                {title: "10,000 - 19,999", value: 15000},
-                {title: "20,000 - 29,999", value: 25000},
-                {title: "30,000 - 39,999", value: 35000},
-                {title: "40,000 - 49,999", value: 45000},
-                {title: "50,000 - 59,999", value: 55000},
-                {title: "60,000 - 69,999", value: 65000},
-                {title: "70,000 - 79,999", value: 75000},
-                {title: "80,000 - 89,999", value: 85000},
-                {title: "90,000", value: 95000},
-            ],
-            helperText: "The amount of people affected by crime per 100,000 people."
-        },
-        {
-            inputLabel: "Walkability/Transability",
-            value: currentConfig.walkAndTransability,
-            onChange: (event: any) => handleChange("walkAndTransability", event),
-            label: "Walkability/Transability",
-            menuItems: [
-                {title: "No Preference", value: ""},
-                {title: "Low", value: "low"},
-                {title: "Medium", value: "medium"},
-                {title: "High", value: "high"}
-            ]
-        },
-        {
+            componentType: "select",
             inputLabel: "Politics",
             value: currentConfig.politics,
             onChange: (event: any) => handleChange("politics", event),
@@ -214,23 +225,11 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
             menuItems: [
                 {title: "No Preference", value: ""},
                 {title: "Democrat", value: "democrat"},
-                {title: "Moderate", value: "moderate"},
                 {title: "Republican", value: "republican"}
             ]
         },
         {
-            inputLabel: "Quality of Education",
-            value: currentConfig.qualityOfEducation,
-            onChange: (event: any) => handleChange("qualityOfEducation", event),
-            label: "Quality of Education",
-            menuItems: [
-                {title: "No Preference", value: ""},
-                {title: "Low", value: "low"},
-                {title: "Medium", value: "medium"},
-                {title: "High", value: "high"}
-            ]
-        },
-        {
+            componentType: "select",
             inputLabel: "Climate",
             value: currentConfig.climate,
             onChange: (event: any) => handleChange("climate", event),
@@ -272,6 +271,7 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
             ]
         },
         {
+            componentType: "select",
             inputLabel: "Average Population Age",
             value: currentConfig.avgPopulationAge,
             onChange: (event: any) => handleChange("avgPopulationAge", event),
@@ -292,14 +292,14 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
     ]
 
     const priorityAttributeCheckboxes = [
-        { title: "Population", value: "population" },
-        { title: "Population Density", value: "populationDensity" },
         { title: "Cost of Living", value: "costOfLiving" },
-        { title: "Number of Jobs Available", value: "numberOfJobsAvailable" },
         { title: "Crime Rate", value: "crimeRate" },
         { title: 'Walkability/Transability', value: "walkAndTransability" },
-        { title: "Politics", value: "politics" },
         { title: "Quality of Education", value: "qualityOfEducation" },
+        { title: "Population", value: "population" },
+        { title: "Population Density", value: "populationDensity" },
+        { title: "Preferred Job Industry", value: "preferredJobIndustry" },
+        { title: "Politics", value: "politics" },
         { title: "Climate", value: "climate" },
         { title: "Average Population Age", value: "avgPopulationAge" }
     ]
@@ -314,22 +314,37 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
                         { formInputs.map((input, index) => {
                                 return (
                                     <FormControl variant="standard" className='preferences-select' key={ index }>
-                                        <InputLabel id={ input.inputLabel }>{ input.label }</InputLabel>
-                                        <Select
-                                            labelId={ input?.inputLabel }
-                                            id={ input?.inputLabel }
-                                            value={ input?.value }
-                                            onChange={ input?.onChange }
-                                            label={ input?.label }
-                                            MenuProps={ input?.menuProps }
-                                        >
-                                            { input.menuItems?.map((menuItem, index) => {
-                                                return (
-                                                    <MenuItem value={ menuItem.value } key={ index }>{ menuItem.title }</MenuItem>
-                                                )
-                                            }) }
-                                        </Select>
-                                        { input?.helperText && <FormHelperText>{ input?.helperText }</FormHelperText> }
+                                        { input?.componentType === 'select' &&
+                                            <>
+                                                <InputLabel id={ input.inputLabel }>{ input.label }</InputLabel>
+                                                <Select
+                                                    labelId={ input?.inputLabel }
+                                                    id={ input?.inputLabel }
+                                                    value={ input?.value }
+                                                    onChange={ input?.onChange }
+                                                    label={ input?.label }
+                                                    MenuProps={ input?.menuProps }
+                                                >
+                                                    { input.menuItems?.map((menuItem, index) => {
+                                                        return (
+                                                            <MenuItem value={ menuItem.value } key={ index }>{ menuItem.title }</MenuItem>
+                                                        )
+                                                    }) }
+                                                </Select>
+                                                { input?.helperText && <FormHelperText>{ input?.helperText }</FormHelperText> }
+                                            </>
+                                        }
+                                        { input?.componentType === 'radio' &&
+                                            <>
+                                                <FormLabel id="demo-row-radio-buttons-group-label">{ input?.groupLabel }</FormLabel>
+                                                <RadioGroup row name={ input?.value + "group" } onChange={ input?.onChange } defaultValue={ input?.values?.na }>
+                                                    {/* @ts-ignore */ }
+                                                    <FormControlLabel control={<Radio />} label={ input?.labels?.yes } value={ input?.values?.yes } onChange={ input?.onChange } />
+                                                    {/* @ts-ignore */ }
+                                                    <FormControlLabel control={<Radio />} label={ input?.labels?.na } value={ input?.values?.na } onChange={ input?.onChange } />
+                                                </RadioGroup>
+                                            </>
+                                        }
                                     </FormControl>
                                 )
                             })}

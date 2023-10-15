@@ -21,7 +21,7 @@ const CityResponseCard = ({ cityDetails } : Props) => {
         { title: 'Population', value: cityDetails?.population },
         { title: 'Population Density', value: cityDetails?.populationDensity },
         { title: 'Cost of Living', value: cityDetails?.costOfLiving },
-        { title: 'Number of Jobs', value: cityDetails?.numberOfJobsAvailable },
+        { title: 'Number of Jobs', value: cityDetails?.preferredJobIndustry },
         { title: 'Crime Rate', value: cityDetails?.crimeRate },
         { title: 'Walkability/Transability', value: cityDetails?.walkAndTransability },
         { title: 'Politics', value: cityDetails?.politics },
