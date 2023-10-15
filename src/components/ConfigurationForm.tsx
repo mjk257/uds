@@ -124,20 +124,6 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
         setReturnedCities(mockResponse);
     }
 
-    // Idk if we want this, but i'll keep it for reference
-    const formInputDefaultValues = {
-        costOfLiving: 1500,
-        crimeRate: 50000,
-        walkAndTransability: 50,
-        qualityOfEducation: 50,
-        population: 450000,
-        populationDensity: 3000,
-        climate: "humid subtropical",
-        preferredJobIndustry: "computers-and-it",
-        politics: "republican",
-        avgPopulationAge: 30
-    };
-
     const formInputs = [
         {
             componentType: "radio",
