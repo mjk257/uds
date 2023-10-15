@@ -103,7 +103,7 @@ const ConfigurationForm = ({currentConfig, setCurrentConfig, allConfigs, current
             onChange: (event: any) => handleChange("crimeRate", event),
             label: "Crime Rate",
             menuItems: [
-                {title: "No Preference", value: 50000},
+                {title: "No Preference", value: ""},
                 {title: "<10,000", value: 5000},
                 {title: "10,000 - 19,999", value: 15000},
                 {title: "20,000 - 29,999", value: 25000},
@@ -197,7 +197,7 @@ const ConfigurationForm = ({currentConfig, setCurrentConfig, allConfigs, current
         {
             inputLabel: "Average Population Age",
             value: currentConfig.avgPopulationAge,
-            onChange: (event: any) => handleChange("averagePopulationAge", event),
+            onChange: (event: any) => handleChange("avgPopulationAge", event),
             label: "Average Population Age",
             menuItems: [
                 {title: "No Preference", value: ""},
@@ -267,9 +267,10 @@ const ConfigurationForm = ({currentConfig, setCurrentConfig, allConfigs, current
                                         <>
                                             <FormControlLabel control={
                                                     <Checkbox key={ index }
-                                                        checked={ currentConfig.priorityAttributes.includes(checkbox.value) }
-                                                              onChange={ (event) =>
-                                                                  handleChange("priorityAttributes", event) }
+                                                              //@ts-ignore
+                                                              disabled={ currentConfig[checkbox.value] === '' }
+                                                              checked={ currentConfig.priorityAttributes.includes(checkbox.value) }
+                                                              onChange={ (event) => handleChange("priorityAttributes", event) }
                                                               name={ checkbox.title}
                                                               value={ checkbox.value } />
                                                 }
@@ -285,7 +286,8 @@ const ConfigurationForm = ({currentConfig, setCurrentConfig, allConfigs, current
                             <Button color='error' variant="outlined" onClick={ clearForm }>
                                 Clear
                             </Button>
-                            <Button color='primary' variant="outlined" onClick={ submitForm }>
+                            <Button color='primary' variant="outlined" onClick={ submitForm }
+                                    disabled={ currentConfig.priorityAttributes.length < 3 || currentConfig.priorityAttributes.length > 5 }>
                                 Submit
                             </Button>
                         </div>
