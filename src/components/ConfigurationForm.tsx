@@ -4,15 +4,15 @@ import {
     Button,
     Card,
     CardContent,
-    CardHeader, Checkbox, Chip,
+    CardHeader, Checkbox,
     Divider,
-    FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel, InputBaseComponentProps,
+    FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel,
     InputLabel,
     MenuItem, Radio, RadioGroup,
-    Select, Slider, TextField, TextFieldVariants, Typography
+    Select
 } from "@mui/material";
 import { Configs } from "../types/utility-types";
-import { JSX } from "react/jsx-runtime";
+import { searchForCities } from "../util/api-calls";
 
 // Note that some of this stuff might be placeholders for later on
 
@@ -124,7 +124,12 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
                 avgPopulationAge: 35
             }
         ]
-        setReturnedCities(mockResponse);
+
+        // fetch data on cities from the api (may need to move this?)
+
+        searchForCities(currentConfig).then(resp => {
+            setReturnedCities(resp);
+        });
     }
 
     const formInputs = [

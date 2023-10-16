@@ -42,3 +42,20 @@ export const defaultCityPreferencesConfigurationSet : Configs = {
     "config5": defaultCityPreferencesConfiguration
 };
 
+export type CityDetails = {
+    density: number,
+    population: number,
+    name: string,
+    state: string,
+    longitude: number,
+    latitude: number,
+    rpp: number,
+    climate_zone: string,
+    zone_description: string,
+    partisan_lean: number //negative value is more republican, positive is more democratic
+}
+
+export type CityResponse = {
+    [key: string]: CityDetails
+}
+

@@ -35,14 +35,15 @@ const mockCityDetails = {
 describe("Testing ConfigurationList component", () => {
 
     const mockProps = {
-        cityDetails: mockCityDetails
+        cityDetails: mockCityDetails,
+        rank: 1
     }
 
     test("renders ConfigurationList header and configuration buttons", () => {
         render(<CityResponseCard { ...mockProps } />);
         console.log("Made it here?")
 
-        const cityName = screen.getByText("New York City");
+        const cityName = screen.getByText("1.) New York City");
         expect(cityName).toBeInTheDocument();
         const citySummary = screen.getByText(nycSummary);
         expect(citySummary).toBeInTheDocument();
