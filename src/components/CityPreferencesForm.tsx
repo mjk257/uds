@@ -7,14 +7,14 @@ import {
 import ConfigurationList from "./ConfigurationList";
 import CityResponseCard from "./CityResponseCard";
 import ConfigurationForm from "./ConfigurationForm";
-import {defaultCityPreferencesConfigurationSet} from "../types/utility-types";
+import {defaultCityPreferencesConfigurationSet, CityResponse } from "../types/utility-types";
 
 export const CityPreferencesForm = () => {
 
     const [allConfigs, setAllConfigs ]= useState(defaultCityPreferencesConfigurationSet);
     const [currentConfig, setCurrentConfig] = useState(allConfigs.config1);
     const [currentConfigName, setCurrentConfigName] = useState('config1');
-    const [returnedCities, setReturnedCities] = useState([]);
+    const [returnedCities, setReturnedCities] = useState<CityResponse>({});
 
     return (
         <div>
@@ -28,11 +28,11 @@ export const CityPreferencesForm = () => {
                     </CardContent>
                 </Card>
             </Container>
-            {/* Note that in the future this will be rendered dynamically, but right now is just showing for reference */}
+            {/* Note: In the future, the data should be returned as an array, already sorted by rank, since JSON's aren't ordered */}
             <Container maxWidth='xl'>
                 {returnedCities &&
-                    returnedCities.map((city, idx) => {
-                        return <CityResponseCard cityDetails={ city } key={ idx }/>
+                    Object.values(returnedCities).map((city, idx) => {
+                        return <CityResponseCard cityDetails={ city } key={ idx } rank={ idx + 1 }/>
                 })}
             </Container>
         </div>

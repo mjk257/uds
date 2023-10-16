@@ -4,15 +4,15 @@ import {
     Button,
     Card,
     CardContent,
-    CardHeader, Checkbox, Chip,
+    CardHeader, Checkbox,
     Divider,
-    FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel, InputBaseComponentProps,
+    FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel,
     InputLabel,
     MenuItem, Radio, RadioGroup,
-    Select, Slider, TextField, TextFieldVariants, Typography
+    Select
 } from "@mui/material";
 import { Configs } from "../types/utility-types";
-import { JSX } from "react/jsx-runtime";
+import { searchForCities } from "../util/api-calls";
 
 // Note that some of this stuff might be placeholders for later on
 
@@ -32,7 +32,8 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
         } else {
             // Not sure why, but items which are numbers are not being converted after being passed through
             // handleChange, so I'm doing the conversion manually for now. Will fix later on
-            const value = isNaN(event.target.value) ? event.target.value : Number(event.target.value);
+            const value = isNaN(event.target.value) || event.target.value === "" ?
+                event.target.value : Number(event.target.value);
             setCurrentConfig({...currentConfig, [property]: value });
         }
     }
@@ -48,83 +49,9 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
 
     const submitForm = () => {
         // 1.) send the data to the search function and await its response
-        // 2.) recieve the data in some form
-            // a.) Right now, I just have a mock for what it might look like
-        const mockResponse = [
-            {
-                summary: "New York City is a city in the United States. " +
-                    "It is the largest city in the United States. " +
-                    "It is also the most populous city in the United States. " +
-                    "It is also the most densely populated city in the United States. " +
-                    "It is also the most expensive city in the United States. " +
-                    "It is also the most dangerous city in the United States. " +
-                    "It is also the most walkable city in the United States. " +
-                    "It is also the most democratic city in the United States. " +
-                    "It is also the most educated city in the United States. " +
-                    "It is also the most humid-subtropical city in the United States. " +
-                    "It is also the youngest city in the United States.",
-                name: "New York City",
-                population: 8398748,
-                populationDensity: 10933,
-                costOfLiving: "high",
-                preferredJobIndustry: 100000,
-                crimeRate: 45000,
-                walkAndTransability: "high",
-                politics: "democrat",
-                qualityOfEducation: "high",
-                climate: "humid-subtropical",
-                avgPopulationAge: 35
-            },
-            {
-                summary: "Los Angeles is a city in the United States. " +
-                    "It is the second largest city in the United States. " +
-                    "It is also the second most populous city in the United States. " +
-                    "It is also the second most densely populated city in the United States. " +
-                    "It is also the second most expensive city in the United States. " +
-                    "It is also the second most dangerous city in the United States. " +
-                    "It is also the second most walkable city in the United States. " +
-                    "It is also the second most democratic city in the United States. " +
-                    "It is also the second most educated city in the United States. " +
-                    "It is also the second most humid-subtropical city in the United States. " +
-                    "It is also the second youngest city in the United States.",
-                name: "Los Angeles",
-                population: 3990456,
-                populationDensity: 3276,
-                costOfLiving: "high",
-                preferredJobIndustry: 100000,
-                crimeRate: 45000,
-                walkAndTransability: "high",
-                politics: "democrat",
-                qualityOfEducation: "high",
-                climate: "humid-subtropical",
-                avgPopulationAge: 35
-            },
-            {
-                summary: "Chicago is a city in the United States. " +
-                    "It is the third largest city in the United States. " +
-                    "It is also the third most populous city in the United States. " +
-                    "It is also the third most densely populated city in the United States. " +
-                    "It is also the third most expensive city in the United States. " +
-                    "It is also the third most dangerous city in the United States. " +
-                    "It is also the third most walkable city in the United States. " +
-                    "It is also the third most democratic city in the United States. " +
-                    "It is also the third most educated city in the United States. " +
-                    "It is also the third most humid-subtropical city in the United States. " +
-                    "It is also the third youngest city in the United States.",
-                name: "Chicago",
-                population: 2705994,
-                populationDensity: 4574,
-                costOfLiving: "high",
-                preferredJobIndustry: 100000,
-                crimeRate: 45000,
-                walkAndTransability: "high",
-                politics: "democrat",
-                qualityOfEducation: "high",
-                climate: "humid-subtropical",
-                avgPopulationAge: 35
-            }
-        ]
-        setReturnedCities(mockResponse);
+        searchForCities(currentConfig).then(resp => {
+            setReturnedCities(resp);
+        });
     }
 
     const formInputs = [

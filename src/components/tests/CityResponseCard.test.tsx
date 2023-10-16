@@ -20,29 +20,30 @@ const nycSummary = "New York City is a city in the United States. " +
 const mockCityDetails = {
     summary: nycSummary,
     name: "New York City",
+    state: "NY",
     population: 8398748,
-    populationDensity: 10933,
+    density: 10933,
     costOfLiving: "high",
     preferredJobIndustry: 100000,
     crimeRate: 45000,
     walkAndTransability: "high",
-    politics: "democrat",
+    partisan_lean: 25,
     qualityOfEducation: "high",
-    climate: "humid-subtropical",
+    zone_description: "humid subtropical",
     avgPopulationAge: 35
 }
 
 describe("Testing ConfigurationList component", () => {
 
     const mockProps = {
-        cityDetails: mockCityDetails
+        cityDetails: mockCityDetails,
+        rank: 1
     }
 
     test("renders ConfigurationList header and configuration buttons", () => {
         render(<CityResponseCard { ...mockProps } />);
-        console.log("Made it here?")
 
-        const cityName = screen.getByText("New York City");
+        const cityName = screen.getByText("1.) New York City, NY");
         expect(cityName).toBeInTheDocument();
         const citySummary = screen.getByText(nycSummary);
         expect(citySummary).toBeInTheDocument();
@@ -58,11 +59,11 @@ describe("Testing ConfigurationList component", () => {
         expect(crimeRate).toBeInTheDocument();
         const walkabilityTransability = screen.getByText("Walkability/Transability: high");
         expect(walkabilityTransability).toBeInTheDocument();
-        const politics = screen.getByText("Politics: democrat");
+        const politics = screen.getByText("Politics: Democrat");
         expect(politics).toBeInTheDocument();
         const qualityOfEducation = screen.getByText("Quality of Education: high");
         expect(qualityOfEducation).toBeInTheDocument();
-        const climate = screen.getByText("Climate: humid-subtropical");
+        const climate = screen.getByText("Climate: humid subtropical");
         expect(climate).toBeInTheDocument();
         const averagePopulationAge = screen.getByText("Average Population Age: 35");
         expect(averagePopulationAge).toBeInTheDocument();
