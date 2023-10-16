@@ -1,4 +1,3 @@
-const { isNull } = require('util');
 const City = require('../models/City');
 
 // Takes in cities and searchCriteria and returns ranked list of top 10 cities
@@ -13,10 +12,8 @@ function citySearch(cities, searchCriteria) {
     // Sort the array of tuples by scores in descending order
     combinedData.sort((a, b) => b[1] - a[1]);
 
-    //console.log(combinedData);
-
+    // Compile list of top numResults cities
     for (let i = 0; i < numResults; i++) {
-        console.log("i = " + i + ", score = " + combinedData[i][1] + ", city.name = " + combinedData[i][0].name);
         topCities[i+1] = combinedData[i][0];
     }
 
@@ -83,14 +80,10 @@ function getCityScores(cities, searchCriteria) {
     // cities is a list of City objects
     // searchCriteria is a JSON with keys=criteriaName and values=preferenceValue and one of keys="priorityAttributes", value=[list of criteriaName that were marked as important]
     const valuedScalingFactor = 5;
-    let num_cities = cities.length;
-    let cityScores = Array(num_cities).fill(0);
-
-    // const searchCriteria = JSON.parse(JSON.stringify(searchCriteriaJSON));
+    let cityScores = Array(cities.length).fill(0);
 
     // Get normalizing data (min and max of each criteria)
     let normalizeData = getNormalizationData(cities, searchCriteria);
-    // console.log(normalizeData)
 
     // Get city scores
     for (let criteriaName in searchCriteria) {
@@ -107,7 +100,7 @@ function getCityScores(cities, searchCriteria) {
 
         let isValued = searchCriteria.priorityAttributes.includes(criteriaName); // Check if criteria is in list of importance
 
-        // console.log("criteria: " + criteriaName + ", pref: " + pref + ", isValued: " + isValued)
+        // Get min/max values for criteria for normalization
         let criteriaMin = normalizeData[criteriaName][0];
         let criteriaMaxMinDiff = null;
         let normalizedPref = null;
@@ -124,23 +117,25 @@ function getCityScores(cities, searchCriteria) {
                 normalizedPref = 1;
         }
 
+        // Add city criteria score to each cities score
         for (let i = 0; i < cities.length; i++) {
             let city = cities[i];
             let cityValue = getAttributeValue(city, criteriaName);
-            if (cityValue == null)
-                break;
 
-            if (criteriaMin != null) {
+            if (cityValue == null) // If attribute not in database (either in total or for the specific city)
+                continue;
+
+            if (criteriaMin != null) { // If numbered attribute
+                if (criteriaMaxMinDiff == 0) // Avoid division by zero
+                    break;
+
                 // Normalize (applicable) attributes to 0.0 - 1.0 using linear scaling: (val - min) / (max - min)
                 cityValue = (cityValue - criteriaMin) / criteriaMaxMinDiff
 
                 // Tune ratings to preferences
                 // Values will still be in 0.0 to 1.0 range with 1.0 being the best
-                // console.log("val = " + getAttributeValue(city, criteriaName) + ", normalized val = " + cityValue + ", abs = " + Math.abs(cityValue - normalizedPref) + ", ");
                 let inverseNormalizedPref = 1 / Math.max(normalizedPref, 1 - normalizedPref);
-
                 cityValue = -Math.abs(cityValue - normalizedPref) * inverseNormalizedPref + 1;
-                // console.log("val = " + getAttributeValue(city, criteriaName) + ", normalized to pref val = " + cityValue);
             } else {
                 cityValue = (cityValue == pref) ? 1 : 0;
             }
@@ -150,7 +145,6 @@ function getCityScores(cities, searchCriteria) {
                 cityValue *= valuedScalingFactor;
 
             // Add criteria score to city score sum
-            // console.log(cityValue);
             cityScores[i] += cityValue;
         }
     }
