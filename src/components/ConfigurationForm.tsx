@@ -32,7 +32,8 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
         } else {
             // Not sure why, but items which are numbers are not being converted after being passed through
             // handleChange, so I'm doing the conversion manually for now. Will fix later on
-            const value = isNaN(event.target.value) ? event.target.value : Number(event.target.value);
+            const value = isNaN(event.target.value) || event.target.value === "" ?
+                event.target.value : Number(event.target.value);
             setCurrentConfig({...currentConfig, [property]: value });
         }
     }
