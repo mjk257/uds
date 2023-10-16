@@ -1,4 +1,6 @@
 const City = require('../models/City');
+const axios = require('axios');
+require('dotenv').config();
 
 // Takes in cities and searchCriteria and returns ranked list of top 10 cities
 function citySearch(cities, searchCriteria) {
@@ -151,6 +153,38 @@ function getCityScores(cities, searchCriteria) {
 
     // Return list of all city scores, the higher the score the better the fit
     return cityScores;
+}
+
+function getJobCounts(cities, job_code){
+    const api_header = {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + proccess.env.COS_API_KEY
+    };
+    const params = {
+        "source": "NLx",
+        "showFilters": "false"
+    };
+
+    const return_data = [];
+    cities.forEach(async (city) => {
+        const api_url = "https://api.careeronestop.org/v1/jobsearch/" + proccess.env.COS_USER_ID + "/" + job_code + "/" + formatCity(city) + "/25/0/0/0/1/60";
+        const res = await axios({
+            method: 'get',
+            url: api_url,
+            params: params,
+            headers: api_header
+        });
+        const data = res.json();
+        return_data.append({"job_count": data.pop("Jobcount"), "city": city});
+    });
+        
+    return return_data;
+}
+
+function formatCity(city){
+    let new_city = city.replace(" ", "%20");
+    new_city = city.replace(",", "%2C");
+    return new_city;
 }
 
 
