@@ -160,7 +160,7 @@ function getCityScores(cities, searchCriteria) {
     return cityScores;
 }
 
-function getJobCounts(cities, job_code){
+async function getJobCounts(cities, job_code){
 
     const params = {
         "source": "NLx",
@@ -168,7 +168,7 @@ function getJobCounts(cities, job_code){
     };
 
     const return_data = [];
-    cities.forEach(async (city) => {
+    for (const city of cities) {
         const api_url = "https://api.careeronestop.org/v1/jobsearch/" + process.env.COS_USER_ID + "/" + job_code + "/" + formatCity(city) + "/25/0/0/0/1/60";
         const res = await axios({
             method: 'get',
@@ -176,14 +176,14 @@ function getJobCounts(cities, job_code){
             params: params,
             headers: api_header
         });
-        const data = res.json();
-        return_data.append({"job_count": data.pop("Jobcount"), "city": city});
-    });
+        return_data.push({"job_count": res.data.Jobcount, "city": city});
+
+    };
         
     return return_data;
 }
 
-function getSalaries(cities, job_code){
+async function getSalaries(cities, job_code){
     // Partition the array into arrays of 5 for API calls
     const cityGroups = cities.reduce((resultArray, item, index) => { 
         const chunkIndex = Math.floor(index/5)
@@ -198,7 +198,7 @@ function getSalaries(cities, job_code){
       }, []);
 
     const return_data = [];
-    cityGroups.forEach(async (cityGroup) => {
+    for (const cityGroup of cityGroups){
         const params = {
             "keyword": job_code,
             "location": cityGroup.join(" | "),
@@ -214,12 +214,11 @@ function getSalaries(cities, job_code){
             params: params,
             headers: api_header
         });
-        res["LocationsList"].forEach((city) => {
-            return_data.append({"hourly": city["OccupationList"][0]["WageInfo"][0]["Median"], "city": city["InputLocation"]});
-        });
-        
-    });
-       
+        for (const city of res.data.LocationsList){
+            return_data.push({"hourly": city.OccupationList[0].WageInfo[0].Median, "city": city.InputLocation});
+        };
+    }
+    return return_data;    
 }
 
 function formatCity(city){
