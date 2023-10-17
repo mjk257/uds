@@ -4,7 +4,7 @@ require('dotenv').config();
 
 // Takes in cities and searchCriteria and returns ranked list of top 10 cities
 function citySearch(cities, searchCriteria) {
-    let topCities = {};
+    let topCities = [];
     const numResults = 10; // Number of cities to return
     cityScores = getCityScores(cities, searchCriteria); // Get city scores
 
@@ -16,7 +16,7 @@ function citySearch(cities, searchCriteria) {
 
     // Compile list of top numResults cities
     for (let i = 0; i < numResults; i++) {
-        topCities[i+1] = combinedData[i][0];
+        topCities[i] = combinedData[i][0];
     }
 
     return topCities;
@@ -37,7 +37,7 @@ function getAttributeValue(city, criteriaName) {
         case "population":
             return city.population;
         case "populationDensity":
-            return parseFloat(city.density);
+            return city.density;
         case "climate":
             return city.zone_description; //TODO: Parse this data correctly to match input data
         case "preferredJobIndustry":
