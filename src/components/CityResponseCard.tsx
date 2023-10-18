@@ -21,7 +21,7 @@ const CityResponseCard = ({ cityDetails, rank } : Props) => {
         { title: 'Population', value: cityDetails?.population ? cityDetails?.population : "N/A" },
         { title: 'Population Density', value: cityDetails?.density ? cityDetails?.density : "N/A" },
         { title: 'Cost of Living', value: cityDetails?.costOfLiving ? cityDetails?.costOfLiving : "N/A" },
-        { title: 'Number of Jobs', value: cityDetails?.preferredJobIndustry ? cityDetails?.preferredJobIndustry : "N/A" },
+        { title: 'Number of Jobs', value: cityDetails?.preferredOccupation ? cityDetails?.preferredJobIndustry : "N/A" },
         { title: 'Crime Rate', value: cityDetails?.crimeRate ? cityDetails?.crimeRate : "N/A" },
         { title: 'Walkability/Transability', value: cityDetails?.walkAndTransability ? cityDetails?.walkAndTransability : "N/A" },
         { title: 'Politics', value: (cityDetails?.partisan_lean && cityDetails?.partisan_lean > 0)  ?

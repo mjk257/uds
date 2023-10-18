@@ -17,25 +17,7 @@ import { searchForCities, getAllOccupations } from "../util/api-calls";
 
 const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, currentConfigName, setAllConfigs, setReturnedCities }: Props) => {
 
-    const mockJobs = [
-        {
-            code: 1,
-            title: "SWE",
-            description: "Software Engineer",
-        },
-        {
-            code: 2,
-            title: "SDE",
-            description: "Software Developer",
-        },
-        {
-            code: 3,
-            title: "SRE",
-            description: "Software Reliability Engineer"
-        }
-    ];
-
-    const [allOccupations, setAllOccupations] = React.useState(mockJobs);
+    const [allOccupations, setAllOccupations] = React.useState([]);
 
     const handleChange = (property: any, event: any) => {
         if (property === 'priorityAttributes') {
@@ -51,7 +33,6 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
         } else {
             // Not sure why, but items which are numbers are not being converted after being passed through
             // handleChange, so I'm doing the conversion manually for now. Will fix later on
-            console.log(event.target.value);
             const value = isNaN(event.target.value) || event.target.value === "" ?
                 event.target.value : Number(event.target.value);
             setCurrentConfig({...currentConfig, [property]: value });
@@ -67,11 +48,9 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
         getAllOccupations().then(resp => {
             setAllOccupations(resp);
         });
-        console.log(currentConfig);
     }, [])
 
     useEffect(() => {
-        console.log(currentConfig);
         setAllConfigs({ ...allConfigs, [currentConfigName as string]: currentConfig });
     }, [currentConfig])
 
@@ -154,8 +133,8 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
             componentType: "autocomplete",
             options: allOccupations,
             getOptionLabel: (option: any) => option.title,
-            value: currentConfig.preferredJobIndustry,
-            onChange: (event: any, newValue: any) => handleAutocompleteChange("preferredJobIndustry", event, newValue),
+            value: currentConfig.preferredOccupation,
+            onChange: (event: any, newValue: any) => handleAutocompleteChange("preferredOccupation", event, newValue),
             label: "Preferred Occupation"
         },
         {
@@ -240,7 +219,7 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
         { title: "Quality of Education", value: "qualityOfEducation" },
         { title: "Population", value: "population" },
         { title: "Population Density", value: "populationDensity" },
-        { title: "Preferred Job Industry", value: "preferredJobIndustry" },
+        { title: "Preferred Job Industry", value: "preferredOccupation" },
         { title: "Politics", value: "politics" },
         { title: "Climate", value: "climate" },
         { title: "Average Population Age", value: "avgPopulationAge" }
