@@ -219,7 +219,7 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
         { title: "Quality of Education", value: "qualityOfEducation" },
         { title: "Population", value: "population" },
         { title: "Population Density", value: "populationDensity" },
-        { title: "Preferred Job Industry", value: "preferredOccupation" },
+        { title: "Preferred Occupation", value: "preferredOccupation" },
         { title: "Politics", value: "politics" },
         { title: "Climate", value: "climate" },
         { title: "Average Population Age", value: "avgPopulationAge" }
