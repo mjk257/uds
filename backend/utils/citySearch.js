@@ -45,7 +45,7 @@ function getAttributeValue(city, criteriaName) {
             return city.density;
         case "climate":
             return city.zone_description; //TODO: Parse this data correctly to match input data
-        case "preferredJobIndustry":
+        case "preferredOccupation":
             return null;
         case "politics":
             return city.partisan_lean;

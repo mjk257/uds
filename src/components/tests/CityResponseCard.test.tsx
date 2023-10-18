@@ -24,7 +24,7 @@ const mockCityDetails = {
     population: 8398748,
     density: 10933,
     costOfLiving: "high",
-    preferredJobIndustry: 100000,
+    preferredOccupation: 100000,
     crimeRate: 45000,
     walkAndTransability: "high",
     partisan_lean: 25,

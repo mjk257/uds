@@ -2,7 +2,7 @@ export type CityPreferencesConfiguration = {
     population: string | number,
     populationDensity: string | number,
     costOfLiving: string | number,
-    preferredJobIndustry: string,
+    preferredOccupation: Occupation | null,
     crimeRate: number | string,
     walkAndTransability: string | number,
     politics: string,
@@ -24,7 +24,7 @@ export const defaultCityPreferencesConfiguration : CityPreferencesConfiguration 
     population: "",
     populationDensity: "",
     costOfLiving: "",
-    preferredJobIndustry: "",
+    preferredOccupation: null,
     crimeRate: '',
     walkAndTransability: "",
     politics: "",
@@ -53,6 +53,12 @@ export type CityDetails = {
     climate_zone: string,
     zone_description: string,
     partisan_lean: number //negative value is more republican, positive is more democratic
+}
+
+export type Occupation = {
+    title: string,
+    code: number,
+    description: string
 }
 
 export type CityResponse = {

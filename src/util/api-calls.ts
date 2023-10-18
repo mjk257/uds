@@ -1,5 +1,4 @@
 const searchForCities = async (body: any) => {
-    console.log(body);
     const response = await fetch('/api/search', {
         method: "POST",
         headers: {
@@ -10,6 +9,17 @@ const searchForCities = async (body: any) => {
     return await response.json();
 }
 
+const getAllOccupations = async () => {
+    const response = await fetch('/api/jobs', {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        }
+    });
+    return await response.json();
+}
+
 export {
-    searchForCities
+    searchForCities,
+    getAllOccupations
 }

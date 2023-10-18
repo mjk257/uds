@@ -36,8 +36,8 @@ describe("Testing ConfigurationList component", () => {
         expect(populationSelect).toHaveLength(2);
         const populationDensitySelect = screen.getAllByText("Population Density");
         expect(populationDensitySelect).toHaveLength(2);
-        const preferredJobIndustrySelect = screen.getAllByText("Preferred Job Industry");
-        expect(preferredJobIndustrySelect).toHaveLength(2);
+        const preferredOccupationSelect = screen.getAllByText("Preferred Occupation");
+        expect(preferredOccupationSelect).toHaveLength(2);
         const politicsSelect = screen.getAllByText("Politics");
         expect(politicsSelect).toHaveLength(2);
         const climateSelect = screen.getAllByText("Climate");
