@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
-import {CityPreferencesConfiguration, defaultCityPreferencesConfiguration} from "../types/utility-types";
+import {CityPreferencesConfiguration, defaultCityPreferencesConfiguration, Occupation} from "../types/utility-types";
 import {
+    Autocomplete, AutocompleteRenderInputParams,
     Button,
     Card,
     CardContent,
@@ -9,14 +10,32 @@ import {
     FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel,
     InputLabel,
     MenuItem, Radio, RadioGroup,
-    Select
+    Select, TextField
 } from "@mui/material";
 import { Configs } from "../types/utility-types";
-import { searchForCities } from "../util/api-calls";
-
-// Note that some of this stuff might be placeholders for later on
+import { searchForCities, getAllOccupations } from "../util/api-calls";
 
 const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, currentConfigName, setAllConfigs, setReturnedCities }: Props) => {
+
+    const mockJobs = [
+        {
+            code: 1,
+            title: "SWE",
+            description: "Software Engineer",
+        },
+        {
+            code: 2,
+            title: "SDE",
+            description: "Software Developer",
+        },
+        {
+            code: 3,
+            title: "SRE",
+            description: "Software Reliability Engineer"
+        }
+    ];
+
+    const [allOccupations, setAllOccupations] = React.useState(mockJobs);
 
     const handleChange = (property: any, event: any) => {
         if (property === 'priorityAttributes') {
@@ -32,11 +51,24 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
         } else {
             // Not sure why, but items which are numbers are not being converted after being passed through
             // handleChange, so I'm doing the conversion manually for now. Will fix later on
+            console.log(event.target.value);
             const value = isNaN(event.target.value) || event.target.value === "" ?
                 event.target.value : Number(event.target.value);
             setCurrentConfig({...currentConfig, [property]: value });
         }
     }
+
+    const handleAutocompleteChange = (property: any, event: any, newValue: any) => {
+        setCurrentConfig({...currentConfig, [property]: newValue });
+    }
+
+    useEffect(() => {
+        // Get all the occupations at the beginning
+        getAllOccupations().then(resp => {
+            setAllOccupations(resp);
+        });
+        console.log(currentConfig);
+    }, [])
 
     useEffect(() => {
         console.log(currentConfig);
@@ -53,6 +85,10 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
             setReturnedCities(resp);
         });
     }
+
+    useEffect(() => {
+        formInputs[6].options = allOccupations
+    }, [allOccupations]);
 
     const formInputs = [
         {
@@ -115,26 +151,12 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
             ]
         },
         {
-            componentType: "select",
-            inputLabel: "Preferred Job Industry",
+            componentType: "autocomplete",
+            options: allOccupations,
+            getOptionLabel: (option: any) => option.title,
             value: currentConfig.preferredJobIndustry,
-            onChange: (event: any) => handleChange("preferredJobIndustry", event),
-            label: "Preferred Job Industry",
-            menuItems: [
-                {title: "No Preference", value: ""},
-                {title: "Software Developers (Computers and IT)", value: "computers-and-it"},
-                {title: "Receptionists and Information Clerks (Office and Administrative Support)", value: "administrative-support"},
-                {title: "Marketing Managers/Sales Managers/Chief Executives (Management)", value: "management"},
-                {title: "Accountants and Auditors/Financial and Investment Analysts (Business/Financial)", value: "business-and-financial"},
-                {title: "Chemical Engineers/Aerospace Engineers (Engineering)", value: "engineering"},
-                {title: "Fashion Designers/Graphic Designers (Arts & Design)", value: "arts-and-design"},
-                {title: "Secondary School Teachers/Elementary School Teachers (Education, Training, & Library)", value: "education-training-and-library"},
-                {title: "Registered Nurses/Physicians, All Other (Healthcare)", value: "healthcare"},
-                {title: "Actors/Coaches and Scouts (Entertainment/Sports)", value: "entertainment-and-sports"},
-                {title: "Lawyers/Judges, Magistrate Judges, and Magistrates (Legal)", value: "legal"},
-                {title: "Social Workers/Counselors, All Other (Community & Social Services)", value: "community-and-social-services"},
-                {title: "All Other Industries", value: "other"}
-            ]
+            onChange: (event: any, newValue: any) => handleAutocompleteChange("preferredJobIndustry", event, newValue),
+            label: "Preferred Occupation"
         },
         {
             componentType: "select",
@@ -227,12 +249,13 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
     return  (
         <>
             <div className='preferences-form-container'>
+                {allOccupations &&
                 <Card className='preferences-form-card'>
                     <CardHeader title="What are you looking for in a city?" />
                     <Divider />
                     <CardContent className='preferences-form-content'>
                         { formInputs.map((input, index) => {
-                                return (
+                            return (
                                     <FormControl variant="standard" className='preferences-select' key={ index }>
                                         { input?.componentType === 'select' &&
                                             <>
@@ -252,6 +275,17 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
                                                     }) }
                                                 </Select>
                                                 { input?.helperText && <FormHelperText>{ input?.helperText }</FormHelperText> }
+                                            </>
+                                        }
+                                        { input?.componentType === 'autocomplete' &&
+                                            <>
+                                                <Autocomplete options={ input?.options as Occupation[] }
+                                                              autoComplete
+                                                              getOptionLabel={ input?.getOptionLabel }
+                                                              renderInput={ (params) => <TextField { ...params } label={ input?.label } variant='standard' /> }
+                                                              value={ input?.value }
+                                                              onChange={ input?.onChange }
+                                                              />
                                             </>
                                         }
                                         { input?.componentType === 'radio' &&
@@ -279,10 +313,10 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
                                             <FormControlLabel control={
                                                     <Checkbox key={ index }
                                                               //@ts-ignore
-                                                              disabled={ currentConfig[checkbox.value] === '' }
+                                                              disabled={ !currentConfig[checkbox.value] }
                                                               checked={ currentConfig.priorityAttributes.includes(checkbox.value) }
                                                               onChange={ (event) => handleChange("priorityAttributes", event) }
-                                                              name={ checkbox.title}
+                                                              name={ checkbox.title }
                                                               value={ checkbox.value } />
                                                 }
                                                 label={ checkbox.title } />
@@ -303,7 +337,7 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
                             </Button>
                         </div>
                     </CardContent>
-                </Card>
+                </Card>}
             </div>
         </>
     )

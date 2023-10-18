@@ -7,6 +7,7 @@ import CityPreferencesForm from "./components/CityPreferencesForm";
 
 import "./styles/index.scss";
 import Header from "./components/Header";
+import Playground from "./AutoCompleteTest";
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -14,6 +15,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
       <Header />
+      <Playground />
       <CityPreferencesForm />
   </React.StrictMode>
 );
