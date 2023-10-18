@@ -17,7 +17,7 @@ router.get('/jobs', (req, res) => {
     res.json(jobs);
   })
 })
-  
+
 // Api route, get city info given id
 router.get('/cities/:id', (req, res) => {
     const {id} = req.params;

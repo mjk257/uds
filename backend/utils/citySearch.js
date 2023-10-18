@@ -2,11 +2,16 @@ const City = require('../models/City');
 const axios = require('axios');
 require('dotenv').config();
 
+const api_header = {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer " + process.env.COS_API_KEY
+};
+
 // Takes in cities and searchCriteria and returns ranked list of top 10 cities
 function citySearch(cities, searchCriteria) {
     let topCities = [];
     const numResults = 10; // Number of cities to return
-    cityScores = getCityScores(cities, searchCriteria); // Get city scores
+    const cityScores = getCityScores(cities, searchCriteria); // Get city scores
 
     // Combine cities and cityScores into an array of tuples
     const combinedData = cities.map((city, index) => [city, cityScores[index]]);
@@ -59,7 +64,7 @@ function getNormalizationData(cities, searchCriteria) {
         let max = Number.MIN_VALUE;
 
         for (let i = 0; i < cities.length; i++) {
-            attrributeValue = getAttributeValue(cities[i], criteriaName);
+            let attrributeValue = getAttributeValue(cities[i], criteriaName);
             if (typeof(attrributeValue) != 'number') {
                 min = null;
                 max = null;
@@ -155,36 +160,71 @@ function getCityScores(cities, searchCriteria) {
     return cityScores;
 }
 
-function getJobCounts(cities, job_code){
-    const api_header = {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + proccess.env.COS_API_KEY
-    };
+async function getJobCounts(cities, job_code){
+
     const params = {
         "source": "NLx",
         "showFilters": "false"
     };
 
     const return_data = [];
-    cities.forEach(async (city) => {
-        const api_url = "https://api.careeronestop.org/v1/jobsearch/" + proccess.env.COS_USER_ID + "/" + job_code + "/" + formatCity(city) + "/25/0/0/0/1/60";
+    for (const city of cities) {
+        const api_url = "https://api.careeronestop.org/v1/jobsearch/" + process.env.COS_USER_ID + "/" + job_code + "/" + formatCity(city) + "/25/0/0/0/1/60";
         const res = await axios({
             method: 'get',
             url: api_url,
             params: params,
             headers: api_header
         });
-        const data = res.json();
-        return_data.append({"job_count": data.pop("Jobcount"), "city": city});
-    });
+        return_data.push({"job_count": res.data.Jobcount, "city": city});
+
+    };
         
     return return_data;
 }
 
+async function getSalaries(cities, job_code){
+    // Partition the array into arrays of 5 for API calls
+    const cityGroups = cities.reduce((resultArray, item, index) => { 
+        const chunkIndex = Math.floor(index/5)
+      
+        if(!resultArray[chunkIndex]) {
+          resultArray[chunkIndex] = []
+        }
+      
+        resultArray[chunkIndex].push(item)
+      
+        return resultArray
+      }, []);
+
+    const return_data = [];
+    for (const cityGroup of cityGroups){
+        const params = {
+            "keyword": job_code,
+            "location": cityGroup.join(" | "),
+            "sortColumns": 0,
+            "sortOrder": 0,
+            "sortBy": 0,
+            "enableMetaData": "true"
+        };
+        const api_url = "https://api.careeronestop.org/v1/comparesalaries/" + process.env.COS_USER_ID + "/wageocc/";
+        const res = await axios({
+            method: 'get',
+            url: api_url,
+            params: params,
+            headers: api_header
+        });
+        for (const city of res.data.LocationsList){
+            return_data.push({"hourly": city.OccupationList[0].WageInfo[0].Median, "city": city.InputLocation});
+        };
+    }
+    return return_data;    
+}
+
 function formatCity(city){
-    let new_city = city.replace(" ", "%20");
-    new_city = city.replace(",", "%2C");
-    return new_city;
+    let new_city1 = city.replace(" ", "%20");
+    let new_city2 = new_city1.replace(",", "%2C");
+    return new_city2;
 }
 
 
