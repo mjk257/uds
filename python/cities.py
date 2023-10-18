@@ -47,6 +47,7 @@ df = df.drop(['name'], axis=1)
 df = df.rename({0: "name", 1: "state"}, axis=1)
 df['state'] = df['state'].apply(abbreviate)
 df['name'] = df['name'].apply(clean_name)
+df['density'] = df['density'].astype(float)
 df = df.sort_values('name')
 df.reset_index(inplace = True, drop = True)
 
@@ -60,8 +61,8 @@ for i, row in df.iterrows():
     coordinates = requests.get(api_url)
     while coordinates.status_code != 200:
         coordinates = requests.get(api_url)
-    df.at[i, 'latitude'] = coordinates.json()[0]['lat']
-    df.at[i, 'longitude'] = coordinates.json()[0]['lon']
+    df.at[i, 'latitude'] = float(coordinates.json()[0]['lat'])
+    df.at[i, 'longitude'] = float(coordinates.json()[0]['lon'])
 
 # add to database
 for row in df.to_dict("records"):

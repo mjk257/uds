@@ -1,12 +1,12 @@
 export type CityPreferencesConfiguration = {
-    population: string,
-    populationDensity: string,
-    costOfLiving: string,
-    numberOfJobsAvailable: string,
+    population: string | number,
+    populationDensity: string | number,
+    costOfLiving: string | number,
+    preferredJobIndustry: string,
     crimeRate: number | string,
-    walkAndTransability: string,
+    walkAndTransability: string | number,
     politics: string,
-    qualityOfEducation: string,
+    qualityOfEducation: string | number,
     climate: string,
     avgPopulationAge: number | string
     priorityAttributes: string[]
@@ -24,7 +24,7 @@ export const defaultCityPreferencesConfiguration : CityPreferencesConfiguration 
     population: "",
     populationDensity: "",
     costOfLiving: "",
-    numberOfJobsAvailable: "",
+    preferredJobIndustry: "",
     crimeRate: '',
     walkAndTransability: "",
     politics: "",
@@ -41,4 +41,21 @@ export const defaultCityPreferencesConfigurationSet : Configs = {
     "config4": defaultCityPreferencesConfiguration,
     "config5": defaultCityPreferencesConfiguration
 };
+
+export type CityDetails = {
+    density: number,
+    population: number,
+    name: string,
+    state: string,
+    longitude: number,
+    latitude: number,
+    rpp: number,
+    climate_zone: string,
+    zone_description: string,
+    partisan_lean: number //negative value is more republican, positive is more democratic
+}
+
+export type CityResponse = {
+    [key: string]: CityDetails
+}
 

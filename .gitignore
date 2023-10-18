@@ -3,6 +3,7 @@
 
 # dependencies
 /node_modules
+/build
 /.pnp
 /__pycache__
 .pnp.js
@@ -11,7 +12,7 @@
 /coverage
 
 # production
-/build
+/backend/build
 /backend/build
 
 # misc
