@@ -23,18 +23,46 @@ const CityResponseCard = ({ cityDetails, rank } : Props) => {
         }
     }
 
+    const populationToString = (population: number) => {
+        return population + " people";
+    }
+
+    const populationDensityToString = (density: number) => {
+        return density + " people per square mile";
+    }
+
+    const crimeRateToString = (crimeRate: number) => {
+        return crimeRate + " crimes per 100,000 people";
+    }
+
+    const politicsToString = (partisan_lean: number) => {
+        const roundedPartisanLean = (100 - Math.abs(partisan_lean)).toFixed(2);
+        if (partisan_lean === 0) {
+            return "Moderate, there is no major partisan lean in this area.";
+        }
+        else if (partisan_lean > 0) {
+            return `${roundedPartisanLean}% more democratic than the average city in the U.S.A`;
+        }
+        else {
+            return `${roundedPartisanLean}% more republican than the average city in the U.S.A`;
+        }
+    }
+
+    const averagePopulationAgeToString = (avgPopulationAge: number) => {
+        return avgPopulationAge + " years old";
+    }
+
     const accordionDetails = [
-        { title: 'Population', value: cityDetails?.population ? cityDetails?.population : "N/A" },
-        { title: 'Population Density', value: cityDetails?.density ? cityDetails?.density : "N/A" },
+        { title: 'Population', value: cityDetails?.population ? populationToString(cityDetails.population) : "N/A" },
+        { title: 'Population Density', value: cityDetails?.density ? populationDensityToString(cityDetails.density) : "N/A" },
         { title: 'Cost of Living', value: cityDetails?.rpp ? costOfLivingToString(cityDetails?.rpp) : "N/A" },
         { title: 'Number of Jobs', value: cityDetails?.preferredOccupation ? cityDetails?.preferredOccupation : "N/A" },
-        { title: 'Crime Rate', value: cityDetails?.crimeRate ? cityDetails?.crimeRate : "N/A" },
-        { title: 'Walkability/Transability', value: cityDetails?.walkAndTransability ? cityDetails?.walkAndTransability : "N/A" },
-        { title: 'Politics', value: (cityDetails?.partisan_lean && cityDetails?.partisan_lean > 0)  ?
-                "Democrat" : (cityDetails?.partisan_lean && cityDetails?.partisan_lean < 0) ? "Republican" : "N/A" },
+        { title: 'Crime Rate', value: cityDetails?.crimeRate ? crimeRateToString(cityDetails.crimeRate) : "N/A" },
+        { title: 'Walkability/Transability', value: cityDetails?.walkAndTransability ? cityDetails.walkAndTransability : "N/A" },
+        { title: 'Politics', value: cityDetails?.partisan_lean ? politicsToString(cityDetails.partisan_lean) : "N/A" },
         { title: 'Quality of Education', value: cityDetails?.qualityOfEducation ? cityDetails?.qualityOfEducation : "N/A" },
         { title: 'Climate', value: cityDetails?.zone_description ? cityDetails?.zone_description : "N/A" },
-        { title: 'Average Population Age', value: cityDetails?.avgPopulationAge ? cityDetails?.avgPopulationAge : "N/A" },
+        { title: 'Average Population Age', value: cityDetails?.avgPopulationAge ? averagePopulationAgeToString(cityDetails.avgPopulationAge) : "N/A" }
     ];
 
     return (
