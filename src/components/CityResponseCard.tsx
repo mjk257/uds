@@ -7,20 +7,26 @@ import {
 } from "@mui/material";
 import { ExpandMore } from "@mui/icons-material";
 
-/*
-The following Props will be needed in the future:
-1.) cityName => String
-2.) citySummary => String
-3.) cityDetails => Object (preferably of type CityDetails, which will be figured out when we set up the data pipeline
- */
-
 // This will likely take in props later on, but the base styling will be set up
 const CityResponseCard = ({ cityDetails, rank } : Props) => {
+
+    const costOfLivingToString = (rpp: number) => {
+        const roundedRpp = Math.abs(rpp - 100).toFixed(2);
+        if (rpp === 100) {
+            return "Equal to the average cost of living in the U.S.A";
+        }
+        else if (rpp > 100) {
+            return `${roundedRpp}% higher than the average cost of living in the U.S.A`;
+        }
+        else {
+            return `${roundedRpp}% lower than the average cost of living in the U.S.A`;
+        }
+    }
 
     const accordionDetails = [
         { title: 'Population', value: cityDetails?.population ? cityDetails?.population : "N/A" },
         { title: 'Population Density', value: cityDetails?.density ? cityDetails?.density : "N/A" },
-        { title: 'Cost of Living', value: cityDetails?.costOfLiving ? cityDetails?.costOfLiving : "N/A" },
+        { title: 'Cost of Living', value: cityDetails?.rpp ? costOfLivingToString(cityDetails?.rpp) : "N/A" },
         { title: 'Number of Jobs', value: cityDetails?.preferredOccupation ? cityDetails?.preferredOccupation : "N/A" },
         { title: 'Crime Rate', value: cityDetails?.crimeRate ? cityDetails?.crimeRate : "N/A" },
         { title: 'Walkability/Transability', value: cityDetails?.walkAndTransability ? cityDetails?.walkAndTransability : "N/A" },

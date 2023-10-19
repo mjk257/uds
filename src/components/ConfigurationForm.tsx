@@ -19,22 +19,33 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
 
     const [allOccupations, setAllOccupations] = React.useState([]);
 
+    const isOverPriorityAttributesLimit = () => currentConfig?.priorityAttributes.length > 3;
+
+    const isConfigEmpty = () => {
+        console.log(currentConfig);
+        const filteredConfig = Object.values(currentConfig).filter((value: any) => value !== "" && value !== null);
+        // Priority attributes can be empty, so submission should be enabled so long as at least 1 attribute is filled
+        return filteredConfig.length <= 1;
+    }
+
     const handleChange = (property: any, event: any) => {
+        let newPriorityAttributes = currentConfig.priorityAttributes;
+        const attribute = event.target.value;
+        const value = isNaN(event.target.value) || event.target.value === "" ?
+            event.target.value : Number(event.target.value);
+
         if (property === 'priorityAttributes') {
-            //@ts-ignore
-            let newPriorityAttributes = currentConfig[property];
-            const attribute = event.target.value;
             if (newPriorityAttributes.includes(attribute)) {
                 newPriorityAttributes = newPriorityAttributes.filter((item: any) => item !== attribute);
             } else {
                 newPriorityAttributes = newPriorityAttributes.concat(attribute);
             }
             setCurrentConfig({...currentConfig, [property]: newPriorityAttributes});
+        } else if (!value && currentConfig.priorityAttributes.includes(property)) {
+            // Removing an attribute from prioritization if it is given no preference
+            newPriorityAttributes = newPriorityAttributes.filter((item: any) => item !== property);
+            setCurrentConfig({...currentConfig, priorityAttributes: newPriorityAttributes, [property]: value});
         } else {
-            // Not sure why, but items which are numbers are not being converted after being passed through
-            // handleChange, so I'm doing the conversion manually for now. Will fix later on
-            const value = isNaN(event.target.value) || event.target.value === "" ?
-                event.target.value : Number(event.target.value);
             setCurrentConfig({...currentConfig, [property]: value });
         }
     }
@@ -75,7 +86,7 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
             groupLabel: "Low Cost of Living?",
             groupValue: currentConfig.costOfLiving,
             labels: { na: "No Preference", yes: "Matters" },
-            values: { na: "", yes: 1000 },
+            values: { na: "", yes: 0 },
             onChange: (event: any) => handleChange("costOfLiving", event)
         },
         {
@@ -283,8 +294,8 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
                         <br/>
                         <Divider />
                         <FormControl variant='standard'
-                                     error={ currentConfig.priorityAttributes.length < 3 || currentConfig.priorityAttributes.length > 5 }>
-                            <FormLabel className='preferences-form-priority-attributes-label'>Select the 3 - 5 Attributes Which you Value Most!</FormLabel>
+                                     error={ isOverPriorityAttributesLimit() }>
+                            <FormLabel className='preferences-form-priority-attributes-label'>Select Up to 3 Attributes Which You Value the Most!</FormLabel>
                             <FormGroup>
                                 { priorityAttributeCheckboxes.map((checkbox, index) => {
                                     return (
@@ -292,7 +303,7 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
                                             <FormControlLabel control={
                                                     <Checkbox key={ index }
                                                               //@ts-ignore
-                                                              disabled={ !currentConfig[checkbox.value] }
+                                                              disabled={ currentConfig[checkbox.value] === null || currentConfig[checkbox.value] === "" }
                                                               checked={ currentConfig.priorityAttributes.includes(checkbox.value) }
                                                               onChange={ (event) => handleChange("priorityAttributes", event) }
                                                               name={ checkbox.title }
@@ -303,15 +314,15 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
                                     )
                                 })}
                             </FormGroup>
-                            {(currentConfig.priorityAttributes.length < 3 || currentConfig.priorityAttributes.length > 5) &&
-                                <FormHelperText>Please select between 3 - 5 values!</FormHelperText>}
+                            {isOverPriorityAttributesLimit() &&
+                                <FormHelperText>Please only select up to 3 attributes!</FormHelperText>}
                         </FormControl>
                         <div className='preferences-form-sibling-set'>
                             <Button color='error' variant="outlined" onClick={ clearForm }>
                                 Clear
                             </Button>
                             <Button color='primary' variant="outlined" onClick={ submitForm }
-                                    disabled={ currentConfig.priorityAttributes.length < 3 || currentConfig.priorityAttributes.length > 5 }>
+                                    disabled={ isOverPriorityAttributesLimit() || isConfigEmpty() }>
                                 Submit
                             </Button>
                         </div>
