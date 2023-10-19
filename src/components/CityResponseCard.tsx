@@ -11,15 +11,14 @@ import { ExpandMore } from "@mui/icons-material";
 const CityResponseCard = ({ cityDetails, rank } : Props) => {
 
     const costOfLivingToString = (rpp: number) => {
+        const roundedRpp = Math.abs(rpp - 100).toFixed(2);
         if (rpp === 100) {
             return "Equal to the average cost of living in the U.S.A";
         }
         else if (rpp > 100) {
-            const roundedRpp = (rpp - 100).toFixed(2);
             return `${roundedRpp}% higher than the average cost of living in the U.S.A`;
         }
         else {
-            const roundedRpp = (100 - rpp).toFixed(2);
             return `${roundedRpp}% lower than the average cost of living in the U.S.A`;
         }
     }
