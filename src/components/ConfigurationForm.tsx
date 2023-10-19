@@ -75,7 +75,7 @@ const ConfigurationForm = ({ currentConfig, setCurrentConfig, allConfigs, curren
             groupLabel: "Low Cost of Living?",
             groupValue: currentConfig.costOfLiving,
             labels: { na: "No Preference", yes: "Matters" },
-            values: { na: "", yes: 1000 },
+            values: { na: "", yes: 0 },
             onChange: (event: any) => handleChange("costOfLiving", event)
         },
         {
