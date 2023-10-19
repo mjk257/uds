@@ -15,10 +15,12 @@ const CityResponseCard = ({ cityDetails, rank } : Props) => {
             return "Equal to the average cost of living in the U.S.A";
         }
         else if (rpp > 100) {
-            return `${rpp - 100}% higher than the average cost of living in the U.S.A`;
+            const roundedRpp = (rpp - 100).toFixed(2);
+            return `${roundedRpp}% higher than the average cost of living in the U.S.A`;
         }
         else {
-            return `${100 - rpp}% lower than the average cost of living in the U.S.A`;
+            const roundedRpp = (100 - rpp).toFixed(2);
+            return `${roundedRpp}% lower than the average cost of living in the U.S.A`;
         }
     }
 
