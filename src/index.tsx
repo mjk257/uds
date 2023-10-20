@@ -7,7 +7,6 @@ import CityPreferencesForm from "./components/CityPreferencesForm";
 
 import "./styles/index.scss";
 import Header from "./components/Header";
-import Map from "./components/Map";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -16,7 +15,6 @@ root.render(
   <React.StrictMode>
     <Header />
     <CityPreferencesForm />
-    <Map cities={[]} />
   </React.StrictMode>
 );
 

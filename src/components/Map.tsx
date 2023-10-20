@@ -1,96 +1,89 @@
-import React, { Component } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import axios from "axios";
-import * as d3 from "d3";
+import React, { useEffect } from "react";
+import mapboxgl from "mapbox-gl";
+import "../styles/index.scss"; // Import the CSS file
 
-// Define the type for the props that the Map component will receive.
+interface City {
+  name: string;
+  state: string;
+  population: number;
+  latitude: number;
+  longitude: number;
+}
+
 interface MapProps {
-  cities: Array<{
-    name: string;
-    state: string;
-    population: number;
-    latitude: number;
-    longitude: number;
-  }>;
+  cities: City[];
+  onMarkerClick: (cityName: string) => void;
 }
 
-interface MapState {
-  projection: any;
-}
-
-class Map extends Component<MapProps> {
-  state: MapState = {
-    projection: null,
+const Map: React.FC<MapProps> = ({ cities, onMarkerClick }) => {
+  const US_BOUNDS = {
+    west: -125.0, // The westernmost point of the U.S.
+    south: 24.396308, // The southernmost point of the U.S.
+    east: -66.93457, // The easternmost point of the U.S.
+    north: 49.345786, // The northernmost point of the U.S.
   };
 
-  async getCities() {
-    try {
-      const response = await axios.get("/api/cities/");
-      if (response.status === 200) {
-        const cities = response.data;
-        this.renderMarkers(cities);
-      }
-    } catch (error) {
-      console.error("API Error:", error);
-    }
-  }
+  useEffect(() => {
+    mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN as string;
 
-  svg: any;
+    const map = new mapboxgl.Map({
+      container: "map",
+      style: "mapbox://styles/fwm25/clnxrvfh9007y01qshgob0qej",
+      center: [-98.583333, 39.833333], // Center the map on the US
+      zoom: 3, // Adjust the zoom level as needed
+      maxBounds: [
+        [US_BOUNDS.west, US_BOUNDS.south], // Southwestern bound
+        [US_BOUNDS.east, US_BOUNDS.north], // Northeastern bound
+      ],
+    });
 
-  componentDidMount() {
-    this.getCities();
-    this.initializeMap();
-    this.renderMarkers();
-  }
+    // Add markers for each city
+    cities.forEach((city) => {
+      const marker = new mapboxgl.Marker()
+        .setLngLat([city.longitude, city.latitude])
+        .setPopup(
+          new mapboxgl.Popup().setHTML(
+            `<h3>${city.name}, ${city.state}</h3><p>Population: ${city.population}</p>`
+          )
+        )
+        .addTo(map);
 
-  initializeMap() {
-    // Define the dimensions of the SVG container
-    const width = 800;
-    const height = 600;
+      // Set the city's name as the marker's unique identifier
+      marker.getElement().setAttribute("data-city-name", city.name);
 
-    // Create an SVG element for the map
-    this.svg = d3
-      .select("#map-container")
-      .append("svg")
-      .attr("width", width)
-      .attr("height", height);
+      // Create a label for the marker
+      const label = document.createElement("div") as HTMLElement;
+      label.className = "marker-label";
+      label.innerHTML = city.name;
 
-    // Create a projection function to convert from latitude and longitude to pixel coordinates
-    const projection = d3
-      .geoMercator()
-      .center([0, 0])
-      .scale(100)
-      .translate([400, 300]);
+      // Add the label to the marker
+      marker.getElement().appendChild(label);
 
-    this.setState({ projection });
-  }
+      // Add a click event listener to the marker
+      marker.getElement().addEventListener("click", (e) => {
+        const cityName = marker.getElement().getAttribute("data-city-name");
+        if (cityName) {
+          onMarkerClick(cityName); // Call the function to open the response card
+        }
+      });
+    });
 
-  renderMarkers(cityData: any = []) {
-    const { projection } = this.state;
+    // Clean up the map on unmount
+    return () => map.remove();
+  }, [
+    US_BOUNDS.east,
+    US_BOUNDS.north,
+    US_BOUNDS.south,
+    US_BOUNDS.west,
+    cities,
+    onMarkerClick,
+  ]);
 
-    // Create circles as markers for each city
-    this.svg
-      .selectAll("circle")
-      .data(cityData)
-      .enter()
-      .append("circle")
-      .attr("cx", (d: any) => projection([d.longitude, d.latitude])?.[0])
-      .attr("cy", (d: any) => projection([d.longitude, d.latitude])?.[1])
-      .attr("r", 5) // Adjust the marker radius as needed
-      .style("fill", "blue"); // Adjust marker style // Adjust marker style
-
-    // Append tooltips to the markers if desired
-    this.svg
-      .selectAll("circle")
-      .append("title")
-      .text((d: any) => d.name);
-  }
-
-  render() {
-    return (
-      <div id="map-container" style={{ height: "400px", width: "100%" }}></div>
-    );
-  }
-}
+  return (
+    <div id="map-container">
+      <div id="map" />
+    </div>
+  );
+};
 
 export default Map;
