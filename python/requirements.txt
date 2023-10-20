@@ -1,4 +1,6 @@
 pandas
 requests
 pymongo
-dotenv
+python-dotenv
+openpyxl
+openai
