@@ -17,6 +17,13 @@ export const CityPreferencesForm = () => {
   const [currentConfigName, setCurrentConfigName] = useState("config1");
   const [returnedCities, setReturnedCities] = useState<CityResponse>({});
 
+  const handleMarkerClick = (cityName: string) => {
+    const cityResponseCard = document.getElementById(cityName);
+    if (cityResponseCard) {
+      cityResponseCard.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <div>
       <Container maxWidth="xl">
@@ -40,7 +47,12 @@ export const CityPreferencesForm = () => {
         </Card>
       </Container>
       <Container maxWidth="xl">
-        {returnedCities && <Map cities={Object.values(returnedCities)} />}
+        {returnedCities && (
+          <Map
+            cities={Object.values(returnedCities)}
+            onMarkerClick={handleMarkerClick}
+          />
+        )}
       </Container>
       {/* Note: In the future, the data should be returned as an array, already sorted by rank, since JSON's aren't ordered */}
       <Container maxWidth="xl">
