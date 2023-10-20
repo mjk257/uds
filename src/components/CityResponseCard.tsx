@@ -23,18 +23,76 @@ const CityResponseCard = ({ cityDetails, rank } : Props) => {
         }
     }
 
+    const populationToString = (population: number) => {
+        return population + " people";
+    }
+
+    const populationDensityToString = (density: number) => {
+        return density + " people per square mile";
+    }
+
+    const crimeRateToString = (crimeRate: number) => {
+        return crimeRate + " crimes per 100,000 people";
+    }
+
+    const qualityOfEducationToString = (qualityOfEducation: number) => {
+        const roundedQOE = (100 - Math.abs(qualityOfEducation)).toFixed(2);
+        if (qualityOfEducation === 0) {
+            return "The quality of education in this city is equal to the national average.";
+        }
+        else if (qualityOfEducation > 0) {
+            return `${qualityOfEducation}% higher quality of education than other cities in the U.S.A`;
+        }
+        else {
+            return `${qualityOfEducation}% lower quality of education than other cities in the U.S.A`;
+        }
+    }
+
+    const walkabilityTransabilityToString = (walkAndTransability: number) => {
+        const roundedWAT = (100 - Math.abs(walkAndTransability)).toFixed(2);
+        if (walkAndTransability === 0) {
+            return "The walkability/transability in this city is equal to the national average.";
+        }
+        else if (walkAndTransability > 0) {
+            return `${walkAndTransability}% higher walkability/transability than other cities in the U.S.A`;
+        }
+        else {
+            return `${walkAndTransability}% lowerS walkability/transability than other cities in the U.S.A`;
+        }
+    }
+
+    const politicsToString = (partisan_lean: number) => {
+        const roundedPartisanLean = (100 - Math.abs(partisan_lean)).toFixed(2);
+        if (partisan_lean === 0) {
+            return "Moderate, there is no major partisan lean in this area.";
+        }
+        else if (partisan_lean > 0) {
+            return `${roundedPartisanLean}% more democratic than the average city in the U.S.A`;
+        }
+        else {
+            return `${roundedPartisanLean}% more republican than the average city in the U.S.A`;
+        }
+    }
+
+    const numberOfJobsToString = (numberOfJobs: number) => {
+        return numberOfJobs + " jobs";
+    }
+
+    const averagePopulationAgeToString = (avgPopulationAge: number) => {
+        return avgPopulationAge + " years old";
+    }
+
     const accordionDetails = [
-        { title: 'Population', value: cityDetails?.population ? cityDetails?.population : "N/A" },
-        { title: 'Population Density', value: cityDetails?.density ? cityDetails?.density : "N/A" },
+        { title: 'Population', value: cityDetails?.population ? populationToString(cityDetails.population) : "N/A" },
+        { title: 'Population Density', value: cityDetails?.density ? populationDensityToString(cityDetails.density) : "N/A" },
         { title: 'Cost of Living', value: cityDetails?.rpp ? costOfLivingToString(cityDetails?.rpp) : "N/A" },
-        { title: 'Number of Jobs', value: cityDetails?.preferredOccupation ? cityDetails?.preferredOccupation : "N/A" },
-        { title: 'Crime Rate', value: cityDetails?.crimeRate ? cityDetails?.crimeRate : "N/A" },
-        { title: 'Walkability/Transability', value: cityDetails?.walkAndTransability ? cityDetails?.walkAndTransability : "N/A" },
-        { title: 'Politics', value: (cityDetails?.partisan_lean && cityDetails?.partisan_lean > 0)  ?
-                "Democrat" : (cityDetails?.partisan_lean && cityDetails?.partisan_lean < 0) ? "Republican" : "N/A" },
-        { title: 'Quality of Education', value: cityDetails?.qualityOfEducation ? cityDetails?.qualityOfEducation : "N/A" },
+        { title: 'Number of Jobs', value: cityDetails?.preferredOccupation ? numberOfJobsToString(cityDetails.preferredOccupation) : "N/A" },
+        { title: 'Crime Rate', value: cityDetails?.crimeRate ? crimeRateToString(cityDetails.crimeRate) : "N/A" },
+        { title: 'Walkability/Transability', value: cityDetails?.walkAndTransability ? walkabilityTransabilityToString(cityDetails.walkAndTransability) : "N/A" },
+        { title: 'Politics', value: cityDetails?.partisan_lean ? politicsToString(cityDetails.partisan_lean) : "N/A" },
+        { title: 'Quality of Education', value: cityDetails?.qualityOfEducation ? qualityOfEducationToString(cityDetails.qualityOfEducation) : "N/A" },
         { title: 'Climate', value: cityDetails?.zone_description ? cityDetails?.zone_description : "N/A" },
-        { title: 'Average Population Age', value: cityDetails?.avgPopulationAge ? cityDetails?.avgPopulationAge : "N/A" },
+        { title: 'Average Population Age', value: cityDetails?.avgPopulationAge ? averagePopulationAgeToString(cityDetails.avgPopulationAge) : "N/A" }
     ];
 
     return (
@@ -51,8 +109,8 @@ const CityResponseCard = ({ cityDetails, rank } : Props) => {
                     <AccordionDetails>
                         { accordionDetails.map((item, idx) => {
                             return (
-                                <Typography key={ idx }>
-                                    { `${item.title}: ${item.value}` }
+                                <Typography key={ idx } className='city-response-text'>
+                                    <span className='title'>{ `${item.title}: ` }</span> { item.value }
                                 </Typography>
                             )
                         })}
