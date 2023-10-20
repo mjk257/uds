@@ -7,7 +7,7 @@ const CityPreferencesForm = () => {
             <AppBar position="static" className='header-bar'>
                 <Toolbar>
                     <Typography variant='h4' component='div' className='header-bar-text' align='left'>
-                        City Finder Application for Young Professionals
+                        UDS: Urban Discovery System
                     </Typography>
                 </Toolbar>
             </AppBar>
