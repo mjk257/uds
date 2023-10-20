@@ -24,7 +24,7 @@ const Map: React.FC<MapProps> = ({ cities, onMarkerClick }) => {
   };
 
   useEffect(() => {
-    mapboxgl.accessToken = process.env.MAPBOX_ACCESS_TOKEN as string;
+    mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN as string;
 
     const map = new mapboxgl.Map({
       container: "map",
