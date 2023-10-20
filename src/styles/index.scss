@@ -57,6 +57,12 @@
   border: 1px solid;
   .city-response-content {
     border-radius: 10em;
+    .city-response-text {
+      margin-top: 5px;
+      .title {
+        font-weight: bold;
+      }
+    }
   }
   .city-response-details {
     margin-top: 20px;
