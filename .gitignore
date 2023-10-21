@@ -3,9 +3,7 @@
 
 # dependencies
 /node_modules
-/build
 /.pnp
-/__pycache__
 .pnp.js
 
 # testing
@@ -14,6 +12,7 @@
 # production
 /backend/build
 /backend/build
+/build
 
 # misc
 .DS_Store
@@ -21,6 +20,7 @@
 .env.development.local
 .env.test.local
 .env.production.local
+/python/__pycache__
 
 npm-debug.log*
 yarn-debug.log*

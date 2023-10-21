@@ -47,7 +47,7 @@ df = df.drop(['name'], axis=1)
 df = df.rename({0: "name", 1: "state"}, axis=1)
 df['state'] = df['state'].apply(abbreviate)
 df['name'] = df['name'].apply(clean_name)
-df['density'] = df['density'].astype(float)
+df['density'] = df['density'].astype(float).astype(int)
 df = df.sort_values('name')
 df.reset_index(inplace = True, drop = True)
 
