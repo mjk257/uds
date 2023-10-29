@@ -41,12 +41,55 @@ const CityPreferencesForm = () => {
             apiLink: "https://www.careeronestop.org/Developers/WebAPI/technical-information.aspx"
         }
     ]
+    const helpTerms = [
+        {
+            term: "RPP",
+            description: "Regional Price Parity (RPP) is a measure of the differences in the price levels of goods and services across states and metropolitan areas for a given year." +
+                " RPPs are expressed as a percentage of the overall national price level for each year."
+        }
+    ]
+
+    const AboutUs = () => {
+        return (
+            <div>
+                <Typography variant="body1" gutterBottom>
+                    <strong>Project Aim:</strong>{' '}
+                    <br/>
+                    After graduating college, many people choose to either move back to their hometown
+                    or stay wherever they completed schooling. However, with hundreds of unique cities
+                    across the United States alone, there are an overwhelming number of options for those
+                    who are just starting their careers and those who are contemplating a change of location
+                    to choose from. A lot of thought can go into moving to another city, and properties such as
+                    cost of living, climate, work opportunities, and many more can be incredibly important when
+                    it comes to making this decision. The team created this application with the intent of helping
+                    young professionals and those considering a lifestyle change to find the city that best fits
+                    their needs.
+                </Typography>
+                <Typography variant="body1" gutterBottom>
+                    <strong>About the Developers and the Project:</strong>
+                    <br/>
+                    This project was created by a team of eight students for CSDS 395: Senior Project
+                    at Case Western Reserve University. Their names are listed below:
+                    <ol>
+                        <li>Peter Schlueter</li>
+                        <li>Martin Kovac</li>
+                        <li>Tyler Avery</li>
+                        <li>Vikranth Mallikarjun</li>
+                        <li>Thomas Bornhorst</li>
+                        <li>Fatih Ahmet Gurbuz</li>
+                        <li>Ziyad Sbeih</li>
+                        <li>Francis Mungai</li>
+                    </ol>
+                </Typography>
+            </div>
+        )
+    }
 
     const Credits = () => {
         return (
             <div>
-                <Typography variant="h6" gutterBottom>
-                    APIs Used:
+                <Typography variant="body1" gutterBottom>
+                    <strong>APIs Used:</strong>
                 </Typography>
                 <ol>
                     {apiCredits.map((api) => {
@@ -66,12 +109,34 @@ const CityPreferencesForm = () => {
         );
     }
 
+    const Help = () => {
+        return (
+            <div>
+                <Typography variant="body1" gutterBottom>
+                    <strong>Measurements and their Meanings:</strong>
+                </Typography>
+                <ol>
+                    {helpTerms.map((term) => {
+                        return (
+                            <li>
+                                <Typography>
+                                    <strong>{term.term}:</strong>{' '}
+                                    {term.description}
+                                </Typography>
+                            </li>
+                        )
+                    })}
+                </ol>
+            </div>
+        )
+    }
+
     const navItems = [
         {
             buttonTitle: 'About Us',
             popupProps: {
                 title: 'About Us',
-                content: "Lorem Ipsum",
+                content: <AboutUs />,
                 popupOpen: aboutPopupOpen,
                 setPopupOpen: setAboutPopupOpen
             }
@@ -80,7 +145,7 @@ const CityPreferencesForm = () => {
             buttonTitle: 'Help',
             popupProps: {
                 title: 'Help',
-                content: "Lorem Ipsum Dolem Dolem Dolem Dolem Dolem Dolem Dolem",
+                content: <Help />,
                 popupOpen: helpPopupOpen,
                 setPopupOpen: setHelpPopupOpen
             }
