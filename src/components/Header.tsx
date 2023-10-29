@@ -71,7 +71,7 @@ const CityPreferencesForm = () => {
                     This project was created by a team of eight students for CSDS 395: Senior Project
                     at Case Western Reserve University. Their names are listed below:
                     <ol>
-                        <li>Peter Schlueter</li>
+                        <li>Peter Schlueter (<a href='https://www.linkedin.com/in/peter-schlueter-32b759165/'>LinkedIn</a>)</li>
                         <li>Martin Kovac</li>
                         <li>Tyler Avery</li>
                         <li>Vikranth Mallikarjun</li>
