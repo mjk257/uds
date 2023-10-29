@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import Popup from "./Popup";
 
-const CityPreferencesForm = () => {
+const Header = () => {
 
     const headerSx = { display: { xs: 'none', sm: 'block' } };
     const [aboutPopupOpen, setAboutPopupOpen] = React.useState(false);
@@ -186,4 +186,4 @@ const CityPreferencesForm = () => {
     );
 }
 
-export default CityPreferencesForm;
+export default Header;
