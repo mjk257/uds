@@ -1,8 +1,6 @@
 import React, {ReactElement, useState} from 'react';
 import {
-    Button,
     Dialog,
-    DialogActions,
     DialogContent,
     DialogContentText,
     DialogTitle,
