@@ -71,6 +71,9 @@
 
 .header-bar {
   background-color: black !important;
+  .header-bar-text {
+    flex-grow: 1;
+  }
 }
 
 #map-container {
