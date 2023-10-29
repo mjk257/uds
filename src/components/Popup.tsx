@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {ReactElement, useState} from 'react';
 import {
     Button,
     Dialog,
@@ -46,7 +46,7 @@ export default Popup;
 
 type Props = {
     title: string,
-    content: string,
+    content: string | ReactElement,
     popupOpen: boolean,
     setPopupOpen: (isOpen: boolean) => void
 };
