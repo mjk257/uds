@@ -7,7 +7,7 @@ afterEach(() => {
 
 describe("Testing Header component", () => {
 
-    test("renders ConfigurationList header and configuration buttons", () => {
+    test("Renders all parts of the header (title + toolbar buttons)", () => {
         render(<Header />);
 
         const header = screen.getByText("UDS: Urban Discovery System");
