@@ -74,7 +74,7 @@ const Header = () => {
                     at Case Western Reserve University. Their names are listed below:
                     <ol>
                         <li>Peter Schlueter (<a href='https://www.linkedin.com/in/peter-schlueter-32b759165/'>LinkedIn</a>)</li>
-                        <li>Martin Kovac</li>
+                        <li>Jack Kovac (<a href='https://www.linkedin.com/in/martin-j-kovac/'>LinkedIN</a>)</li>
                         <li>Tyler Avery</li>
                         <li>Vikranth Mallikarjun</li>
                         <li>Thomas Bornhorst</li>
