@@ -7,10 +7,10 @@ const Footer = () => {
         <AppBar position="static" className='footer'>
             <Container maxWidth="lg">
                 <Toolbar disableGutters>
-                    <Typography variant="body2" color="inherit" style={{ flex: 1 }} align='center'>
+                    <Typography variant="body2" color="inherit" style={{ flex: 1 }} align='center' data-testid='uds-footer-test'>
                         &copy; {new Date().getFullYear()} UDS: Urban Discovery System
                     </Typography>
-                    <Link href='https://github.com/mjk257/uds' target='_blank' className='footer-link'>
+                    <Link href='https://github.com/mjk257/uds' target='_blank' className='footer-link' data-testid='github-footer-icon'>
                         <GitHubIcon />
                     </Link>
                 </Toolbar>
