@@ -18,5 +18,7 @@ describe("Testing Header component", () => {
         expect(helpButton).toBeInTheDocument();
         const creditsButton = screen.getByText("Credits");
         expect(creditsButton).toBeInTheDocument();
+        const gitHubIcon = screen.getByTestId("github-header-icon");
+        expect(gitHubIcon).toBeInTheDocument();
     });
 });

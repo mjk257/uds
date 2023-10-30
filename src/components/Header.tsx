@@ -165,7 +165,7 @@ const Header = () => {
 
     const navIcons = [
         {
-            icon: <GitHub sx={ { paddingLeft: 2 }} />,
+            icon: <GitHub sx={ { paddingLeft: 2 }} data-testid='github-header-icon'/>,
             link: "https://github.com/mjk257/uds"
         }
     ]
