@@ -3,10 +3,12 @@ import {
     AppBar,
     Box,
     Button,
+    Link,
     Toolbar,
     Typography
 } from "@mui/material";
 import Popup from "./Popup";
+import {GitHub} from "@mui/icons-material";
 
 const Header = () => {
 
@@ -131,7 +133,7 @@ const Header = () => {
         )
     }
 
-    const navItems = [
+    const navButtons = [
         {
             buttonTitle: 'About Us',
             popupProps: {
@@ -161,6 +163,13 @@ const Header = () => {
         }
     ];
 
+    const navIcons = [
+        {
+            icon: <GitHub sx={ { paddingLeft: 2 }} />,
+            link: "https://github.com/mjk257/uds"
+        }
+    ]
+
     return (
         <div>
             <AppBar position="static" className='header-bar'>
@@ -171,7 +180,7 @@ const Header = () => {
                         UDS: Urban Discovery System
                     </Typography>
                     <Box sx={ headerSx }>
-                        {navItems.map((item) => (
+                        {navButtons.map((item) => (
                             <>
                                 <Button key={ item.buttonTitle } color='inherit' onClick={ () => item.popupProps.setPopupOpen(true) }>
                                     { item.buttonTitle }
@@ -180,6 +189,11 @@ const Header = () => {
                             </>
                         ))}
                     </Box>
+                    {navIcons.map((item) => (
+                        <Link key={ item.link } color='inherit' href={ item.link }>
+                            { item.icon }
+                        </Link>
+                    ))}
                 </Toolbar>
             </AppBar>
         </div>
