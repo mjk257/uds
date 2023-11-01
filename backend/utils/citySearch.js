@@ -8,10 +8,12 @@ const api_header = {
 };
 
 // Takes in cities and searchCriteria and returns ranked list of top 10 cities
-function citySearch(cities, searchCriteria) {
+async function citySearch(cities, searchCriteria) {
+    const valuedScalingFactor = 5;
     let topCities = [];
+    const numCoarseResults = 30;
     const numResults = 10; // Number of cities to return
-    const cityScores = getCityScores(cities, searchCriteria); // Get city scores
+    const cityScores = getCityScores(cities, searchCriteria, valuedScalingFactor); // Get city scores
 
     // Combine cities and cityScores into an array of tuples
     const combinedData = cities.map((city, index) => [city, cityScores[index]]);
@@ -19,12 +21,55 @@ function citySearch(cities, searchCriteria) {
     // Sort the array of tuples by scores in descending order
     combinedData.sort((a, b) => b[1] - a[1]);
 
+    if (searchCriteria["preferredOccupation"] != null) {
+        await addJobsScores(combinedData, numCoarseResults, searchCriteria, valuedScalingFactor);
+    }
+
     // Compile list of top numResults cities
     for (let i = 0; i < numResults; i++) {
         topCities[i] = combinedData[i][0];
     }
 
     return topCities;
+}
+
+async function addJobsScores(combinedData, numCoarseResults, searchCriteria, valuedScalingFactor) {
+    // Compile list of top numCoarseResults cities
+    coarseCityNames = [];
+    for (let i = 0; i < numCoarseResults; i++) {
+        coarseCityNames[i] = combinedData[i][0].name;
+    }
+    let jobCode = searchCriteria["preferredOccupation"]["code"];
+    let jobCounts = await getJobCounts(coarseCityNames, jobCode);
+
+    // Find min and max job count values
+    let jobCountMin = jobCounts[0].job_count;
+    let jobCountMax = 0;
+    for (let entry of jobCounts) {
+        if (entry.job_count < jobCountMin)
+            jobCountMin = entry.job_count;
+        if (entry.job_count > jobCountMax)
+            jobCountMax = entry.job_count;
+    }
+
+    let isValued = false;
+    if (searchCriteria.priorityAttributes.includes("preferredOccupation"))
+        isValued = true;
+
+    // Add new job count values to scores
+    let jobCountMaxMinDiff = jobCountMax - jobCountMin;
+    for (let i = 0; i < numCoarseResults; i++) {
+        let entry = jobCounts[i];
+        let jobCountScore = (entry.job_count - jobCountMin) / jobCountMaxMinDiff;
+
+        if (isValued)
+            jobCountScore *= valuedScalingFactor;
+
+        combinedData[i][1] += jobCountScore;
+    }
+
+    // Sort the array of tuples by scores in descending order
+    combinedData.sort((a, b) => b[1] - a[1]);
 }
 
 function getAttributeValue(city, criteriaName) {
@@ -71,7 +116,6 @@ function getNormalizationData(cities, searchCriteria) {
                 break;
             }
 
-
             if (attrributeValue < min)
                 min = attrributeValue;
             if (attrributeValue > max)
@@ -83,10 +127,33 @@ function getNormalizationData(cities, searchCriteria) {
     return normalizationData;
 }
 
-function getCityScores(cities, searchCriteria) {
+function getNormalizedCityValue(cityValue, pref, normalizedPref, criteriaMin, criteriaMaxMinDiff, isValued, valuedScalingFactor) {
+    
+    if (criteriaMin != null) { // If numbered attribute
+        if (criteriaMaxMinDiff == 0) // Avoid division by zero
+            return null;
+
+        // Normalize (applicable) attributes to 0.0 - 1.0 using linear scaling: (val - min) / (max - min)
+        cityValue = (cityValue - criteriaMin) / criteriaMaxMinDiff
+
+        // Tune ratings to preferences
+        // Values will still be in 0.0 to 1.0 range with 1.0 being the best
+        let inverseNormalizedPref = 1 / Math.max(normalizedPref, 1 - normalizedPref);
+        cityValue = -Math.abs(cityValue - normalizedPref) * inverseNormalizedPref + 1;
+    } else {
+        cityValue = (cityValue == pref) ? 1 : 0;
+    }
+
+    // If one of important attributes, multiply by scaling factor
+    if (isValued)
+        cityValue *= valuedScalingFactor;
+
+    return cityValue;
+}
+
+function getCityScores(cities, searchCriteria, valuedScalingFactor) {
     // cities is a list of City objects
     // searchCriteria is a JSON with keys=criteriaName and values=preferenceValue and one of keys="priorityAttributes", value=[list of criteriaName that were marked as important]
-    const valuedScalingFactor = 5;
     let cityScores = Array(cities.length).fill(0);
 
     // Get normalizing data (min and max of each criteria)
@@ -132,24 +199,10 @@ function getCityScores(cities, searchCriteria) {
             if (cityValue == null) // If attribute not in database (either in total or for the specific city)
                 continue;
 
-            if (criteriaMin != null) { // If numbered attribute
-                if (criteriaMaxMinDiff == 0) // Avoid division by zero
-                    break;
+            cityValue = getNormalizedCityValue(cityValue, pref, normalizedPref, criteriaMin, criteriaMaxMinDiff, isValued, valuedScalingFactor);
 
-                // Normalize (applicable) attributes to 0.0 - 1.0 using linear scaling: (val - min) / (max - min)
-                cityValue = (cityValue - criteriaMin) / criteriaMaxMinDiff
-
-                // Tune ratings to preferences
-                // Values will still be in 0.0 to 1.0 range with 1.0 being the best
-                let inverseNormalizedPref = 1 / Math.max(normalizedPref, 1 - normalizedPref);
-                cityValue = -Math.abs(cityValue - normalizedPref) * inverseNormalizedPref + 1;
-            } else {
-                cityValue = (cityValue == pref) ? 1 : 0;
-            }
-
-            // If one of important attributes, multiply by scaling factor
-            if (isValued)
-                cityValue *= valuedScalingFactor;
+            if (cityValue == null)
+                break;
 
             // Add criteria score to city score sum
             cityScores[i] += cityValue;
@@ -176,7 +229,7 @@ async function getJobCounts(cities, job_code){
             params: params,
             headers: api_header
         });
-        return_data.push({"job_count": res.data.Jobcount, "city": city});
+        return_data.push({"job_count": parseInt(res.data.Jobcount), "city": city});
 
     };
         
