@@ -20,51 +20,52 @@ const nycSummary = "New York City is a city in the United States. " +
 const mockCityDetails = {
     summary: nycSummary,
     name: "New York City",
+    state: "NY",
     population: 8398748,
-    populationDensity: 10933,
-    costOfLiving: "high",
-    numberOfJobsAvailable: 100000,
+    density: 10933,
+    costOfLiving: 20,
+    preferredOccupation: 100000,
     crimeRate: 45000,
-    walkAndTransability: "high",
-    politics: "democrat",
-    qualityOfEducation: "high",
-    climate: "humid-subtropical",
+    walkAndTransability: 20,
+    partisan_lean: 25,
+    qualityOfEducation: 30,
+    zone_description: "humid subtropical",
     avgPopulationAge: 35
 }
 
 describe("Testing ConfigurationList component", () => {
 
     const mockProps = {
-        cityDetails: mockCityDetails
+        cityDetails: mockCityDetails,
+        rank: 1
     }
 
     test("renders ConfigurationList header and configuration buttons", () => {
         render(<CityResponseCard { ...mockProps } />);
-        console.log("Made it here?")
 
-        const cityName = screen.getByText("New York City");
+        const cityName = screen.getByText("1.) New York City, NY");
         expect(cityName).toBeInTheDocument();
         const citySummary = screen.getByText(nycSummary);
         expect(citySummary).toBeInTheDocument();
-        const population = screen.getByText("Population: 8398748");
+        const population = screen.getByText("Population:");
         expect(population).toBeInTheDocument();
-        const populationDensity = screen.getByText("Population Density: 10933");
+        const populationDensity = screen.getByText("Population Density:");
         expect(populationDensity).toBeInTheDocument();
-        const costOfLiving = screen.getByText("Cost of Living: high");
+        const costOfLiving = screen.getByText("Cost of Living:");
         expect(costOfLiving).toBeInTheDocument();
-        const numberOfJobs = screen.getByText("Number of Jobs: 100000");
+        const numberOfJobs = screen.getByText("Number of Jobs:");
         expect(numberOfJobs).toBeInTheDocument();
-        const crimeRate = screen.getByText("Crime Rate: 45000");
+        const crimeRate = screen.getByText("Crime Rate:");
         expect(crimeRate).toBeInTheDocument();
-        const walkabilityTransability = screen.getByText("Walkability/Transability: high");
+        const walkabilityTransability = screen.getByText("Walkability/Transability:");
         expect(walkabilityTransability).toBeInTheDocument();
-        const politics = screen.getByText("Politics: democrat");
+        const politics = screen.getByText("Politics:");
         expect(politics).toBeInTheDocument();
-        const qualityOfEducation = screen.getByText("Quality of Education: high");
+        const qualityOfEducation = screen.getByText("Quality of Education:");
         expect(qualityOfEducation).toBeInTheDocument();
-        const climate = screen.getByText("Climate: humid-subtropical");
+        const climate = screen.getByText("Climate:");
         expect(climate).toBeInTheDocument();
-        const averagePopulationAge = screen.getByText("Average Population Age: 35");
+        const averagePopulationAge = screen.getByText("Average Population Age:");
         expect(averagePopulationAge).toBeInTheDocument();
     });
 });

@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const City = require('../models/City');
+const Job = require('../models/Job');
+const citySearch = require('../utils/citySearch');
 
 // Api route, get list of all cities
 router.get('/cities/', (req, res) => {
@@ -8,7 +10,14 @@ router.get('/cities/', (req, res) => {
       res.json(cities)
     });
 });
-  
+
+// Api route, get list of all occupations
+router.get('/jobs', (req, res) => {
+  Job.find({}).then(jobs => {
+    res.json(jobs);
+  })
+})
+
 // Api route, get city info given id
 router.get('/cities/:id', (req, res) => {
     const {id} = req.params;
@@ -21,9 +30,9 @@ router.get('/cities/:id', (req, res) => {
 router.post('/search', (req, res) => {    
     const searchCriteria = req.body;
   
-    /* ADD SEARCH FUCNTION CALL */
-  
-    res.json(searchCriteria);
+    City.find({}).then(cities => {
+        res.json(citySearch(cities, searchCriteria));
+    });
 });
 
 module.exports = router;
