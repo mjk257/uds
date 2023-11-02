@@ -6,7 +6,7 @@ export type CityPreferencesConfiguration = {
     crimeRate: number | string,
     walkAndTransability: string | number,
     politics: string,
-    qualityOfEducation: string | number,
+    outdoorScore: string | number,
     climate: string,
     avgPopulationAge: number | string
     priorityAttributes: string[]
@@ -28,7 +28,7 @@ export const defaultCityPreferencesConfiguration : CityPreferencesConfiguration 
     crimeRate: '',
     walkAndTransability: "",
     politics: "",
-    qualityOfEducation: "",
+    outdoorScore: "",
     climate: "",
     avgPopulationAge: '',
     priorityAttributes: []
@@ -52,7 +52,8 @@ export type CityDetails = {
     rpp: number,
     climate_zone: string,
     zone_description: string,
-    partisan_lean: number //negative value is more republican, positive is more democratic
+    partisan_lean: number // negative value is more republican, positive is more democratic
+    outdoor_score: number // the closer this value is to 100, the better suited the city is for outdoor recreation
 }
 
 export type Occupation = {

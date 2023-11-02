@@ -28,7 +28,7 @@ const mockCityDetails = {
     crimeRate: 45000,
     walkAndTransability: 20,
     partisan_lean: 25,
-    qualityOfEducation: 30,
+    outdoorScore: 79,
     zone_description: "humid subtropical",
     avgPopulationAge: 35
 }
@@ -61,8 +61,8 @@ describe("Testing ConfigurationList component", () => {
         expect(walkabilityTransability).toBeInTheDocument();
         const politics = screen.getByText("Politics:");
         expect(politics).toBeInTheDocument();
-        const qualityOfEducation = screen.getByText("Quality of Education:");
-        expect(qualityOfEducation).toBeInTheDocument();
+        const outdoorScore = screen.getByText("Outdoor Score:");
+        expect(outdoorScore).toBeInTheDocument();
         const climate = screen.getByText("Climate:");
         expect(climate).toBeInTheDocument();
         const averagePopulationAge = screen.getByText("Average Population Age:");

@@ -36,14 +36,17 @@ const CityResponseCard = ({ cityDetails, rank }: Props) => {
     return crimeRate + " crimes per 100,000 people";
   };
 
-  const qualityOfEducationToString = (qualityOfEducation: number) => {
-    const roundedQOE = (100 - Math.abs(qualityOfEducation)).toFixed(2);
-    if (qualityOfEducation === 0) {
-      return "The quality of education in this city is equal to the national average.";
-    } else if (qualityOfEducation > 0) {
-      return `${qualityOfEducation}% higher quality of education than other cities in the U.S.A`;
+  const outdoorScoreToString = (outdoorScore: number) => {
+    // Outdoor score ranges from 58 through 100
+    // So I will use 79 as the average
+    const OUTDOOR_SCORE_AVG = 79;
+    const roundedOutdoorScore = Math.abs(OUTDOOR_SCORE_AVG - outdoorScore).toFixed(2);
+    if (outdoorScore === OUTDOOR_SCORE_AVG) {
+      return "No better or worse than other cities for outdoor recreation.";
+    } else if (outdoorScore > OUTDOOR_SCORE_AVG) {
+      return `${roundedOutdoorScore}% better for outdoor recreation than other cities in the U.S.A`;
     } else {
-      return `${qualityOfEducation}% lower quality of education than other cities in the U.S.A`;
+      return `${roundedOutdoorScore}% worse for outdoor recreation than other cities in the U.S.A`;
     }
   };
 
@@ -119,9 +122,9 @@ const CityResponseCard = ({ cityDetails, rank }: Props) => {
         : "N/A",
     },
     {
-      title: "Quality of Education",
-      value: cityDetails?.qualityOfEducation
-        ? qualityOfEducationToString(cityDetails.qualityOfEducation)
+      title: "Outdoor Score",
+      value: cityDetails?.outdoor_score
+        ? outdoorScoreToString(cityDetails.outdoor_score)
         : "N/A",
     },
     {
