@@ -21,10 +21,8 @@ df = pd.read_json(
 
 df = df[["city", "state", "median_age"]]
 df['state'] = df['state'].apply(abbreviate)
-df = df.rename(columns={"city": "name"})
-print(df)
 
 for row in df.to_dict("records"):
-    query = { "state": row["state"], "name": row['name'] }
+    query = { "state": row["state"], "name": row['city'] }
     values = { "$set": { "median_age":  row['median_age'] } }
-    cities.update_many(query, values)
+    cities.update_one(query, values)
