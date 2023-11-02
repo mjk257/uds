@@ -53,7 +53,7 @@ describe("Testing ConfigurationList component", () => {
         expect(populationDensity).toBeInTheDocument();
         const costOfLiving = screen.getByText("Cost of Living:");
         expect(costOfLiving).toBeInTheDocument();
-        const numberOfJobs = screen.getByText("Number of Jobs:");
+        const numberOfJobs = screen.getByText("Job Market:");
         expect(numberOfJobs).toBeInTheDocument();
         const crimeRate = screen.getByText("Crime Rate:");
         expect(crimeRate).toBeInTheDocument();

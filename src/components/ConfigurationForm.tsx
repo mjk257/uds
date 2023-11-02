@@ -87,7 +87,16 @@ const ConfigurationForm = ({
     event: any,
     newValue: any
   ) => {
-    setCurrentConfig({ ...currentConfig, [property]: newValue });
+    let newPriorityAttributes = currentConfig.priorityAttributes;
+    // Removing an attribute from prioritization if it is given no preference
+    newPriorityAttributes = newPriorityAttributes.filter(
+        (item: any) => item !== property
+    );
+    setCurrentConfig({
+      ...currentConfig,
+      priorityAttributes: newPriorityAttributes,
+      [property]: newValue,
+    });
   };
 
   useEffect(() => {
@@ -187,6 +196,7 @@ const ConfigurationForm = ({
       onChange: (event: any, newValue: any) =>
         handleAutocompleteChange("preferredOccupation", event, newValue),
       label: "Preferred Occupation",
+      helperText: "Note: Since live data is being used, selecting a preferred occupation will add roughly 10 seconds to the search time."
     },
     {
       componentType: "select",
@@ -339,9 +349,6 @@ const ConfigurationForm = ({
                             );
                           })}
                         </Select>
-                        {input?.helperText && (
-                          <FormHelperText>{input?.helperText}</FormHelperText>
-                        )}
                       </>
                     )}
                     {input?.componentType === "autocomplete" && (
@@ -387,6 +394,9 @@ const ConfigurationForm = ({
                           />
                         </RadioGroup>
                       </>
+                    )}
+                    {input?.helperText && input?.value && (
+                        <FormHelperText>{input?.helperText}</FormHelperText>
                     )}
                   </FormControl>
                 );

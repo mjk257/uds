@@ -31,7 +31,7 @@ router.post('/search', (req, res) => {
     const searchCriteria = req.body;
   
     City.find({}).then(cities => {
-        res.json(citySearch(cities, searchCriteria));
+        citySearch(cities, searchCriteria).then(response => res.json(response))
     });
 });
 
