@@ -10,7 +10,7 @@ const searchForCities = async (body: any) => {
 }
 
 const getAllOccupations = async () => {
-    const response = await fetch('/api/jobs', {
+    const response = await fetch('http://localhost:5000/api/jobs', {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
