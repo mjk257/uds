@@ -16,7 +16,7 @@ async function citySearch(cities, searchCriteria) {
     const cityScores = getCityScores(cities, searchCriteria, valuedScalingFactor); // Get city scores
 
     // Combine cities and cityScores into an array of tuples
-    const combinedData = cities.map((city, index) => [city, cityScores[index]]);
+    let combinedData = cities.map((city, index) => [city, cityScores[index]]);
 
     // Sort the array of tuples by scores in descending order
     combinedData.sort((a, b) => b[1] - a[1]);
@@ -82,6 +82,12 @@ async function addJobsScores(combinedData, numCoarseResults, searchCriteria, val
             jobsScore *= valuedScalingFactor;
 
         combinedData[i][1] += jobsScore;
+        
+        let occupation_data = {}
+        occupation_data.title = searchCriteria["preferredOccupation"]["title"];
+        occupation_data.job_count = jobCount;
+        occupation_data.hourly_salary = salary;
+        combinedData[i][0].occupation_data = occupation_data;
     }
 
     // Sort the array of tuples by scores in descending order
@@ -284,7 +290,7 @@ async function getSalaries(cities, job_code){
             headers: api_header
         });
         for (const city of res.data.LocationsList){
-            return_data.push({"hourly": city.OccupationList[0].WageInfo[0].Median, "city": city.InputLocation});
+            return_data.push({"hourly": Number.parseFloat(city.OccupationList[0].WageInfo[0].Median), "city": city.InputLocation});
         };
     }
 
