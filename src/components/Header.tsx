@@ -74,7 +74,7 @@ const Header = () => {
         {
             term: "Outdoor Score",
             description: "The outdoor score is calculated using a weighted, curved average using the percentage of the state covered by GAP-1, GAP-2, and GAP-3 protected areas, percentage of the state" +
-            " economy made up by the outdoor recreation industry, median annual air quality, lbs of chemicals released annually per state square mile, and miles of trail per state square mile."
+            " economy made up by the outdoor recreation industry, median annual air quality, LBs of chemicals released annually per state square mile, and miles of trail per state square mile."
         }
     ]
 
@@ -126,7 +126,7 @@ const Header = () => {
                             <li>
                                 <Typography>
                                     <a href={api.apiLink} target="_blank" rel="noopener noreferrer">
-                                        <strong>{api.apiName}</strong>{' '}
+                                        {api.apiName}
                                     </a>
                                 </Typography>
                             </li>
