@@ -69,8 +69,11 @@ const CityResponseCard = ({ cityDetails, rank }: Props) => {
     }
   };
 
-  const numberOfJobsToString = (numberOfJobs: number) => {
-    return numberOfJobs + " jobs";
+  const numberOfJobsToString = (occupation_data: { [key: string]: any }) => {
+    if (occupation_data["hourly_salary"] == null)
+      return occupation_data["job_count"] + " jobs for " + occupation_data["title"];
+    else
+      return occupation_data["job_count"] + " jobs for " + occupation_data["title"] + " with a median hourly salary of $" + occupation_data["hourly_salary"];
   };
 
   const averagePopulationAgeToString = (avgPopulationAge: number) => {
@@ -95,9 +98,9 @@ const CityResponseCard = ({ cityDetails, rank }: Props) => {
       value: cityDetails?.rpp ? costOfLivingToString(cityDetails?.rpp) : "N/A",
     },
     {
-      title: "Number of Jobs",
-      value: cityDetails?.preferredOccupation
-        ? numberOfJobsToString(cityDetails.preferredOccupation)
+      title: "Job Market",
+      value: cityDetails?.occupation_data
+        ? numberOfJobsToString(cityDetails.occupation_data)
         : "N/A",
     },
     {

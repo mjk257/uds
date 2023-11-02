@@ -72,17 +72,20 @@ async function addJobsScores(combinedData, numCoarseResults, searchCriteria, val
     let salaryMaxMinDiff = salaryMax - salaryMin;
     for (let i = 0; i < numCoarseResults; i++) {
         let jobCount = jobCounts[i].job_count;
-        let salary = salaries[i].hourly;
+        let salary = null;
+        if (salaries[i] != null)
+            salary = salaries[i].hourly;
 
         let jobsScore = (jobCount - jobCountMin) / jobCountMaxMinDiff;
-        jobsScore += (salary - salaryMin) / salaryMaxMinDiff;
+        if (salary != null)
+            jobsScore += (salary - salaryMin) / salaryMaxMinDiff;
         jobsScore /= 2;
 
         if (isValued)
             jobsScore *= valuedScalingFactor;
 
         combinedData[i][1] += jobsScore;
-        
+
         let occupation_data = {}
         occupation_data.title = searchCriteria["preferredOccupation"]["title"];
         occupation_data.job_count = jobCount;
@@ -290,7 +293,12 @@ async function getSalaries(cities, job_code){
             headers: api_header
         });
         for (const city of res.data.LocationsList){
-            return_data.push({"hourly": Number.parseFloat(city.OccupationList[0].WageInfo[0].Median), "city": city.InputLocation});
+            try {
+                return_data.push({"hourly": Number.parseFloat(city.OccupationList[0].WageInfo[0].Median), "city": city.InputLocation});
+            } catch {
+                return_data.push({"hourly": null, "city": city.InputLocation});
+                console.log("Couldn't get median pay for", city.InputLocation);
+            }
         };
     }
 
