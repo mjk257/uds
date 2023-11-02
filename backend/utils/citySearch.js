@@ -37,10 +37,11 @@ async function addJobsScores(combinedData, numCoarseResults, searchCriteria, val
     // Compile list of top numCoarseResults cities
     coarseCityNames = [];
     for (let i = 0; i < numCoarseResults; i++) {
-        coarseCityNames[i] = combinedData[i][0].name;
+        coarseCityNames[i] = combinedData[i][0].name + "," + combinedData[i][0].state;
     }
     let jobCode = searchCriteria["preferredOccupation"]["code"];
     let jobCounts = await getJobCounts(coarseCityNames, jobCode);
+    let salaries = await getSalaries(coarseCityNames, jobCode);
 
     // Find min and max job count values
     let jobCountMin = jobCounts[0].job_count;
@@ -52,20 +53,35 @@ async function addJobsScores(combinedData, numCoarseResults, searchCriteria, val
             jobCountMax = entry.job_count;
     }
 
+    // Find min and max salary values
+    let salaryMin = salaries[0].hourly;
+    let salaryMax = 0;
+    for (let entry of salaries) {
+        if (entry.hourly < salaryMin)
+            salaryMin = entry.hourly;
+        if (entry.hourly > salaryMax)
+            salaryMax = entry.hourly;
+    }
+
     let isValued = false;
     if (searchCriteria.priorityAttributes.includes("preferredOccupation"))
         isValued = true;
 
     // Add new job count values to scores
     let jobCountMaxMinDiff = jobCountMax - jobCountMin;
+    let salaryMaxMinDiff = salaryMax - salaryMin;
     for (let i = 0; i < numCoarseResults; i++) {
-        let entry = jobCounts[i];
-        let jobCountScore = (entry.job_count - jobCountMin) / jobCountMaxMinDiff;
+        let jobCount = jobCounts[i].job_count;
+        let salary = salaries[i].hourly;
+
+        let jobsScore = (jobCount - jobCountMin) / jobCountMaxMinDiff;
+        jobsScore += (salary - salaryMin) / salaryMaxMinDiff;
+        jobsScore /= 2;
 
         if (isValued)
-            jobCountScore *= valuedScalingFactor;
+            jobsScore *= valuedScalingFactor;
 
-        combinedData[i][1] += jobCountScore;
+        combinedData[i][1] += jobsScore;
     }
 
     // Sort the array of tuples by scores in descending order
@@ -271,6 +287,7 @@ async function getSalaries(cities, job_code){
             return_data.push({"hourly": city.OccupationList[0].WageInfo[0].Median, "city": city.InputLocation});
         };
     }
+
     return return_data;    
 }
 
