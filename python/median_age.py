@@ -14,8 +14,8 @@ db_url = os.getenv("MONGODB_URL")
 client = MongoClient(db_url)
 cities = client["uds"]["cities"]
 
-df = pd.read_csv(
-    "https://www2.census.gov/programs-surveys/popest/datasets/2020-2022/counties/asrh/cc-est2022-agesex-all.csv"
+df = pd.read_json(
+    "C:\Users\tyler\Downloads\us-cities-demographics.json"
 )
 df = df[df.YEAR == 4]
 df = df.filter(["STNAME", "CTYNAME", "MEDIAN_AGE_TOT"])
