@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 import pandas as pd
 from pymongo import MongoClient
+from abbreviate_state import *
 
 load_dotenv("../.env")
 
@@ -18,10 +19,9 @@ df = pd.read_json(
     "https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/us-cities-demographics/exports/json?lang=en&timezone=America%2FNew_York"
 )
 
-df = df.filter(["city", "state_code", "median_age"])
-df = df.rename(
-    columns={"state_code": "state", "city": "name"}
-)
+df = df[["city", "state", "median_age"]]
+df['state'] = df['state'].apply(abbreviate)
+df = df.rename(columns={"city": "name"})
 print(df)
 
 for row in df.to_dict("records"):
