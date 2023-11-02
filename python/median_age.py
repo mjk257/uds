@@ -22,7 +22,10 @@ df = pd.read_json(
 df = df[["city", "state", "median_age"]]
 df['state'] = df['state'].apply(abbreviate)
 
-for row in df.to_dict("records"):
-    query = { "state": row["state"], "name": row['city'] }
-    values = { "$set": { "median_age":  row['median_age'] } }
-    cities.update_one(query, values)
+for city in cities.find():
+    name = city["name"].replace("St.", "Saint").replace("town", "").replace(" City", "")
+    row = df[df['city'].str.contains("(?<![A-z])" + name) & df['state'].str.contains(city['state'])]
+    if not row.empty:
+        query = { "state": city['state'], "name": city['name'] }
+        values = { "$set": { "median_age":  row.values[0][2] } }
+        cities.update_one(query, values)
