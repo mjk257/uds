@@ -21,7 +21,6 @@ df = pd.read_json(
 df = df[["city", "state", "median_age"]]
 df['state'] = df['state'].apply(abbreviate)
 df = df.rename(columns={"city": "name"})
-print(df)
 
 for city in cities.find():
     name = city["name"].replace("St.", "Saint").replace("town", "").replace(" City", "")
