@@ -37,8 +37,8 @@ function getAttributeValue(city, criteriaName) {
             return null;
         case "walkAndTransability":
             return null;
-        case "qualityOfEducation":
-            return null;
+        case "outdoorScore":
+            return city.outdoor_score;
         case "population":
             return city.population;
         case "populationDensity":

@@ -10,7 +10,8 @@ const citySchema = new mongoose.Schema({
     rpp: Number,
     climate_zone: String,
     zone_description: String,
-    partisan_lean: Number //negative value is more republican, positive is more democratic
+    partisan_lean: Number, // negative value is more republican, positive is more democratic
+    outdoor_score: Number  // closer to 100 means more outdoor activities are available
 });
 
 module.exports = mongoose.model('City', citySchema, 'cities');
