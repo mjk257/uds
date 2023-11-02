@@ -24,6 +24,7 @@ describe("Testing ConfigurationList component", () => {
     );
     expect(configurationFormHeader).toBeInTheDocument();
 
+    // Tests for radio button groups
     const lowCostOfLivingRadioGroup = screen.getByText("Low Cost of Living?");
     expect(lowCostOfLivingRadioGroup).toBeInTheDocument();
     const lowCrimeRateRadioGroup = screen.getByText("Low Crime Rate?");
@@ -32,11 +33,10 @@ describe("Testing ConfigurationList component", () => {
       "High Walkability/Transability?"
     );
     expect(highWalkabilityTransabilityRadioGroup).toBeInTheDocument();
-    const highQualityOfEducationRadioGroup = screen.getByText(
-      "High Quality of Education?"
-    );
-    expect(highQualityOfEducationRadioGroup).toBeInTheDocument();
+    const outdoorScoreRadioGroup = screen.getByText("Good for Outdoor Recreation?");
+    expect(outdoorScoreRadioGroup).toBeInTheDocument();
 
+    // Tests for selects
     const populationSelect = screen.getAllByText("Population");
     expect(populationSelect).toHaveLength(2);
     const populationDensitySelect = screen.getAllByText("Population Density");
@@ -53,15 +53,17 @@ describe("Testing ConfigurationList component", () => {
       "Average Population Age"
     );
     expect(averagePopulationAgeSelect).toHaveLength(2);
-    const costOfLivingSelect = screen.getByText("Cost of Living");
-    expect(costOfLivingSelect).toBeInTheDocument();
-    const crimeRateSelect = screen.getByText("Crime Rate");
-    expect(crimeRateSelect).toBeInTheDocument();
-    const walkabilityTransabilitySelect = screen.getByText(
+
+    // Tests for specific checkbox values for radio button groups
+    const costOfLivingCheckbox = screen.getByText("Cost of Living");
+    expect(costOfLivingCheckbox).toBeInTheDocument();
+    const crimeRateCheckbox = screen.getByText("Crime Rate");
+    expect(crimeRateCheckbox).toBeInTheDocument();
+    const walkabilityTransabilityCheckbox = screen.getByText(
       "Walkability/Transability"
     );
-    expect(walkabilityTransabilitySelect).toBeInTheDocument();
-    const qualityOfEducationSelect = screen.getByText("Quality of Education");
-    expect(qualityOfEducationSelect).toBeInTheDocument();
+    expect(walkabilityTransabilityCheckbox).toBeInTheDocument();
+    const outdoorScoreCheckbox = screen.getByText("Good for Outdoor Recreation");
+    expect(outdoorScoreCheckbox).toBeInTheDocument();
   });
 });
