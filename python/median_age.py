@@ -15,11 +15,16 @@ client = MongoClient(db_url)
 cities = client["uds"]["cities"]
 
 df = pd.read_json(
-    "C:\Users\tyler\Downloads\us-cities-demographics.json"
+    "https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/us-cities-demographics/exports/json?lang=en&timezone=America%2FNew_York"
 )
-df = df[df.YEAR == 4]
-df = df.filter(["STNAME", "CTYNAME", "MEDIAN_AGE_TOT"])
+
+df = df.filter(["city", "state_code", "median_age"])
 df = df.rename(
-    columns={"STNAME": "state", "CTYNAME": "county", "MEDIAN_AGE_TOT": "median_age"}
+    columns={"state_code": "state", "city": "name"}
 )
-df["state"] = df["state"].apply(abbreviate)
+print(df)
+
+for row in df.to_dict("records"):
+    query = { "state": row["state"], "name": row['name'] }
+    values = { "$set": { "median_age":  row['median_age'] } }
+    cities.update_many(query, values)
