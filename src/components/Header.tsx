@@ -19,7 +19,7 @@ const Header = () => {
 
     const apiCredits = [
         {
-            apiName: "Population Estimate API by the US Census Bureau (2019)",
+            apiName: "Population Estimate Dataset by the US Census Bureau (2019)",
             apiLink: "https://www.census.gov/data/developers/data-sets/popest-popproj/popest.Vintage_2019.html#list-tab-2014455046"
         },
         {
@@ -27,27 +27,54 @@ const Header = () => {
             apiLink: "https://geocode.maps.co"
         },
         {
-            apiName: "Climate Zones API",
+            apiName: "Koppen Geiger Climate Zones API",
             apiLink: "http://climateapi.scottpinkelman.com"
         },
         {
-            apiName: "RPP API (Cost of Living)",
+            apiName: "RPP Dataset (Cost of Living) by the Bureau of Economic Analysis (2021)",
             apiLink: "https://www.bea.gov/news/2022/real-personal-consumption-expenditures-state-and-real-personal-income-state-and"
         },
         {
-            apiName: "Partisan Lean API by FiveThirtyEight",
-            apiLink: "https://github.com/fivethirtyeight/data/tree/master/partisan-lean"
+            apiName: "Partisan Lean Dataset by FiveThirtyEight (2021)",
+            apiLink: "https://github.com/fivethirtyeight/data/tree/master/partisan-lean/2021"
         },
         {
             apiName: "WebAPI Job Counts/Salaries by CareerOneStop",
             apiLink: "https://www.careeronestop.org/Developers/WebAPI/technical-information.aspx"
+        },
+        {
+            apiName: "PAD-US Dataset by U.S. Geological Survey (2022)",
+            apiLink: "https://www.usgs.gov/programs/gap-analysis-project/science/pad-us-data-overview"
+        },
+        {
+            apiName: "Outdoor Recreation Dataset by Bureau of Economic Analysis (2021)",
+            apiLink: "https://www.bea.gov/data/special-topics/outdoor-recreation"
+        },
+        {
+            apiName: "AQI by CBSA Dataset by Environmental Protection Agency (2022)",
+            apiLink: "https://aqs.epa.gov/aqsweb/airdata/download_files.html#Annual"
+        },
+        {
+            apiName: "Environmental Protection Agency Toxic Release Index Dataset (2022)",
+            apiLink: "https://www.epa.gov/toxics-release-inventory-tri-program"
+        },
+        {
+            apiName: "U.S. Census State Area Measurements and Internal Point Coordinates Dataset (2010)",
+            apiLink: "https://www.census.gov/geographies/reference-files/2010/geo/state-area.html"
         }
+
+
     ]
     const helpTerms = [
         {
             term: "RPP",
             description: "Regional Price Parity (RPP) is a measure of the differences in the price levels of goods and services across states and metropolitan areas for a given year." +
                 " RPPs are expressed as a percentage of the overall national price level for each year."
+        },
+        {
+            term: "Outdoor Score",
+            description: "The outdoor score is calculated using a weighted, curved average using the percentage of the state covered by GAP-1, GAP-2, and GAP-3 protected areas, percentage of the state" +
+            " economy made up by the outdoor recreation industry, median annual air quality, LBs of chemicals released annually per state square mile, and miles of trail per state square mile."
         }
     ]
 
@@ -72,16 +99,16 @@ const Header = () => {
                     <br/>
                     This project was created by a team of eight students for CSDS 395: Senior Project
                     at Case Western Reserve University. Their names are listed below:
-                    <ol>
+                    <ul>
                         <li>Peter Schlueter (<a href='https://www.linkedin.com/in/peter-schlueter-32b759165/'>LinkedIn</a>)</li>
-                        <li>Jack Kovac (<a href='https://www.linkedin.com/in/martin-j-kovac/'>LinkedIN</a>)</li>
+                        <li>Jack Kovac (<a href='https://www.linkedin.com/in/martin-j-kovac/'>LinkedIn</a>)</li>
                         <li>Tyler Avery</li>
                         <li>Vikranth Mallikarjun</li>
                         <li>Thomas Bornhorst</li>
                         <li>Fatih Ahmet Gurbuz</li>
                         <li>Ziyad Sbeih</li>
                         <li>Francis Mungai</li>
-                    </ol>
+                    </ul>
                 </Typography>
             </div>
         )
@@ -91,16 +118,15 @@ const Header = () => {
         return (
             <div>
                 <Typography variant="body1" gutterBottom>
-                    <strong>APIs Used:</strong>
+                    <strong>APIs & Datasets Used:</strong>
                 </Typography>
                 <ol>
                     {apiCredits.map((api) => {
                         return (
                             <li>
                                 <Typography>
-                                    <strong>{api.apiName}:</strong>{' '}
                                     <a href={api.apiLink} target="_blank" rel="noopener noreferrer">
-                                        {api.apiLink}
+                                        {api.apiName}
                                     </a>
                                 </Typography>
                             </li>
@@ -190,7 +216,7 @@ const Header = () => {
                         ))}
                     </Box>
                     {navIcons.map((item) => (
-                        <Link key={ item.link } color='inherit' href={ item.link }>
+                        <Link key={ item.link } color='inherit' href={ item.link } target="_blank">
                             { item.icon }
                         </Link>
                     ))}
