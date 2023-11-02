@@ -9,6 +9,7 @@ const api_header = {
 
 // Takes in cities and searchCriteria and returns ranked list of top 10 cities
 async function citySearch(cities, searchCriteria) {
+    // Main variables for changing how search works
     const valuedScalingFactor = 5;
     let topCities = [];
     const numCoarseResults = 30;
@@ -21,6 +22,7 @@ async function citySearch(cities, searchCriteria) {
     // Sort the array of tuples by scores in descending order
     combinedData.sort((a, b) => b[1] - a[1]);
 
+    // If jobs is selected, search using it
     if (searchCriteria["preferredOccupation"] != null) {
         await addJobsScores(combinedData, numCoarseResults, searchCriteria, valuedScalingFactor);
     }
@@ -35,10 +37,12 @@ async function citySearch(cities, searchCriteria) {
 
 async function addJobsScores(combinedData, numCoarseResults, searchCriteria, valuedScalingFactor) {
     // Compile list of top numCoarseResults cities
-    coarseCityNames = [];
+    let coarseCityNames = [];
     for (let i = 0; i < numCoarseResults; i++) {
         coarseCityNames[i] = combinedData[i][0].name + "," + combinedData[i][0].state;
     }
+
+    // Get job information
     let jobCode = searchCriteria["preferredOccupation"]["code"];
     let jobCounts = await getJobCounts(coarseCityNames, jobCode);
     let salaries = await getSalaries(coarseCityNames, jobCode);
@@ -63,6 +67,7 @@ async function addJobsScores(combinedData, numCoarseResults, searchCriteria, val
             salaryMax = entry.hourly;
     }
 
+    // Check if variable is prioritized
     let isValued = false;
     if (searchCriteria.priorityAttributes.includes("preferredOccupation"))
         isValued = true;
@@ -133,8 +138,8 @@ function getNormalizationData(cities, searchCriteria) {
         let min = Number.MAX_VALUE;
         let max = Number.MIN_VALUE;
 
-        for (let i = 0; i < cities.length; i++) {
-            let attrributeValue = getAttributeValue(cities[i], criteriaName);
+        for (let city in cities) {
+            let attrributeValue = getAttributeValue(city, criteriaName);
             if (typeof(attrributeValue) != 'number') {
                 min = null;
                 max = null;
