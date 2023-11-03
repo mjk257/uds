@@ -30,7 +30,7 @@ const mockCityDetails = {
     partisan_lean: 25,
     outdoorScore: 79,
     zone_description: "humid subtropical",
-    avgPopulationAge: 35
+    median_age: 35
 }
 
 describe("Testing ConfigurationList component", () => {

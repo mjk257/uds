@@ -138,8 +138,8 @@ const CityResponseCard = ({ cityDetails, rank }: Props) => {
     },
     {
       title: "Average Population Age",
-      value: cityDetails?.avgPopulationAge
-        ? averagePopulationAgeToString(cityDetails.avgPopulationAge)
+      value: cityDetails?.median_age
+        ? averagePopulationAgeToString(cityDetails.median_age)
         : "N/A",
     },
   ];

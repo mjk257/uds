@@ -125,7 +125,7 @@ function getAttributeValue(city, criteriaName) {
         case "politics":
             return city.partisan_lean;
         case "avgPopulationAge":
-            return null;
+            return city.median_age;
         default:
             return null;
     }
