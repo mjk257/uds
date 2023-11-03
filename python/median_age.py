@@ -19,7 +19,6 @@ df = pd.read_json(
 )
 df = df[["city", "state", "median_age"]]
 df['state'] = df['state'].apply(abbreviate)
-df = df.rename(columns={"city": "name"})
 
 #send data to db
 for city in cities.find():
