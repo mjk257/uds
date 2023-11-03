@@ -138,12 +138,10 @@ function getNormalizationData(cities, searchCriteria) {
         let min = Number.MAX_VALUE;
         let max = Number.MIN_VALUE;
 
-        for (let city in cities) {
+        for (let city of cities) {
             let attrributeValue = getAttributeValue(city, criteriaName);
             if (typeof(attrributeValue) != 'number') {
-                min = null;
-                max = null;
-                break;
+                continue;
             }
 
             if (attrributeValue < min)
@@ -151,6 +149,12 @@ function getNormalizationData(cities, searchCriteria) {
             if (attrributeValue > max)
                 max = attrributeValue;
         }
+
+        if (min == Number.MIN_VALUE)
+            min = null;
+        if (max == Number.MAX_VALUE)
+            max = null;
+
         normalizationData[criteriaName] = [min, max]
     }
 
@@ -210,15 +214,21 @@ function getCityScores(cities, searchCriteria, valuedScalingFactor) {
         let normalizedPref = null;
 
         if (criteriaMin != null) {
-            criteriaMaxMinDiff = normalizeData[criteriaName][1] - criteriaMin; // max - min
-            normalizedPref = (pref - criteriaMin) / criteriaMaxMinDiff;
-            // console.log("Min: " + criteriaMin + ", Max: " + normalizeData[criteriaName][1] + ", MaxMinDiff: " + criteriaMaxMinDiff + ", pref: " + pref + ", normalizedPref: " + normalizedPref);
-        
-            // If preference is outside range of data
-            if (normalizedPref < 0)
-                normalizedPref = 0;
-            else if(normalizedPref > 1)
+            if (pref == "max") {
                 normalizedPref = 1;
+            } else if (pref == "min") {
+                normalizedPref = 0;
+            } else {
+                criteriaMaxMinDiff = normalizeData[criteriaName][1] - criteriaMin; // max - min
+                normalizedPref = (pref - criteriaMin) / criteriaMaxMinDiff;
+                // console.log("Min: " + criteriaMin + ", Max: " + normalizeData[criteriaName][1] + ", MaxMinDiff: " + criteriaMaxMinDiff + ", pref: " + pref + ", normalizedPref: " + normalizedPref);
+            
+                // If preference is outside range of data
+                if (normalizedPref < 0)
+                    normalizedPref = 0;
+                else if(normalizedPref > 1)
+                    normalizedPref = 1;
+            }
         }
 
         // Add city criteria score to each cities score
