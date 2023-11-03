@@ -67,6 +67,10 @@ const Header = () => {
             apiLink: "https://www.census.gov/geographies/reference-files/2010/geo/state-area.html"
         },
         {
+            apiName: "OpenStreetMap Hiking Trails",
+            apiLink: "https://www.openstreetmap.org"
+        },
+        {
             apiName: "U.S. Census Bureau American Community Survey (2015)",
             apiLink: "https://public.opendatasoft.com/explore/dataset/us-cities-demographics/information/?flg=en-us"
         }
