@@ -31,6 +31,10 @@ const Header = () => {
             apiLink: "http://climateapi.scottpinkelman.com"
         },
         {
+            apiName: "National Centers for Environmental Information Data Access API",
+            apiLink: "https://www.ncei.noaa.gov/access"
+        },
+        {
             apiName: "RPP Dataset (Cost of Living) by the Bureau of Economic Analysis (2021)",
             apiLink: "https://www.bea.gov/news/2022/real-personal-consumption-expenditures-state-and-real-personal-income-state-and"
         },
@@ -61,6 +65,14 @@ const Header = () => {
         {
             apiName: "U.S. Census State Area Measurements and Internal Point Coordinates Dataset (2010)",
             apiLink: "https://www.census.gov/geographies/reference-files/2010/geo/state-area.html"
+        },
+        {
+            apiName: "OpenStreetMap Hiking Trails",
+            apiLink: "https://www.openstreetmap.org"
+        },
+        {
+            apiName: "U.S. Census Bureau American Community Survey (2015)",
+            apiLink: "https://public.opendatasoft.com/explore/dataset/us-cities-demographics/information/?flg=en-us"
         }
 
 
