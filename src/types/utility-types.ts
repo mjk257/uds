@@ -54,6 +54,8 @@ export type CityDetails = {
     zone_description: string,
     partisan_lean: number // negative value is more republican, positive is more democratic
     outdoor_score: number // the closer this value is to 100, the better suited the city is for outdoor recreation
+    occupation_data: number,
+    median_age: number
 }
 
 export type Occupation = {
