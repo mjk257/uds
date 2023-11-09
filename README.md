@@ -48,14 +48,11 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 
 # Data Ingestion
 
-To ingest new data, first navigate to the python directory and run
-### `pip install -r requirements.txt`
+To load up a fresh version of the database, simply run
+`./python/full_ingestion.py`
 
-Next, ensure your .env file is setup correctly either with the production Atlas connection string or
-`mongodb://localhost:27017`
-for local connection.
-
-Then, if using PowerShell, in the same directory run
-### ` ./cities.py ; ./rpp.py ; ./climate.py`
-
-to run the data ingestion scripts in the optimal order. You can also run an individual script, however, note that running the `cities.py` script will overwrite all the other attributes in the database.
+To run any individual ingestion scripts, first run
+`pip install -r requirements.txt` 
+followed by
+`./python/{ingestion_script_here}.py`
+Note that `cities.py` needs to be run first before any of the other scripts will function.
