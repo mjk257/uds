@@ -18,7 +18,7 @@ const apiRoutes = require("./routes/api.js");
 app.use(cors());
 
 // Serve static files from the build directory
-app.use(express.static(path.join(__dirname, "/build")));
+app.use(express.static(path.join(__dirname, "/../build")));
 
 // Middleware to parse JSON requests
 app.use(express.json());

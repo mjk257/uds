@@ -105,29 +105,18 @@
   }
 }
 
-.marker-label {
-  background-color: #0078d4;
-  color: #ffffff;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-weight: bold;
-  font-size: 12px;
-  text-align: center;
-  cursor: pointer;
-}
-
 .mapboxgl-marker {
   cursor: pointer;
 }
 
 .footer {
-    background-color: black !important;
-    color: white;
-    text-align: center;
-    padding: 20px 0;
-    .footer-link {
-      color: white !important;
-      text-decoration: none;
-      margin: 0 10px;
-    }
+  background-color: black !important;
+  color: white;
+  text-align: center;
+  padding: 20px 0;
+  .footer-link {
+    color: white !important;
+    text-decoration: none;
+    margin: 0 10px;
+  }
 }
