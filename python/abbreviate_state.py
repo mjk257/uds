@@ -55,6 +55,7 @@ us_state_to_abbrev = {
     "Wisconsin": "WI",
     "Wyoming": "WY",
     "District of Columbia": "DC",
+    "District Of Columbia": "DC",
     "American Samoa": "AS",
     "Guam": "GU",
     "Northern Mariana Islands": "MP",
