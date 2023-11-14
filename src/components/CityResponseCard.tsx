@@ -80,8 +80,8 @@ const CityResponseCard = ({ cityDetails, rank }: Props) => {
     return avgPopulationAge + " years old";
   };
 
-  const crimeRateToString = (crimeRate: number) => {
-    return crimeRate + " crimes per 100,000 people";
+  const crimeRateToString = (crime_rate: number) => {
+    return crime_rate + " crimes per 100,000 people annually";
   };
 
   const politicsToString = (partisan_lean: number) => {
@@ -154,8 +154,8 @@ const CityResponseCard = ({ cityDetails, rank }: Props) => {
     },
     {
       title: "Crime Rate",
-      value: cityDetails?.crimeRate
-        ? crimeRateToString(cityDetails.crimeRate)
+      value: cityDetails?.crime_rate
+        ? crimeRateToString(cityDetails.crime_rate)
         : "N/A",
     },
     {
