@@ -159,25 +159,25 @@ const CityResponseCard = ({ cityDetails, rank }: Props) => {
         : "N/A",
     },
     {
-      title: "Walk Score",
-      value: cityDetails?.walk_score
-        ? cityDetails.walk_score
+      title: "WalkScore®",
+      value: cityDetails?.walkscore
+        ? cityDetails.walkscore
         : "N/A",
-      style: {color: percentageToColor(cityDetails?.walk_score, 45, 100)}
+      branding: "https://www.walkscore.com/how-it-works/"
     },
     {
-      title: "Transit Score",
-      value: cityDetails?.transit_score
-        ? cityDetails.transit_score
+      title: "TransitScore®",
+      value: cityDetails?.transitscore
+        ? cityDetails.transitscore
         : "N/A",
-      style: {color: percentageToColor(cityDetails?.transit_score, 45, 100)}
+      branding: "https://www.walkscore.com/how-it-works/"
     },
     {
-      title: "Bike Score",
-      value: cityDetails?.bike_score
-        ? cityDetails.bike_score
+      title: "BikeScore®",
+      value: cityDetails?.bikescore
+        ? cityDetails.bikescore
         : "N/A",
-      style: {color: percentageToColor(cityDetails?.bike_score, 45, 100)}  
+      branding: "https://www.walkscore.com/how-it-works/"
     },
     {
       title: "Outdoor Score",
@@ -246,8 +246,17 @@ const CityResponseCard = ({ cityDetails, rank }: Props) => {
             {accordionDetails.map((item, idx) => {
               return (
                 <Typography key={idx} className="city-response-text">
-                  <span className="title">{`${item.title}: `}</span>{" "}
-                  <span style={item.style}>{item.value}</span>
+                  {item?.branding ? (
+                    <Typography>
+                      <span className="title"><a href={item.branding}>{`${item.title}`}</a>:</span>{" "}
+                      <span style={item.style}><a href={item.branding}>{item.value}</a></span>
+                    </Typography>
+                  ) : (
+                    <Typography>
+                      <span className="title">{`${item.title}: `}</span>{" "}
+                      <span style={item.style}>{item.value}</span>
+                    </Typography>
+                  )}
                 </Typography>
               );
             })}
