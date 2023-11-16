@@ -166,13 +166,6 @@ const CityResponseCard = ({ cityDetails, rank }: Props) => {
       branding: "https://www.walkscore.com/how-it-works/"
     },
     {
-      title: "TransitScore®",
-      value: cityDetails?.transitscore
-        ? cityDetails.transitscore
-        : "N/A",
-      branding: "https://www.walkscore.com/how-it-works/"
-    },
-    {
       title: "BikeScore®",
       value: cityDetails?.bikescore
         ? cityDetails.bikescore
