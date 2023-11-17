@@ -73,6 +73,14 @@ const Header = () => {
         {
             apiName: "U.S. Census Bureau American Community Survey (2015)",
             apiLink: "https://public.opendatasoft.com/explore/dataset/us-cities-demographics/information/?flg=en-us"
+        },
+        {
+            apiName: "Federal Bureau of Investigation Uniform Crime Reports (2018)",
+            apiLink: "https://ucr.fbi.gov/crime-in-the-u.s/2019/crime-in-the-u.s.-2019/tables/table-8/table-8.xls/view"
+        },
+        {
+            apiName: "WalkScore API",
+            apiLink: "https://www.walkscore.com/how-it-works/"
         }
 
 
