@@ -5,7 +5,7 @@ import {
   Occupation,
 } from "../types/utility-types";
 import {
-  Autocomplete,
+  Autocomplete, Box,
   Button,
   Card,
   CardContent,
@@ -14,7 +14,6 @@ import {
   Divider,
   FormControl,
   FormControlLabel,
-  FormGroup,
   FormHelperText,
   FormLabel,
   InputLabel,
@@ -26,6 +25,7 @@ import {
 } from "@mui/material";
 import { Configs, ageRange, densityRange, populationRange, numTics } from "../types/utility-types";
 import { searchForCities, getAllOccupations } from "../util/api-calls";
+import {Star, StarBorder} from "@mui/icons-material";
 
 const ConfigurationForm = ({
   currentConfig,
@@ -214,6 +214,32 @@ const ConfigurationForm = ({
     formInputs[6].options = allOccupations;
   }, [allOccupations]);
 
+  const PriorityCheckbox = ({ value } : CheckboxProps) => {
+    return (
+      <FormControlLabel
+        control={
+          <Checkbox
+            sx={{ marginLeft: 1, marginBottom: 0.5, width: "fit-content", pointerEvents: "auto" }}
+            icon={ <StarBorder /> }
+            checkedIcon={ <Star /> }
+            //@ts-ignore
+            disabled={
+              //@ts-ignore
+              currentConfig[value] === null ||
+              //@ts-ignore
+              currentConfig[value] === "" ||
+              isDefaultRange(value)
+            }
+            checked={currentConfig.priorityAttributes.includes(value)}
+            onChange={(event) => handleChange("priorityAttributes", event)}
+            value={value}
+          />
+        }
+        label={""}
+      />
+    );
+  };
+
   const formInputs = [
     {
       componentType: "radio",
@@ -221,6 +247,7 @@ const ConfigurationForm = ({
       groupValue: currentConfig.costOfLiving,
       labels: { na: "No Preference", yes: "Matters" },
       values: { na: "", yes: 0 },
+      checkboxValue: "costOfLiving",
       onChange: (event: any) => handleChange("costOfLiving", event),
     },
     {
@@ -230,6 +257,7 @@ const ConfigurationForm = ({
       values: { na: "", yes: 10000 },
       labels: { na: "No Preference", yes: "Matters" },
       onChange: (event: any) => handleChange("crimeRate", event),
+      checkboxValue: "crimeRate",
       helperText: "The amount of people affected by crime per 100,000 people.",
     },
     {
@@ -238,6 +266,7 @@ const ConfigurationForm = ({
       groupValue: currentConfig.walkAndTransability,
       values: { na: "", yes: 95 },
       labels: { na: "No Preference", yes: "Matters" },
+      checkboxValue: "walkAndTransability",
       onChange: (event: any) => handleChange("walkAndTransability", event),
     },
     {
@@ -246,6 +275,7 @@ const ConfigurationForm = ({
       groupValue: currentConfig.outdoorScore,
       values: { na: "", yes: 100 },
       labels: { na: "No Preference", yes: "Matters" },
+      checkboxValue: "outdoorScore",
       onChange: (event: any) => handleChange("outdoorScore", event),
     },
     {
@@ -258,6 +288,7 @@ const ConfigurationForm = ({
       value: currentConfig.population,
       onChange: (event: any) => handleSliderChange("population", event),
       marks: generateMarks(populationRange, numTics),
+      checkboxValue: "population",
       label: "Population"
     },
     {
@@ -269,6 +300,7 @@ const ConfigurationForm = ({
       value: currentConfig.populationDensity,
       onChange: (event: any) => handleSliderChange("populationDensity", event),
       marks: generateMarks(densityRange, numTics),
+      checkboxValue: "populationDensity",
       label: "Population Density"
     },
     {
@@ -279,6 +311,7 @@ const ConfigurationForm = ({
       onChange: (event: any, newValue: any) =>
         handleAutocompleteChange("preferredOccupation", event, newValue),
       label: "Preferred Occupation",
+      checkboxValue: "preferredOccupation",
       helperText: "Note: Since live data is being used, selecting a preferred occupation will add roughly 10 seconds to the search time."
     },
     {
@@ -286,6 +319,7 @@ const ConfigurationForm = ({
       inputLabel: "Politics",
       value: currentConfig.politics,
       onChange: (event: any) => handleChange("politics", event),
+      checkboxValue: "politics",
       label: "Politics",
       menuItems: [
         { title: "No Preference", value: "" },
@@ -299,6 +333,7 @@ const ConfigurationForm = ({
       value: currentConfig.climate,
       onChange: (event: any) => handleChange("climate", event),
       label: "Climate",
+      checkboxValue: "climate",
       menuProps: {
         PaperProps: {
           style: {
@@ -371,21 +406,9 @@ const ConfigurationForm = ({
       max: ageRange[1],
       marks: generateMarks(ageRange, numTics),
       onChange: (event: any) => handleSliderChange("avgPopulationAge", event),
+      checkboxValue: "avgPopulationAge",
       label: "Average Population Age"
     },
-  ];
-
-  const priorityAttributeCheckboxes = [
-    { title: "Cost of Living", value: "costOfLiving" },
-    { title: "Crime Rate", value: "crimeRate" },
-    { title: "Walkability/Transability", value: "walkAndTransability" },
-    { title: "Good for Outdoor Recreation", value: "outdoorScore" },
-    { title: "Population", value: "population" },
-    { title: "Population Density", value: "populationDensity" },
-    { title: "Preferred Occupation", value: "preferredOccupation" },
-    { title: "Politics", value: "politics" },
-    { title: "Climate", value: "climate" },
-    { title: "Average Population Age", value: "avgPopulationAge" },
   ];
 
   return (
@@ -404,34 +427,39 @@ const ConfigurationForm = ({
                     key={index}
                   >
                     {input?.componentType === "select" && (
-                      <>
+                      <div style={{ display: 'flex', alignItems: 'left' }}>
                         <InputLabel id={input.inputLabel}>
                           {input.label}
                         </InputLabel>
                         <Select
-                          labelId={input?.inputLabel}
-                          id={input?.inputLabel}
-                          value={input?.value}
-                          onChange={input?.onChange}
-                          label={input?.label}
-                          MenuProps={input?.menuProps}
+                            labelId={input?.inputLabel}
+                            id={input?.inputLabel}
+                            value={input?.value}
+                            onChange={input?.onChange}
+                            label={input?.label}
+                            MenuProps={input?.menuProps}
+                            sx={{ width: "100%" }}
                         >
                           {input.menuItems?.map((menuItem, index) => {
                             return (
-                              <MenuItem value={menuItem.value} key={index}>
-                                {menuItem.title}
-                              </MenuItem>
+                                <MenuItem value={menuItem.value} key={index}>
+                                  {menuItem.title}
+                                </MenuItem>
                             );
                           })}
                         </Select>
-                      </>
+                        <Box style={{ transform: "translate(0px, 10px)"}}>
+                          <PriorityCheckbox value={input.checkboxValue} />
+                        </Box>
+                      </div>
                     )}
                     {input?.componentType === "autocomplete" && (
-                      <>
+                      <div style={{ display: 'flex', alignItems: 'left' }}>
                         <Autocomplete
                           options={input?.options as Occupation[]}
                           autoComplete
                           getOptionLabel={input?.getOptionLabel}
+                          sx={{ width: "100%" }}
                           renderInput={(params) => (
                             <TextField
                               {...params}
@@ -442,12 +470,16 @@ const ConfigurationForm = ({
                           value={input?.value}
                           onChange={input?.onChange}
                         />
-                      </>
+                        <Box style={{ transform: "translate(0px, 10px)"}}>
+                          <PriorityCheckbox value={input.checkboxValue} />
+                        </Box>
+                      </div>
                     )}
                     {input?.componentType === "radio" && (
                       <>
-                        <FormLabel id="demo-row-radio-buttons-group-label">
+                        <FormLabel sx={{ width: "fit-content", pointerEvents: "none", marginTop: -1, marginBottom: -1 }}>
                           {input?.groupLabel}
+                          <PriorityCheckbox value={input.checkboxValue} />
                         </FormLabel>
                         <RadioGroup
                           key={index}
@@ -472,7 +504,10 @@ const ConfigurationForm = ({
                     )}
                     {input?.componentType === "slider" && (
                         <>
-                          <FormLabel>{input?.label}</FormLabel>
+                          <FormLabel sx={{ width: "fit-content", pointerEvents: "none", marginTop: -1, marginBottom: -1 }}>
+                            {input?.label}
+                            <PriorityCheckbox value={input?.checkboxValue} />
+                          </FormLabel>
                           <Slider
                               key={index}
                               value={input?.value as number[]}
@@ -489,53 +524,12 @@ const ConfigurationForm = ({
                   </FormControl>
                 );
               })}
-              <br />
-              <Divider />
-              <FormControl
-                variant="standard"
-                error={isOverPriorityAttributesLimit()}
-              >
-                <FormLabel className="preferences-form-priority-attributes-label">
-                  Select Up to 3 Attributes Which You Value the Most!
-                </FormLabel>
-                <FormGroup>
-                  {priorityAttributeCheckboxes.map((checkbox, index) => {
-                    return (
-                      <>
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              key={index}
-                              //@ts-ignore
-                              disabled={
-                                //@ts-ignore
-                                currentConfig[checkbox.value] === null ||
-                                //@ts-ignore
-                                currentConfig[checkbox.value] === "" ||
-                                isDefaultRange(checkbox.value)
-                              }
-                              checked={currentConfig.priorityAttributes.includes(
-                                checkbox.value
-                              )}
-                              onChange={(event) =>
-                                handleChange("priorityAttributes", event)
-                              }
-                              name={checkbox.title}
-                              value={checkbox.value}
-                            />
-                          }
-                          label={checkbox.title}
-                        />
-                      </>
-                    );
-                  })}
-                </FormGroup>
-                {isOverPriorityAttributesLimit() && (
+              {isOverPriorityAttributesLimit() && (
                   <FormHelperText>
                     Please only select up to 3 attributes!
                   </FormHelperText>
-                )}
-              </FormControl>
+              )}
+              <br />
               <div className="preferences-form-sibling-set">
                 <Button color="error" variant="outlined" onClick={clearForm}>
                   Clear
@@ -565,5 +559,9 @@ type Props = {
   setAllConfigs: Function;
   setReturnedCities: Function;
 };
+
+type CheckboxProps = {
+  value: string
+}
 
 export default ConfigurationForm;
