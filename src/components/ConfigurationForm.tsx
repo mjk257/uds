@@ -276,12 +276,12 @@ const ConfigurationForm = ({
     formInputs[6].options = allOccupations;
   }, [allOccupations]);
 
-  const PriorityCheckbox = ({ value } : CheckboxProps) => {
+  const PriorityCheckbox = ({ value, bottomMargin } : CheckboxProps) => {
     return (
       <FormControlLabel
         control={
           <Checkbox
-            sx={{ marginLeft: 1, marginBottom: 0.5, width: "fit-content", pointerEvents: "auto" }}
+            sx={{ marginLeft: 1, marginBottom: bottomMargin, width: "fit-content", pointerEvents: "auto" }}
             icon={ <StarBorder /> }
             checkedIcon={ <Star /> }
             //@ts-ignore
@@ -486,7 +486,7 @@ const ConfigurationForm = ({
                           })}
                         </Select>
                         <Box style={{ transform: "translate(10px, 10px)" }}>
-                          <PriorityCheckbox value={input.checkboxValue} />
+                          <PriorityCheckbox value={input.checkboxValue} bottomMargin={ 0.5 }/>
                         </Box>
                       </div>
                     )}
@@ -508,7 +508,7 @@ const ConfigurationForm = ({
                           onChange={input?.onChange}
                         />
                         <Box style={{ transform: "translate(10px, 10px)" }}>
-                          <PriorityCheckbox value={input.checkboxValue} />
+                          <PriorityCheckbox value={input.checkboxValue} bottomMargin={ 0.5 }/>
                         </Box>
                       </div>
                     )}
@@ -523,7 +523,7 @@ const ConfigurationForm = ({
                                   onChange={ input?.onChange }
                                   value={ input?.value }
                             />
-                            <PriorityCheckbox value={input.checkboxValue} />
+                            <PriorityCheckbox value={input.checkboxValue} bottomMargin={ 0.25 }/>
                           </FormLabel>
                         </>
                     )}
@@ -531,7 +531,7 @@ const ConfigurationForm = ({
                         <>
                           <FormLabel sx={{ width: "fit-content", pointerEvents: "none", marginTop: -1, marginBottom: -1 }}>
                             {input?.label}
-                            <PriorityCheckbox value={input?.checkboxValue} />
+                            <PriorityCheckbox value={input?.checkboxValue} bottomMargin={ 0.5 }/>
                           </FormLabel>
                           <Slider
                               key={index}
@@ -586,7 +586,8 @@ type Props = {
 };
 
 type CheckboxProps = {
-  value: string
+  value: string,
+  bottomMargin: number
 }
 
 export default ConfigurationForm;
