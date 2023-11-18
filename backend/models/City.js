@@ -18,7 +18,9 @@ const citySchema = new mongoose.Schema({
     annual_snowfall: Number,
     summer_temp: Number,
     winter_temp: Number,
-    crime_rate: Number
+    crime_rate: Number,
+    walkscore: Number,
+    bikescore: Number
 });
 
 module.exports = mongoose.model('City', citySchema, 'cities');

@@ -110,8 +110,10 @@ function getAttributeValue(city, criteriaName) {
             return city.rpp;
         case "crimeRate":
             return city.crime_rate;
-        case "walkAndTransability":
-            return null;
+        case "walkability":
+            return city.walkscore;
+        case "bikeability":
+            return city.bikescore;
         case "outdoorScore":
             return city.outdoor_score;
         case "population":

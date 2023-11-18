@@ -15,7 +15,8 @@ export type CityPreferencesConfiguration = {
     costOfLiving: string | number,
     preferredOccupation: Occupation | null,
     crimeRate: number | string,
-    walkAndTransability: string | number,
+    walkability: string | number,
+    bikeability: string | number,
     politics: string,
     outdoorScore: string | number,
     annualRainfall: string | number[],
@@ -40,7 +41,8 @@ export const defaultCityPreferencesConfiguration : CityPreferencesConfiguration 
     costOfLiving: "",
     preferredOccupation: null,
     crimeRate: '',
-    walkAndTransability: "",
+    walkability: "",
+    bikeability: "",
     politics: "",
     outdoorScore: "",
     annualRainfall: annualRainfallRange,
@@ -78,6 +80,8 @@ export type CityDetails = {
     winter_temp: number,
     summer_temp: number,
     crime_rate: number,
+    walkscore: number,
+    bikescore: number
 }
 
 export type Occupation = {
