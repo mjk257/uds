@@ -512,7 +512,6 @@ const ConfigurationForm = ({
                                 currentConfig[checkbox.value] === null ||
                                 //@ts-ignore
                                 currentConfig[checkbox.value] === "" ||
-                                //@ts-ignore
                                 isDefaultRange(checkbox.value)
                               }
                               checked={currentConfig.priorityAttributes.includes(
