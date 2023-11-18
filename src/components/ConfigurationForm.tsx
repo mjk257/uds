@@ -137,6 +137,23 @@ const ConfigurationForm = ({
     }
   }
 
+  const handleCheckboxChange = (property: any, checkedValue: any) => {
+    let newPriorityAttributes = currentConfig.priorityAttributes;
+    // @ts-ignore
+    if (currentConfig.priorityAttributes.includes(property) && currentConfig[property] === checkedValue) {
+      newPriorityAttributes = newPriorityAttributes.filter(
+        (item: any) => item !== property
+      );
+    }
+    // @ts-ignore
+    const newValue = currentConfig[property] === checkedValue ? "" : checkedValue;
+    setCurrentConfig({
+        ...currentConfig,
+        [property]: newValue,
+        priorityAttributes: newPriorityAttributes
+    });
+  };
+
   // Used to change the slider value check marks. Had a lot of trouble with this so keeping this jank for now
   useEffect(() => {
     let newPriorityAttributes = currentConfig.priorityAttributes;
@@ -287,50 +304,39 @@ const ConfigurationForm = ({
 
   const formInputs = [
     {
-      componentType: "radio",
-      groupLabel: "Low Cost of Living?",
-      groupValue: currentConfig.costOfLiving,
-      labels: { na: "No Preference", yes: "Matters" },
-      values: { na: "", yes: 0 },
+      componentType: "checkbox",
+      label: "Low Cost of Living",
       checkboxValue: "costOfLiving",
-      onChange: (event: any) => handleChange("costOfLiving", event),
+      checkedValue: 95,
+      onChange: () => handleCheckboxChange("costOfLiving", 95)
     },
     {
-      componentType: "radio",
-      groupLabel: "Low Crime Rate?",
-      groupValue: currentConfig.crimeRate,
-      values: { na: "", yes: 10000 },
-      labels: { na: "No Preference", yes: "Matters" },
-      onChange: (event: any) => handleChange("crimeRate", event),
+      componentType: "checkbox",
+      label: "Low Crime Rate",
       checkboxValue: "crimeRate",
-      helperText: "The amount of people affected by crime per 100,000 people.",
+      checkedValue: 1,
+      onChange: () => handleCheckboxChange("crimeRate", 1)
     },
     {
-      componentType: "radio",
-      groupLabel: "High Walkability?",
-      groupValue: currentConfig.walkability,
-      values: { na: "", yes: 100 },
-      labels: { na: "No Preference", yes: "Matters" },
+      componentType: "checkbox",
+      label: "High Walkability",
       checkboxValue: "walkability",
-      onChange: (event: any) => handleChange("walkability", event),
+      checkedValue: 100,
+      onChange: () => handleCheckboxChange("walkability", 100)
     },
     {
-      componentType: "radio",
-      groupLabel: "High Bikeability?",
-      groupValue: currentConfig.bikeability,
-      values: { na: "", yes: 100 },
-      labels: { na: "No Preference", yes: "Matters" },
+      componentType: "checkbox",
+      label: "High Bikeability",
       checkboxValue: "bikeability",
-      onChange: (event: any) => handleChange("bikeability", event),
+      checkedValue: 100,
+      onChange: () => handleCheckboxChange("bikeability", 100)
     },
     {
-      componentType: "radio",
-      groupLabel: "Good for Outdoor Recreation?",
-      groupValue: currentConfig.outdoorScore,
-      values: { na: "", yes: 100 },
-      labels: { na: "No Preference", yes: "Matters" },
+      componentType: "checkbox",
+      label: "Good for Outdoor Recreation",
       checkboxValue: "outdoorScore",
-      onChange: (event: any) => handleChange("outdoorScore", event),
+      checkedValue: 100,
+      onChange: () => handleCheckboxChange("outdoorScore", 100)
     },
     {
       componentType: "slider",
@@ -506,32 +512,20 @@ const ConfigurationForm = ({
                         </Box>
                       </div>
                     )}
-                    {input?.componentType === "radio" && (
-                      <>
-                        <FormLabel sx={{ width: "fit-content", pointerEvents: "none", marginTop: -1, marginBottom: -1 }}>
-                          {input?.groupLabel}
-                          <PriorityCheckbox value={input.checkboxValue} />
-                        </FormLabel>
-                        <RadioGroup
-                          key={index}
-                          row
-                          name={input?.groupValue + "group"}
-                          onChange={input?.onChange}
-                          value={input?.groupValue}
-                          defaultValue={input?.values?.na}
-                        >
-                          <FormControlLabel
-                            control={<Radio />}
-                            label={input?.labels?.yes}
-                            value={input?.values?.yes}
-                          />
-                          <FormControlLabel
-                            control={<Radio />}
-                            label={input?.labels?.na}
-                            value={input?.values?.na}
-                          />
-                        </RadioGroup>
-                      </>
+                    {input?.componentType === "checkbox" && (
+                        <>
+                          <FormLabel sx={{ width: "fit-content", pointerEvents: "none", marginTop: -1, marginBottom: -1 }}>
+                            {input?.label}
+                            <Checkbox
+                                  sx={{ width: "fit-content", pointerEvents: "auto" }}
+                                  //@ts-ignore
+                                  checked={currentConfig[input.checkboxValue] === input.checkedValue}
+                                  onChange={ input?.onChange }
+                                  value={ input?.value }
+                            />
+                            <PriorityCheckbox value={input.checkboxValue} />
+                          </FormLabel>
+                        </>
                     )}
                     {input?.componentType === "slider" && (
                         <>
