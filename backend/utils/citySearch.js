@@ -109,9 +109,11 @@ function getAttributeValue(city, criteriaName) {
         case "costOfLiving":
             return city.rpp;
         case "crimeRate":
-            return null;
-        case "walkAndTransability":
-            return null;
+            return city.crime_rate;
+        case "walkability":
+            return city.walkscore;
+        case "bikeability":
+            return city.bikescore;
         case "outdoorScore":
             return city.outdoor_score;
         case "population":
@@ -119,13 +121,19 @@ function getAttributeValue(city, criteriaName) {
         case "populationDensity":
             return city.density;
         case "climate":
-            return city.zone_description; //TODO: Parse this data correctly to match input data
-        case "preferredOccupation":
-            return null;
+            return city.zone_description; // TODO: Parse this data correctly to match input data
         case "politics":
             return city.partisan_lean;
         case "avgPopulationAge":
             return city.median_age;
+        case "annualPrecipitation":
+            return city.annual_precipitation;
+        case "annualSnowfall":
+            return city.annual_snowfall;
+        case "avgSummerTemp":
+            return city.summer_temp;
+        case "avgWinterTemp":
+            return city.winter_temp;
         default:
             return null;
     }

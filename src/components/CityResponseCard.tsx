@@ -220,8 +220,8 @@ const CityResponseCard = ({ cityDetails, rank }: Props) => {
         titleTypographyProps={{ align: "left" }}
       />
       <CardContent className="city-response-content">
-        {cityDetails?.summary ? (
-          <Typography>{cityDetails?.summary}</Typography>
+        {cityDetails?.description ? (
+          <Typography>{cityDetails?.description}</Typography>
         ) : (
           "N/A"
         )}

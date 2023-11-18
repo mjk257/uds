@@ -5,8 +5,7 @@ import {
   Occupation,
 } from "../types/utility-types";
 import {
-  Autocomplete,
-  AutocompleteRenderInputParams,
+  Autocomplete, Box,
   Button,
   Card,
   CardContent,
@@ -15,18 +14,18 @@ import {
   Divider,
   FormControl,
   FormControlLabel,
-  FormGroup,
   FormHelperText,
   FormLabel,
   InputLabel,
   MenuItem,
-  Radio,
-  RadioGroup,
-  Select,
+  Select, Slider,
   TextField,
 } from "@mui/material";
-import { Configs } from "../types/utility-types";
+import { Configs, ageRange, densityRange, populationRange, numTics,
+  avgSummerTempRange, avgWinterTempRange,
+  annualRainfallRange, annualSnowfallRange } from "../types/utility-types";
 import { searchForCities, getAllOccupations } from "../util/api-calls";
+import {Star, StarBorder} from "@mui/icons-material";
 
 const ConfigurationForm = ({
   currentConfig,
@@ -43,12 +42,48 @@ const ConfigurationForm = ({
 
   const isConfigEmpty = () => {
     console.log(currentConfig);
-    const filteredConfig = Object.values(currentConfig).filter(
-      (value: any) => value !== "" && value !== null
-    );
+    const allSlidersInDefaultRange = isDefaultRange("population")
+        && isDefaultRange("populationDensity")
+        && isDefaultRange("avgPopulationAge")
+        && isDefaultRange("annualSnowfall")
+        && isDefaultRange("annualRainfall")
+        && isDefaultRange("avgWinterTemp")
+        && isDefaultRange("avgSummerTemp");
+    let allOtherValuesEmpty = true;
+    for (const [key, value] of Object.entries(currentConfig)) {
+      if ((typeof(value) === "string" || typeof(value) === "number") && (value !== "" && value !== null)) {
+        allOtherValuesEmpty = false;
+      }
+    }
     // Priority attributes can be empty, so submission should be enabled so long as at least 1 attribute is filled
-    return filteredConfig.length <= 1;
+    return allSlidersInDefaultRange && allOtherValuesEmpty;
   };
+
+  const isDefaultRange = (property: string) => {
+    if (property === "population") {
+      return currentConfig.population[0] === populationRange[0] && currentConfig.population[1] === populationRange[1];
+    }
+    else if (property === "populationDensity") {
+      return currentConfig.populationDensity[0] === densityRange[0] && currentConfig.populationDensity[1] === densityRange[1];
+    }
+    else if (property === "avgPopulationAge") {
+      return currentConfig.avgPopulationAge[0] === ageRange[0] && currentConfig.avgPopulationAge[1] === ageRange[1];
+    }
+    else if (property === "annualSnowfall") {
+        return currentConfig.annualSnowfall[0] === annualSnowfallRange[0] && currentConfig.annualSnowfall[1] === annualSnowfallRange[1];
+    }
+    else if (property === "annualRainfall") {
+        return currentConfig.annualRainfall[0] === annualRainfallRange[0] && currentConfig.annualRainfall[1] === annualRainfallRange[1];
+    }
+    else if (property === "avgWinterTemp") {
+        return currentConfig.avgWinterTemp[0] === avgWinterTempRange[0] && currentConfig.avgWinterTemp[1] === avgWinterTempRange[1];
+    }
+    else if (property === "avgSummerTemp") {
+        return currentConfig.avgSummerTemp[0] === avgSummerTempRange[0] && currentConfig.avgSummerTemp[1] === avgSummerTempRange[1];
+    }
+    // If none of these, return false
+    return false;
+  }
 
   const handleChange = (property: any, event: any) => {
     let newPriorityAttributes = currentConfig.priorityAttributes;
@@ -57,6 +92,8 @@ const ConfigurationForm = ({
       isNaN(event.target.value) || event.target.value === ""
         ? event.target.value
         : Number(event.target.value);
+
+    console.log(value);
 
     if (property === "priorityAttributes") {
       if (newPriorityAttributes.includes(attribute)) {
@@ -81,6 +118,73 @@ const ConfigurationForm = ({
       setCurrentConfig({ ...currentConfig, [property]: value });
     }
   };
+
+  const handleSliderChange = (property: any, event: any) => {
+    let newPriorityAttributes = currentConfig.priorityAttributes;
+    const value = event.target.value;
+
+    if (isDefaultRange(property)) {
+      setCurrentConfig({
+        ...currentConfig,
+        priorityAttributes: newPriorityAttributes,
+        [property]: value,
+      });
+    }
+    else {
+      setCurrentConfig({ ...currentConfig, [property]: value });
+    }
+  }
+
+  const handleCheckboxChange = (property: any, checkedValue: any) => {
+    let newPriorityAttributes = currentConfig.priorityAttributes;
+    // @ts-ignore
+    if (currentConfig.priorityAttributes.includes(property) && currentConfig[property] === checkedValue) {
+      newPriorityAttributes = newPriorityAttributes.filter(
+        (item: any) => item !== property
+      );
+    }
+    // @ts-ignore
+    const newValue = currentConfig[property] === checkedValue ? "" : checkedValue;
+    setCurrentConfig({
+        ...currentConfig,
+        [property]: newValue,
+        priorityAttributes: newPriorityAttributes
+    });
+  };
+
+  // Used to change the slider value check marks. Had a lot of trouble with this so keeping this jank for now
+  useEffect(() => {
+    let newPriorityAttributes = currentConfig.priorityAttributes;
+    // Removing an attribute from prioritization if it is given no preference
+    console.log("Reached default range, should remove item from priority attributes")
+
+    if (isDefaultRange("avgPopulationAge")) {
+      newPriorityAttributes = newPriorityAttributes.filter((item: any) => item !== "avgPopulationAge");
+    }
+    if (isDefaultRange("population")) {
+      newPriorityAttributes = newPriorityAttributes.filter((item: any) => item !== "population");
+    }
+    if (isDefaultRange("populationDensity")) {
+      newPriorityAttributes = newPriorityAttributes.filter((item: any) => item !== "populationDensity");
+    }
+    if (isDefaultRange("annualSnowfall")) {
+        newPriorityAttributes = newPriorityAttributes.filter((item: any) => item !== "annualSnowfall");
+    }
+    if (isDefaultRange("annualRainfall")) {
+        newPriorityAttributes = newPriorityAttributes.filter((item: any) => item !== "annualRainfall");
+    }
+    if (isDefaultRange("avgWinterTemp")) {
+        newPriorityAttributes = newPriorityAttributes.filter((item: any) => item !== "avgWinterTemp");
+    }
+    if (isDefaultRange("avgSummerTemp")) {
+        newPriorityAttributes = newPriorityAttributes.filter((item: any) => item !== "avgSummerTemp");
+    }
+    setCurrentConfig({
+      ...currentConfig,
+      priorityAttributes: newPriorityAttributes
+    });
+  }, [currentConfig.population, currentConfig.populationDensity, currentConfig.avgPopulationAge,
+    currentConfig.annualRainfall, currentConfig.annualSnowfall, currentConfig.avgWinterTemp, currentConfig.avgSummerTemp])
 
   const handleAutocompleteChange = (
     property: any,
@@ -118,75 +222,204 @@ const ConfigurationForm = ({
   };
 
   const submitForm = () => {
-    // 1.) send the data to the search function and await its response
-    searchForCities(currentConfig).then((resp) => {
+    // Create a copy of the current config, making sure to display the original on screen
+    // This copy will contain the midpoint of the slider values, the same values for other fields
+    const populationMidpoint = ((currentConfig.population[0] as number) + (currentConfig.population[1] as number)) / 2;
+    const densityMidpoint = ((currentConfig.populationDensity[0] as number) + (currentConfig.populationDensity[1] as number)) / 2;
+    const ageMidpoint = ((currentConfig.avgPopulationAge[0] as number) + (currentConfig.avgPopulationAge[1] as number)) / 2;
+    const annualSnowfallMidpoint = ((currentConfig.annualSnowfall[0] as number) + (currentConfig.annualSnowfall[1] as number)) / 2;
+    const annualRainfallMidpoint = ((currentConfig.annualRainfall[0] as number) + (currentConfig.annualRainfall[1] as number)) / 2;
+    const avgWinterTempMidpoint = ((currentConfig.avgWinterTemp[0] as number) + (currentConfig.avgWinterTemp[1] as number)) / 2;
+    const avgSummerTempMidpoint = ((currentConfig.avgSummerTemp[0] as number) + (currentConfig.avgSummerTemp[1] as number)) / 2;
+    const currentConfigCopy = {
+        ...currentConfig,
+        population: populationMidpoint,
+        populationDensity: densityMidpoint,
+        avgPopulationAge: ageMidpoint,
+        annualSnowfall: annualSnowfallMidpoint,
+        annualRainfall: annualRainfallMidpoint,
+        avgWinterTemp: avgWinterTempMidpoint,
+        avgSummerTemp: avgSummerTempMidpoint
+    }
+
+    // send the data to the search function and await its response
+    searchForCities(currentConfigCopy).then((resp) => {
       setReturnedCities(resp);
     });
   };
+
+  const generateMarks = (range: number[], numTics: number) => {
+    const increment = (range[1] - range[0]) / numTics;
+    const marks = []
+    for (let i = 0; i <= numTics; i++) {
+        const value = range[0] + i * increment;
+        let label = String(range[0] + i * increment);
+        // If in the thousands, shorten to "num K"
+        if (Number(value) >= 1000 && Number(value) < 1000000) {
+          label = (Math.round(value / 1000)) + "k";
+        }
+        // If in the millions, shorten to "num M"
+        else if (Number(value) >= 1000000) {
+          label = (Math.round(value / 1000) / 1000) + "m";
+        }
+        marks.push({
+            value: value,
+            label: label
+        });
+    }
+    return marks;
+  }
 
   useEffect(() => {
     formInputs[6].options = allOccupations;
   }, [allOccupations]);
 
+  const PriorityCheckbox = ({ value, bottomMargin } : CheckboxProps) => {
+    return (
+      <FormControlLabel
+        control={
+          <Checkbox
+            sx={{ marginLeft: 1, marginBottom: bottomMargin, width: "fit-content", pointerEvents: "auto" }}
+            icon={ <StarBorder /> }
+            checkedIcon={ <Star /> }
+            //@ts-ignore
+            disabled={
+              //@ts-ignore
+              currentConfig[value] === null ||
+              //@ts-ignore
+              currentConfig[value] === "" ||
+              isDefaultRange(value)
+            }
+            checked={currentConfig.priorityAttributes.includes(value)}
+            onChange={(event) => handleChange("priorityAttributes", event)}
+            value={value}
+          />
+        }
+        label={""}
+      />
+    );
+  };
+
   const formInputs = [
     {
-      componentType: "radio",
-      groupLabel: "Low Cost of Living?",
-      groupValue: currentConfig.costOfLiving,
-      labels: { na: "No Preference", yes: "Matters" },
-      values: { na: "", yes: 0 },
-      onChange: (event: any) => handleChange("costOfLiving", event),
+      componentType: "checkbox",
+      label: "Low Cost of Living",
+      checkboxValue: "costOfLiving",
+      checkedValue: 95,
+      onChange: () => handleCheckboxChange("costOfLiving", 95)
     },
     {
-      componentType: "radio",
-      groupLabel: "Low Crime Rate?",
-      groupValue: currentConfig.crimeRate,
-      values: { na: "", yes: 10000 },
-      labels: { na: "No Preference", yes: "Matters" },
-      onChange: (event: any) => handleChange("crimeRate", event),
-      helperText: "The amount of people affected by crime per 100,000 people.",
+      componentType: "checkbox",
+      label: "Low Crime Rate",
+      checkboxValue: "crimeRate",
+      checkedValue: 1,
+      onChange: () => handleCheckboxChange("crimeRate", 1)
     },
     {
-      componentType: "radio",
-      groupLabel: "High Walkability/Transability?",
-      groupValue: currentConfig.walkAndTransability,
-      values: { na: "", yes: 95 },
-      labels: { na: "No Preference", yes: "Matters" },
-      onChange: (event: any) => handleChange("walkAndTransability", event),
+      componentType: "checkbox",
+      label: "High Walkability",
+      checkboxValue: "walkability",
+      checkedValue: 100,
+      onChange: () => handleCheckboxChange("walkability", 100)
     },
     {
-      componentType: "radio",
-      groupLabel: "Good for Outdoor Recreation?",
-      groupValue: currentConfig.outdoorScore,
-      values: { na: "", yes: 100 },
-      labels: { na: "No Preference", yes: "Matters" },
-      onChange: (event: any) => handleChange("outdoorScore", event),
+      componentType: "checkbox",
+      label: "High Bikeability",
+      checkboxValue: "bikeability",
+      checkedValue: 100,
+      onChange: () => handleCheckboxChange("bikeability", 100)
     },
     {
-      componentType: "select",
+      componentType: "checkbox",
+      label: "Good for Outdoor Recreation",
+      checkboxValue: "outdoorScore",
+      checkedValue: 100,
+      onChange: () => handleCheckboxChange("outdoorScore", 100)
+    },
+    {
+      componentType: "slider",
       inputLabel: "Population",
+      step: (populationRange[1] - populationRange[0]) / numTics,
+      min: populationRange[0],
+      max: populationRange[1],
+      valueLabelDisplay: "auto",
       value: currentConfig.population,
-      onChange: (event: any) => handleChange("population", event),
-      label: "Population",
-      menuItems: [
-        { title: "No Preference", value: "" },
-        { title: "Low (<300,000 people)", value: 150000 },
-        { title: "Medium (300,000 - 599,999 people)", value: 450000 },
-        { title: "High (>600,000 people)", value: 1000000 },
-      ],
+      onChange: (event: any) => handleSliderChange("population", event),
+      marks: generateMarks(populationRange, numTics),
+      checkboxValue: "population",
+      label: "Population"
     },
     {
-      componentType: "select",
+      componentType: "slider",
       inputLabel: "Population Density",
+      step: (densityRange[1] - densityRange[0]) / numTics,
+      min: densityRange[0],
+      max: densityRange[1],
       value: currentConfig.populationDensity,
-      onChange: (event: any) => handleChange("populationDensity", event),
-      label: "Population Density",
-      menuItems: [
-        { title: "No Preference", value: "" },
-        { title: "Low (<2,500 people per square mile)", value: 2000 },
-        { title: "Medium (2,500 - 5,500 people per square mile)", value: 4000 },
-        { title: "High (>5,500 people per square mile)", value: 7000 },
-      ],
+      onChange: (event: any) => handleSliderChange("populationDensity", event),
+      marks: generateMarks(densityRange, numTics),
+      checkboxValue: "populationDensity",
+      label: "Population Density"
+    },
+    {
+      componentType: "slider",
+      inputLabel: "Annual Snowfall (inches)",
+      step: (annualSnowfallRange[1] - annualSnowfallRange[0]) / numTics,
+      min: annualSnowfallRange[0],
+      max: annualSnowfallRange[1],
+      value: currentConfig.annualSnowfall,
+      onChange: (event: any) => handleSliderChange("annualSnowfall", event),
+      marks: generateMarks(annualSnowfallRange, numTics),
+      checkboxValue: "annualSnowfall",
+      label: "Annual Snowfall (inches)"
+    },
+    {
+      componentType: "slider",
+      inputLabel: "Annual Rainfall (inches)",
+      step: (annualRainfallRange[1] - annualRainfallRange[0]) / numTics,
+      min: annualRainfallRange[0],
+      max: annualRainfallRange[1],
+      value: currentConfig.annualRainfall,
+      onChange: (event: any) => handleSliderChange("annualRainfall", event),
+      marks: generateMarks(annualRainfallRange, numTics),
+      checkboxValue: "annualRainfall",
+      label: "Annual Rainfall (inches)"
+    },
+    {
+      componentType: "slider",
+      inputLabel: "Average Winter Temperature (fahrenheit)",
+      step: (avgWinterTempRange[1] - avgWinterTempRange[0]) / numTics,
+      min: avgWinterTempRange[0],
+      max: avgWinterTempRange[1],
+      value: currentConfig.avgWinterTemp,
+      onChange: (event: any) => handleSliderChange("avgWinterTemp", event),
+      marks: generateMarks(avgWinterTempRange, numTics),
+      checkboxValue: "avgWinterTemp",
+      label: "Average Winter Temperature (fahrenheit)"
+    },
+    {
+      componentType: "slider",
+      inputLabel: "Average Summer Temperature (fahrenheit)",
+      step: (avgSummerTempRange[1] - avgSummerTempRange[0]) / numTics,
+      min: avgSummerTempRange[0],
+      max: avgSummerTempRange[1],
+      value: currentConfig.avgSummerTemp,
+      onChange: (event: any) => handleSliderChange("avgSummerTemp", event),
+      marks: generateMarks(avgSummerTempRange, numTics),
+      checkboxValue: "avgSummerTemp",
+      label: "Average Summer Temperature (fahrenheit)"
+    },
+    {
+      componentType: "slider",
+      inputLabel: "Average Population Age",
+      value: currentConfig.avgPopulationAge,
+      step: (ageRange[1] - ageRange[0]) / numTics,
+      min: ageRange[0],
+      max: ageRange[1],
+      marks: generateMarks(ageRange, numTics),
+      onChange: (event: any) => handleSliderChange("avgPopulationAge", event),
+      checkboxValue: "avgPopulationAge",
+      label: "Average Population Age"
     },
     {
       componentType: "autocomplete",
@@ -194,8 +427,9 @@ const ConfigurationForm = ({
       getOptionLabel: (option: any) => option.title,
       value: currentConfig.preferredOccupation,
       onChange: (event: any, newValue: any) =>
-        handleAutocompleteChange("preferredOccupation", event, newValue),
+          handleAutocompleteChange("preferredOccupation", event, newValue),
       label: "Preferred Occupation",
+      checkboxValue: "preferredOccupation",
       helperText: "Note: Since live data is being used, selecting a preferred occupation will add roughly 10 seconds to the search time."
     },
     {
@@ -203,114 +437,14 @@ const ConfigurationForm = ({
       inputLabel: "Politics",
       value: currentConfig.politics,
       onChange: (event: any) => handleChange("politics", event),
+      checkboxValue: "politics",
       label: "Politics",
       menuItems: [
         { title: "No Preference", value: "" },
         { title: "Democrat", value: "democrat" },
         { title: "Republican", value: "republican" },
       ],
-    },
-    {
-      componentType: "select",
-      inputLabel: "Climate",
-      value: currentConfig.climate,
-      onChange: (event: any) => handleChange("climate", event),
-      label: "Climate",
-      menuProps: {
-        PaperProps: {
-          style: {
-            maxHeight: 200,
-          },
-        },
-      },
-      menuItems: [
-        { title: "No Preference", value: "" },
-        { title: "Rainforest", value: "rainforest" },
-        { title: "Monsoon", value: "monsoon" },
-        { title: "Savanna", value: "savanna" },
-        { title: "Hot Desert", value: "hot-desert" },
-        { title: "Cold Desert", value: "cold-desert" },
-        { title: "Hot Semi-arid", value: "hot-semi-arid" },
-        { title: "Cold semi-arid", value: "cold-semi-arid" },
-        {
-          title: "Hot-summer Mediterranean",
-          value: "hot-summer-mediterranean",
-        },
-        {
-          title: "Warm-summer Mediterranean",
-          value: "warm-summer-mediterranean",
-        },
-        {
-          title: "Cold-summer Mediterranean",
-          value: "cold-summer-mediterranean",
-        },
-        { title: "Humid Subtropical", value: "humid-subtropical" },
-        { title: "Subtropical Highland", value: "subtropical-highland" },
-        { title: "Oceanic", value: "oceanic" },
-        { title: "Subpolar Oceanic", value: "subpolar-oceanic" },
-        {
-          title: "Hot-summer Mediterranean Continental",
-          value: "hot-summer-mediterranean-continental",
-        },
-        {
-          title: "Warm-summer Mediterranean Continental",
-          value: "warm-summer-mediterranean-continental",
-        },
-        { title: "Dry-summer Subarctic", value: "dry-summer-subarctic" },
-        {
-          title: "Hot-summer Humid Continental",
-          value: "hot-summer-humid-continental",
-        },
-        {
-          title: "Warm-summer Humid Continental",
-          value: "warm-summer-humid-continental",
-        },
-        { title: "Dry-winter Subarctic", value: "dry-winter-subarctic" },
-        {
-          title: "Hot-summer Humid Continental",
-          value: "hot-summer-humid-continental",
-        },
-        {
-          title: "Warm-summer Humid Continental",
-          value: "warm-summer-humid-continental",
-        },
-        { title: "Subarctic", value: "subarctic" },
-        { title: "Tundra", value: "tundra" },
-        { title: "Ice-cap", value: "ice-cap" },
-      ],
-    },
-    {
-      componentType: "select",
-      inputLabel: "Average Population Age",
-      value: currentConfig.avgPopulationAge,
-      onChange: (event: any) => handleChange("avgPopulationAge", event),
-      label: "Average Population Age",
-      menuItems: [
-        { title: "No Preference", value: "" },
-        { title: "<20", value: 15 },
-        { title: "20 - 29", value: 25 },
-        { title: "30 - 39", value: 35 },
-        { title: "40 - 49", value: 45 },
-        { title: "50 - 59", value: 55 },
-        { title: "60 - 69", value: 65 },
-        { title: "70 - 79", value: 75 },
-        { title: "80 - 89", value: 85 },
-        { title: "90+", value: 95 },
-      ],
-    },
-  ];
-
-  const priorityAttributeCheckboxes = [
-    { title: "Cost of Living", value: "costOfLiving" },
-    { title: "Crime Rate", value: "crimeRate" },
-    { title: "Walkability/Transability", value: "walkAndTransability" },
-    { title: "Good for Outdoor Recreation", value: "outdoorScore" },
-    { title: "Population", value: "population" },
-    { title: "Population Density", value: "populationDensity" },
-    { title: "Preferred Occupation", value: "preferredOccupation" },
-    { title: "Politics", value: "politics" },
-    { title: "Climate", value: "climate" },
-    { title: "Average Population Age", value: "avgPopulationAge" },
+    }
   ];
 
   return (
@@ -318,7 +452,7 @@ const ConfigurationForm = ({
       <div className="preferences-form-container">
         {allOccupations && (
           <Card className="preferences-form-card">
-            <CardHeader title="What are you looking for in a city?" />
+            <CardHeader title="What Are You Looking For in a City?" />
             <Divider />
             <CardContent className="preferences-form-content">
               {formInputs.map((input, index) => {
@@ -329,34 +463,38 @@ const ConfigurationForm = ({
                     key={index}
                   >
                     {input?.componentType === "select" && (
-                      <>
+                      <div style={{ display: 'flex', alignItems: 'left' }}>
                         <InputLabel id={input.inputLabel}>
                           {input.label}
                         </InputLabel>
                         <Select
-                          labelId={input?.inputLabel}
-                          id={input?.inputLabel}
-                          value={input?.value}
-                          onChange={input?.onChange}
-                          label={input?.label}
-                          MenuProps={input?.menuProps}
+                            labelId={input?.inputLabel}
+                            id={input?.inputLabel}
+                            value={input?.value}
+                            onChange={input?.onChange}
+                            label={input?.label}
+                            sx={{ width: "100%" }}
                         >
                           {input.menuItems?.map((menuItem, index) => {
                             return (
-                              <MenuItem value={menuItem.value} key={index}>
-                                {menuItem.title}
-                              </MenuItem>
+                                <MenuItem value={menuItem.value} key={index}>
+                                  {menuItem.title}
+                                </MenuItem>
                             );
                           })}
                         </Select>
-                      </>
+                        <Box style={{ transform: "translate(10px, 10px)" }}>
+                          <PriorityCheckbox value={input.checkboxValue} bottomMargin={ 0.5 }/>
+                        </Box>
+                      </div>
                     )}
                     {input?.componentType === "autocomplete" && (
-                      <>
+                      <div style={{ display: 'flex', alignItems: 'left' }}>
                         <Autocomplete
                           options={input?.options as Occupation[]}
                           autoComplete
                           getOptionLabel={input?.getOptionLabel}
+                          sx={{ width: "100%" }}
                           renderInput={(params) => (
                             <TextField
                               {...params}
@@ -367,33 +505,41 @@ const ConfigurationForm = ({
                           value={input?.value}
                           onChange={input?.onChange}
                         />
-                      </>
+                        <Box style={{ transform: "translate(10px, 10px)" }}>
+                          <PriorityCheckbox value={input.checkboxValue} bottomMargin={ 0.5 }/>
+                        </Box>
+                      </div>
                     )}
-                    {input?.componentType === "radio" && (
-                      <>
-                        <FormLabel id="demo-row-radio-buttons-group-label">
-                          {input?.groupLabel}
-                        </FormLabel>
-                        <RadioGroup
-                          key={index}
-                          row
-                          name={input?.groupValue + "group"}
-                          onChange={input?.onChange}
-                          value={input?.groupValue}
-                          defaultValue={input?.values?.na}
-                        >
-                          <FormControlLabel
-                            control={<Radio />}
-                            label={input?.labels?.yes}
-                            value={input?.values?.yes}
-                          />
-                          <FormControlLabel
-                            control={<Radio />}
-                            label={input?.labels?.na}
-                            value={input?.values?.na}
-                          />
-                        </RadioGroup>
-                      </>
+                    {input?.componentType === "checkbox" && (
+                        <>
+                          <FormLabel sx={{ width: "fit-content", pointerEvents: "none", marginTop: -1, marginBottom: -1 }}>
+                            {input?.label}
+                            <Checkbox
+                                  sx={{ width: "fit-content", pointerEvents: "auto" }}
+                                  //@ts-ignore
+                                  checked={currentConfig[input.checkboxValue] === input.checkedValue}
+                                  onChange={ input?.onChange }
+                                  value={ input?.value }
+                            />
+                            <PriorityCheckbox value={input.checkboxValue} bottomMargin={ 0.25 }/>
+                          </FormLabel>
+                        </>
+                    )}
+                    {input?.componentType === "slider" && (
+                        <>
+                          <FormLabel sx={{ width: "fit-content", pointerEvents: "none", marginTop: -1, marginBottom: -1 }}>
+                            {input?.label}
+                            <PriorityCheckbox value={input?.checkboxValue} bottomMargin={ 0.5 }/>
+                          </FormLabel>
+                          <Slider
+                              key={index}
+                              value={input?.value as number[]}
+                              onChange={input?.onChange}
+                              step={input?.step}
+                              min={input?.min}
+                              max={ input?.max }
+                              marks={input?.marks}/>
+                        </>
                     )}
                     {input?.helperText && input?.value && (
                         <FormHelperText>{input?.helperText}</FormHelperText>
@@ -401,53 +547,12 @@ const ConfigurationForm = ({
                   </FormControl>
                 );
               })}
-              <br />
-              <Divider />
-              <FormControl
-                variant="standard"
-                error={isOverPriorityAttributesLimit()}
-              >
-                <FormLabel className="preferences-form-priority-attributes-label">
-                  Select Up to 3 Attributes Which You Value the Most!
-                </FormLabel>
-                <FormGroup>
-                  {priorityAttributeCheckboxes.map((checkbox, index) => {
-                    return (
-                      <>
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              key={index}
-                              //@ts-ignore
-                              disabled={
-                                //@ts-ignore
-                                currentConfig[checkbox.value] === null ||
-                                //@ts-ignore
-                                currentConfig[checkbox.value] === ""
-                                //@ts-ignore
-                              }
-                              checked={currentConfig.priorityAttributes.includes(
-                                checkbox.value
-                              )}
-                              onChange={(event) =>
-                                handleChange("priorityAttributes", event)
-                              }
-                              name={checkbox.title}
-                              value={checkbox.value}
-                            />
-                          }
-                          label={checkbox.title}
-                        />
-                      </>
-                    );
-                  })}
-                </FormGroup>
-                {isOverPriorityAttributesLimit() && (
+              {isOverPriorityAttributesLimit() && (
                   <FormHelperText>
-                    Please only select up to 3 attributes!
+                    <span style={{ fontSize: 20, color: "red" }}>Please only star up to 3 attributes!</span>
                   </FormHelperText>
-                )}
-              </FormControl>
+              )}
+              <br />
               <div className="preferences-form-sibling-set">
                 <Button color="error" variant="outlined" onClick={clearForm}>
                   Clear
@@ -477,5 +582,10 @@ type Props = {
   setAllConfigs: Function;
   setReturnedCities: Function;
 };
+
+type CheckboxProps = {
+  value: string,
+  bottomMargin: number
+}
 
 export default ConfigurationForm;
