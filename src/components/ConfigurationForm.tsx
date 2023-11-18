@@ -6,7 +6,6 @@ import {
 } from "../types/utility-types";
 import {
   Autocomplete,
-  AutocompleteRenderInputParams,
   Button,
   Card,
   CardContent,
@@ -22,10 +21,10 @@ import {
   MenuItem,
   Radio,
   RadioGroup,
-  Select,
+  Select, Slider,
   TextField,
 } from "@mui/material";
-import { Configs } from "../types/utility-types";
+import { Configs, ageRange, densityRange, populationRange, numTics } from "../types/utility-types";
 import { searchForCities, getAllOccupations } from "../util/api-calls";
 
 const ConfigurationForm = ({
@@ -44,11 +43,25 @@ const ConfigurationForm = ({
   const isConfigEmpty = () => {
     console.log(currentConfig);
     const filteredConfig = Object.values(currentConfig).filter(
-      (value: any) => value !== "" && value !== null
+      (value: any) => value !== "" && value !== null && ((!isDefaultRange("population") || !isDefaultRange("populationDensity") || !isDefaultRange("avgPopulationAge")))
     );
     // Priority attributes can be empty, so submission should be enabled so long as at least 1 attribute is filled
     return filteredConfig.length <= 1;
   };
+
+  const isDefaultRange = (property: string) => {
+    if (property === "population") {
+      return currentConfig.population[0] === populationRange[0] && currentConfig.population[1] === populationRange[1];
+    }
+    else if (property === "populationDensity") {
+      return currentConfig.populationDensity[0] === densityRange[0] && currentConfig.populationDensity[1] === densityRange[1];
+    }
+    else if (property === "avgPopulationAge") {
+      return currentConfig.avgPopulationAge[0] === ageRange[0] && currentConfig.avgPopulationAge[1] === ageRange[1];
+    }
+    // If none of these, return false
+    return false;
+  }
 
   const handleChange = (property: any, event: any) => {
     let newPriorityAttributes = currentConfig.priorityAttributes;
@@ -57,6 +70,8 @@ const ConfigurationForm = ({
       isNaN(event.target.value) || event.target.value === ""
         ? event.target.value
         : Number(event.target.value);
+
+    console.log(value);
 
     if (property === "priorityAttributes") {
       if (newPriorityAttributes.includes(attribute)) {
@@ -81,6 +96,43 @@ const ConfigurationForm = ({
       setCurrentConfig({ ...currentConfig, [property]: value });
     }
   };
+
+  const handleSliderChange = (property: any, event: any) => {
+    let newPriorityAttributes = currentConfig.priorityAttributes;
+    const value = event.target.value;
+
+    if (isDefaultRange(property)) {
+      setCurrentConfig({
+        ...currentConfig,
+        priorityAttributes: newPriorityAttributes,
+        [property]: value,
+      });
+    }
+    else {
+      setCurrentConfig({ ...currentConfig, [property]: value });
+    }
+  }
+
+  // Used to change the slider value check marks. Had a lot of trouble with this so keeping this jank for now
+  useEffect(() => {
+    let newPriorityAttributes = currentConfig.priorityAttributes;
+    // Removing an attribute from prioritization if it is given no preference
+    console.log("Reached default range, should remove item from priority attributes")
+
+    if (isDefaultRange("avgPopulationAge")) {
+      newPriorityAttributes = newPriorityAttributes.filter((item: any) => item !== "avgPopulationAge");
+    }
+    if (isDefaultRange("population")) {
+      newPriorityAttributes = newPriorityAttributes.filter((item: any) => item !== "population");
+    }
+    if (isDefaultRange("populationDensity")) {
+      newPriorityAttributes = newPriorityAttributes.filter((item: any) => item !== "populationDensity");
+    }
+    setCurrentConfig({
+      ...currentConfig,
+      priorityAttributes: newPriorityAttributes
+    });
+  }, [currentConfig.population, currentConfig.populationDensity, currentConfig.avgPopulationAge])
 
   const handleAutocompleteChange = (
     property: any,
@@ -118,11 +170,45 @@ const ConfigurationForm = ({
   };
 
   const submitForm = () => {
-    // 1.) send the data to the search function and await its response
-    searchForCities(currentConfig).then((resp) => {
+    // Create a copy of the current config, making sure to display the original on screen
+    // This copy will contain the midpoint of the slider values, the same values for other fields
+    const populationMidpoint = ((currentConfig.population[0] as number) + (currentConfig.population[1] as number)) / 2;
+    const densityMidpoint = ((currentConfig.populationDensity[0] as number) + (currentConfig.populationDensity[1] as number)) / 2;
+    const ageMidpoint = ((currentConfig.avgPopulationAge[0] as number) + (currentConfig.avgPopulationAge[1] as number)) / 2;
+    const currentConfigCopy = {
+        ...currentConfig,
+        population: populationMidpoint,
+        populationDensity: densityMidpoint,
+        avgPopulationAge: ageMidpoint
+    }
+
+    // send the data to the search function and await its response
+    searchForCities(currentConfigCopy).then((resp) => {
       setReturnedCities(resp);
     });
   };
+
+  const generateMarks = (range: number[], numTics: number) => {
+    const increment = (range[1] - range[0]) / numTics;
+    const marks = []
+    for (let i = 0; i <= numTics; i++) {
+        const value = range[0] + i * increment;
+        let label = String(range[0] + i * increment);
+        // If in the thousands, shorten to "num K"
+        if (Number(value) >= 1000 && Number(value) < 1000000) {
+          label = (Math.round(value / 1000)) + "k";
+        }
+        // If in the millions, shorten to "num M"
+        else if (Number(value) >= 1000000) {
+          label = (Math.round(value / 1000) / 1000) + "m";
+        }
+        marks.push({
+            value: value,
+            label: label
+        });
+    }
+    return marks;
+  }
 
   useEffect(() => {
     formInputs[6].options = allOccupations;
@@ -163,30 +249,27 @@ const ConfigurationForm = ({
       onChange: (event: any) => handleChange("outdoorScore", event),
     },
     {
-      componentType: "select",
+      componentType: "slider",
       inputLabel: "Population",
+      step: (populationRange[1] - populationRange[0]) / numTics,
+      min: populationRange[0],
+      max: populationRange[1],
+      valueLabelDisplay: "auto",
       value: currentConfig.population,
-      onChange: (event: any) => handleChange("population", event),
-      label: "Population",
-      menuItems: [
-        { title: "No Preference", value: "" },
-        { title: "Low (<300,000 people)", value: 150000 },
-        { title: "Medium (300,000 - 599,999 people)", value: 450000 },
-        { title: "High (>600,000 people)", value: 1000000 },
-      ],
+      onChange: (event: any) => handleSliderChange("population", event),
+      marks: generateMarks(populationRange, numTics),
+      label: "Population"
     },
     {
-      componentType: "select",
+      componentType: "slider",
       inputLabel: "Population Density",
+      step: (densityRange[1] - densityRange[0]) / numTics,
+      min: densityRange[0],
+      max: densityRange[1],
       value: currentConfig.populationDensity,
-      onChange: (event: any) => handleChange("populationDensity", event),
-      label: "Population Density",
-      menuItems: [
-        { title: "No Preference", value: "" },
-        { title: "Low (<2,500 people per square mile)", value: 2000 },
-        { title: "Medium (2,500 - 5,500 people per square mile)", value: 4000 },
-        { title: "High (>5,500 people per square mile)", value: 7000 },
-      ],
+      onChange: (event: any) => handleSliderChange("populationDensity", event),
+      marks: generateMarks(densityRange, numTics),
+      label: "Population Density"
     },
     {
       componentType: "autocomplete",
@@ -280,23 +363,15 @@ const ConfigurationForm = ({
       ],
     },
     {
-      componentType: "select",
+      componentType: "slider",
       inputLabel: "Average Population Age",
       value: currentConfig.avgPopulationAge,
-      onChange: (event: any) => handleChange("avgPopulationAge", event),
-      label: "Average Population Age",
-      menuItems: [
-        { title: "No Preference", value: "" },
-        { title: "<20", value: 15 },
-        { title: "20 - 29", value: 25 },
-        { title: "30 - 39", value: 35 },
-        { title: "40 - 49", value: 45 },
-        { title: "50 - 59", value: 55 },
-        { title: "60 - 69", value: 65 },
-        { title: "70 - 79", value: 75 },
-        { title: "80 - 89", value: 85 },
-        { title: "90+", value: 95 },
-      ],
+      step: (ageRange[1] - ageRange[0]) / numTics,
+      min: ageRange[0],
+      max: ageRange[1],
+      marks: generateMarks(ageRange, numTics),
+      onChange: (event: any) => handleSliderChange("avgPopulationAge", event),
+      label: "Average Population Age"
     },
   ];
 
@@ -395,6 +470,19 @@ const ConfigurationForm = ({
                         </RadioGroup>
                       </>
                     )}
+                    {input?.componentType === "slider" && (
+                        <>
+                          <FormLabel>{input?.label}</FormLabel>
+                          <Slider
+                              key={index}
+                              value={input?.value as number[]}
+                              onChange={input?.onChange}
+                              step={input?.step}
+                              min={input?.min}
+                              max={ input?.max }
+                              marks={input?.marks}/>
+                        </>
+                    )}
                     {input?.helperText && input?.value && (
                         <FormHelperText>{input?.helperText}</FormHelperText>
                     )}
@@ -423,8 +511,9 @@ const ConfigurationForm = ({
                                 //@ts-ignore
                                 currentConfig[checkbox.value] === null ||
                                 //@ts-ignore
-                                currentConfig[checkbox.value] === ""
+                                currentConfig[checkbox.value] === "" ||
                                 //@ts-ignore
+                                isDefaultRange(checkbox.value)
                               }
                               checked={currentConfig.priorityAttributes.includes(
                                 checkbox.value

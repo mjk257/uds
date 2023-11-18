@@ -1,6 +1,12 @@
+// Later on, this will be obtained from an endpoint
+export const populationRange = [100000, 9000000];
+export const ageRange = [20, 100];
+export const densityRange = [100, 31000];
+export const numTics = 10;
+
 export type CityPreferencesConfiguration = {
-    population: string | number,
-    populationDensity: string | number,
+    population: string | number[],
+    populationDensity: string | number[],
     costOfLiving: string | number,
     preferredOccupation: Occupation | null,
     crimeRate: number | string,
@@ -8,7 +14,7 @@ export type CityPreferencesConfiguration = {
     politics: string,
     outdoorScore: string | number,
     climate: string,
-    avgPopulationAge: number | string
+    avgPopulationAge: number[] | string
     priorityAttributes: string[]
 };
 
@@ -21,8 +27,8 @@ export type Configs = {
 }
 
 export const defaultCityPreferencesConfiguration : CityPreferencesConfiguration =  {
-    population: "",
-    populationDensity: "",
+    population: populationRange,
+    populationDensity: densityRange,
     costOfLiving: "",
     preferredOccupation: null,
     crimeRate: '',
@@ -30,7 +36,7 @@ export const defaultCityPreferencesConfiguration : CityPreferencesConfiguration 
     politics: "",
     outdoorScore: "",
     climate: "",
-    avgPopulationAge: '',
+    avgPopulationAge: ageRange,
     priorityAttributes: []
 };
 
