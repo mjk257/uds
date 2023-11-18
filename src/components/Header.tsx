@@ -81,6 +81,10 @@ const Header = () => {
         {
             apiName: "WalkScore API",
             apiLink: "https://www.walkscore.com/how-it-works/"
+        },
+        {
+            apiName: "PaLM API",
+            apiLink: "https://developers.generativeai.google/guide/palm_api_overview"
         }
 
 
@@ -95,6 +99,10 @@ const Header = () => {
             term: "Outdoor Score",
             description: "The outdoor score is calculated using a weighted, curved average using the percentage of the state covered by GAP-1, GAP-2, and GAP-3 protected areas, percentage of the state" +
             " economy made up by the outdoor recreation industry, median annual air quality, LBs of chemicals released annually per state square mile, and miles of trail per state square mile."
+        },
+        {
+            term: "Description",
+            description: "The descriptions for cities are AI generated using Google's PaLM API. While we strive for accuracy and quality, please note that the information provided may not be entirely error-free or up-to-date. We do not assume any responsibility or liability for the use or interpretation of this content."
         }
     ]
 

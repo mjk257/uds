@@ -6,3 +6,4 @@ openpyxl
 openai
 lxml
 xlrd
+google-generativeai
