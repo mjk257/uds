@@ -358,30 +358,6 @@ const ConfigurationForm = ({
       label: "Population Density"
     },
     {
-      componentType: "autocomplete",
-      options: allOccupations,
-      getOptionLabel: (option: any) => option.title,
-      value: currentConfig.preferredOccupation,
-      onChange: (event: any, newValue: any) =>
-        handleAutocompleteChange("preferredOccupation", event, newValue),
-      label: "Preferred Occupation",
-      checkboxValue: "preferredOccupation",
-      helperText: "Note: Since live data is being used, selecting a preferred occupation will add roughly 10 seconds to the search time."
-    },
-    {
-      componentType: "select",
-      inputLabel: "Politics",
-      value: currentConfig.politics,
-      onChange: (event: any) => handleChange("politics", event),
-      checkboxValue: "politics",
-      label: "Politics",
-      menuItems: [
-        { title: "No Preference", value: "" },
-        { title: "Democrat", value: "democrat" },
-        { title: "Republican", value: "republican" },
-      ],
-    },
-    {
       componentType: "slider",
       inputLabel: "Annual Snowfall (inches)",
       step: (annualSnowfallRange[1] - annualSnowfallRange[0]) / numTics,
@@ -441,6 +417,30 @@ const ConfigurationForm = ({
       checkboxValue: "avgPopulationAge",
       label: "Average Population Age"
     },
+    {
+      componentType: "autocomplete",
+      options: allOccupations,
+      getOptionLabel: (option: any) => option.title,
+      value: currentConfig.preferredOccupation,
+      onChange: (event: any, newValue: any) =>
+          handleAutocompleteChange("preferredOccupation", event, newValue),
+      label: "Preferred Occupation",
+      checkboxValue: "preferredOccupation",
+      helperText: "Note: Since live data is being used, selecting a preferred occupation will add roughly 10 seconds to the search time."
+    },
+    {
+      componentType: "select",
+      inputLabel: "Politics",
+      value: currentConfig.politics,
+      onChange: (event: any) => handleChange("politics", event),
+      checkboxValue: "politics",
+      label: "Politics",
+      menuItems: [
+        { title: "No Preference", value: "" },
+        { title: "Democrat", value: "democrat" },
+        { title: "Republican", value: "republican" },
+      ],
+    }
   ];
 
   return (
