@@ -23,7 +23,9 @@ import {
   Select, Slider,
   TextField,
 } from "@mui/material";
-import { Configs, ageRange, densityRange, populationRange, numTics } from "../types/utility-types";
+import { Configs, ageRange, densityRange, populationRange, numTics,
+  avgSummerTempRange, avgWinterTempRange,
+  annualRainfallRange, annualSnowfallRange } from "../types/utility-types";
 import { searchForCities, getAllOccupations } from "../util/api-calls";
 import {Star, StarBorder} from "@mui/icons-material";
 
@@ -42,11 +44,21 @@ const ConfigurationForm = ({
 
   const isConfigEmpty = () => {
     console.log(currentConfig);
-    const filteredConfig = Object.values(currentConfig).filter(
-      (value: any) => value !== "" && value !== null && ((!isDefaultRange("population") || !isDefaultRange("populationDensity") || !isDefaultRange("avgPopulationAge")))
-    );
+    const allSlidersInDefaultRange = isDefaultRange("population")
+        && isDefaultRange("populationDensity")
+        && isDefaultRange("avgPopulationAge")
+        && isDefaultRange("annualSnowfall")
+        && isDefaultRange("annualRainfall")
+        && isDefaultRange("avgWinterTemp")
+        && isDefaultRange("avgSummerTemp");
+    let allOtherValuesEmpty = true;
+    for (const [key, value] of Object.entries(currentConfig)) {
+      if ((typeof(value) === "string" || typeof(value) === "number") && (value !== "" && value !== null)) {
+        allOtherValuesEmpty = false;
+      }
+    }
     // Priority attributes can be empty, so submission should be enabled so long as at least 1 attribute is filled
-    return filteredConfig.length <= 1;
+    return allSlidersInDefaultRange && allOtherValuesEmpty;
   };
 
   const isDefaultRange = (property: string) => {
@@ -58,6 +70,18 @@ const ConfigurationForm = ({
     }
     else if (property === "avgPopulationAge") {
       return currentConfig.avgPopulationAge[0] === ageRange[0] && currentConfig.avgPopulationAge[1] === ageRange[1];
+    }
+    else if (property === "annualSnowfall") {
+        return currentConfig.annualSnowfall[0] === annualSnowfallRange[0] && currentConfig.annualSnowfall[1] === annualSnowfallRange[1];
+    }
+    else if (property === "annualRainfall") {
+        return currentConfig.annualRainfall[0] === annualRainfallRange[0] && currentConfig.annualRainfall[1] === annualRainfallRange[1];
+    }
+    else if (property === "avgWinterTemp") {
+        return currentConfig.avgWinterTemp[0] === avgWinterTempRange[0] && currentConfig.avgWinterTemp[1] === avgWinterTempRange[1];
+    }
+    else if (property === "avgSummerTemp") {
+        return currentConfig.avgSummerTemp[0] === avgSummerTempRange[0] && currentConfig.avgSummerTemp[1] === avgSummerTempRange[1];
     }
     // If none of these, return false
     return false;
@@ -128,11 +152,24 @@ const ConfigurationForm = ({
     if (isDefaultRange("populationDensity")) {
       newPriorityAttributes = newPriorityAttributes.filter((item: any) => item !== "populationDensity");
     }
+    if (isDefaultRange("annualSnowfall")) {
+        newPriorityAttributes = newPriorityAttributes.filter((item: any) => item !== "annualSnowfall");
+    }
+    if (isDefaultRange("annualRainfall")) {
+        newPriorityAttributes = newPriorityAttributes.filter((item: any) => item !== "annualRainfall");
+    }
+    if (isDefaultRange("avgWinterTemp")) {
+        newPriorityAttributes = newPriorityAttributes.filter((item: any) => item !== "avgWinterTemp");
+    }
+    if (isDefaultRange("avgSummerTemp")) {
+        newPriorityAttributes = newPriorityAttributes.filter((item: any) => item !== "avgSummerTemp");
+    }
     setCurrentConfig({
       ...currentConfig,
       priorityAttributes: newPriorityAttributes
     });
-  }, [currentConfig.population, currentConfig.populationDensity, currentConfig.avgPopulationAge])
+  }, [currentConfig.population, currentConfig.populationDensity, currentConfig.avgPopulationAge,
+    currentConfig.annualRainfall, currentConfig.annualSnowfall, currentConfig.avgWinterTemp, currentConfig.avgSummerTemp])
 
   const handleAutocompleteChange = (
     property: any,
@@ -175,11 +212,19 @@ const ConfigurationForm = ({
     const populationMidpoint = ((currentConfig.population[0] as number) + (currentConfig.population[1] as number)) / 2;
     const densityMidpoint = ((currentConfig.populationDensity[0] as number) + (currentConfig.populationDensity[1] as number)) / 2;
     const ageMidpoint = ((currentConfig.avgPopulationAge[0] as number) + (currentConfig.avgPopulationAge[1] as number)) / 2;
+    const annualSnowfallMidpoint = ((currentConfig.annualSnowfall[0] as number) + (currentConfig.annualSnowfall[1] as number)) / 2;
+    const annualRainfallMidpoint = ((currentConfig.annualRainfall[0] as number) + (currentConfig.annualRainfall[1] as number)) / 2;
+    const avgWinterTempMidpoint = ((currentConfig.avgWinterTemp[0] as number) + (currentConfig.avgWinterTemp[1] as number)) / 2;
+    const avgSummerTempMidpoint = ((currentConfig.avgSummerTemp[0] as number) + (currentConfig.avgSummerTemp[1] as number)) / 2;
     const currentConfigCopy = {
         ...currentConfig,
         population: populationMidpoint,
         populationDensity: densityMidpoint,
-        avgPopulationAge: ageMidpoint
+        avgPopulationAge: ageMidpoint,
+        annualSnowfall: annualSnowfallMidpoint,
+        annualRainfall: annualRainfallMidpoint,
+        avgWinterTemp: avgWinterTempMidpoint,
+        avgSummerTemp: avgSummerTempMidpoint
     }
 
     // send the data to the search function and await its response
@@ -328,74 +373,52 @@ const ConfigurationForm = ({
       ],
     },
     {
-      componentType: "select",
-      inputLabel: "Climate",
-      value: currentConfig.climate,
-      onChange: (event: any) => handleChange("climate", event),
-      label: "Climate",
-      checkboxValue: "climate",
-      menuProps: {
-        PaperProps: {
-          style: {
-            maxHeight: 200,
-          },
-        },
-      },
-      menuItems: [
-        { title: "No Preference", value: "" },
-        { title: "Rainforest", value: "rainforest" },
-        { title: "Monsoon", value: "monsoon" },
-        { title: "Savanna", value: "savanna" },
-        { title: "Hot Desert", value: "hot-desert" },
-        { title: "Cold Desert", value: "cold-desert" },
-        { title: "Hot Semi-arid", value: "hot-semi-arid" },
-        { title: "Cold semi-arid", value: "cold-semi-arid" },
-        {
-          title: "Hot-summer Mediterranean",
-          value: "hot-summer-mediterranean",
-        },
-        {
-          title: "Warm-summer Mediterranean",
-          value: "warm-summer-mediterranean",
-        },
-        {
-          title: "Cold-summer Mediterranean",
-          value: "cold-summer-mediterranean",
-        },
-        { title: "Humid Subtropical", value: "humid-subtropical" },
-        { title: "Subtropical Highland", value: "subtropical-highland" },
-        { title: "Oceanic", value: "oceanic" },
-        { title: "Subpolar Oceanic", value: "subpolar-oceanic" },
-        {
-          title: "Hot-summer Mediterranean Continental",
-          value: "hot-summer-mediterranean-continental",
-        },
-        {
-          title: "Warm-summer Mediterranean Continental",
-          value: "warm-summer-mediterranean-continental",
-        },
-        { title: "Dry-summer Subarctic", value: "dry-summer-subarctic" },
-        {
-          title: "Hot-summer Humid Continental",
-          value: "hot-summer-humid-continental",
-        },
-        {
-          title: "Warm-summer Humid Continental",
-          value: "warm-summer-humid-continental",
-        },
-        { title: "Dry-winter Subarctic", value: "dry-winter-subarctic" },
-        {
-          title: "Hot-summer Humid Continental",
-          value: "hot-summer-humid-continental",
-        },
-        {
-          title: "Warm-summer Humid Continental",
-          value: "warm-summer-humid-continental",
-        },
-        { title: "Subarctic", value: "subarctic" },
-        { title: "Tundra", value: "tundra" },
-        { title: "Ice-cap", value: "ice-cap" },
-      ],
+      componentType: "slider",
+      inputLabel: "Annual Snowfall (inches)",
+      step: (annualSnowfallRange[1] - annualSnowfallRange[0]) / numTics,
+      min: annualSnowfallRange[0],
+      max: annualSnowfallRange[1],
+      value: currentConfig.annualSnowfall,
+      onChange: (event: any) => handleSliderChange("annualSnowfall", event),
+      marks: generateMarks(annualSnowfallRange, numTics),
+      checkboxValue: "annualSnowfall",
+      label: "Annual Snowfall (inches)"
+    },
+    {
+      componentType: "slider",
+      inputLabel: "Annual Rainfall (inches)",
+      step: (annualRainfallRange[1] - annualRainfallRange[0]) / numTics,
+      min: annualRainfallRange[0],
+      max: annualRainfallRange[1],
+      value: currentConfig.annualRainfall,
+      onChange: (event: any) => handleSliderChange("annualRainfall", event),
+      marks: generateMarks(annualRainfallRange, numTics),
+      checkboxValue: "annualRainfall",
+      label: "Annual Rainfall (inches)"
+    },
+    {
+      componentType: "slider",
+      inputLabel: "Average Winter Temperature (fahrenheit)",
+      step: (avgWinterTempRange[1] - avgWinterTempRange[0]) / numTics,
+      min: avgWinterTempRange[0],
+      max: avgWinterTempRange[1],
+      value: currentConfig.avgWinterTemp,
+      onChange: (event: any) => handleSliderChange("avgWinterTemp", event),
+      marks: generateMarks(avgWinterTempRange, numTics),
+      checkboxValue: "avgWinterTemp",
+      label: "Average Winter Temperature (fahrenheit)"
+    },
+    {
+      componentType: "slider",
+      inputLabel: "Average Summer Temperature (fahrenheit)",
+      step: (avgSummerTempRange[1] - avgSummerTempRange[0]) / numTics,
+      min: avgSummerTempRange[0],
+      max: avgSummerTempRange[1],
+      value: currentConfig.avgSummerTemp,
+      onChange: (event: any) => handleSliderChange("avgSummerTemp", event),
+      marks: generateMarks(avgSummerTempRange, numTics),
+      checkboxValue: "avgSummerTemp",
+      label: "Average Summer Temperature (fahrenheit)"
     },
     {
       componentType: "slider",
@@ -416,7 +439,7 @@ const ConfigurationForm = ({
       <div className="preferences-form-container">
         {allOccupations && (
           <Card className="preferences-form-card">
-            <CardHeader title="What are you looking for in a city?" />
+            <CardHeader title="What Are You Looking For in a City?" />
             <Divider />
             <CardContent className="preferences-form-content">
               {formInputs.map((input, index) => {
@@ -437,7 +460,6 @@ const ConfigurationForm = ({
                             value={input?.value}
                             onChange={input?.onChange}
                             label={input?.label}
-                            MenuProps={input?.menuProps}
                             sx={{ width: "100%" }}
                         >
                           {input.menuItems?.map((menuItem, index) => {
@@ -448,7 +470,7 @@ const ConfigurationForm = ({
                             );
                           })}
                         </Select>
-                        <Box style={{ transform: "translate(0px, 10px)"}}>
+                        <Box style={{ transform: "translate(10px, 10px)" }}>
                           <PriorityCheckbox value={input.checkboxValue} />
                         </Box>
                       </div>
@@ -470,7 +492,7 @@ const ConfigurationForm = ({
                           value={input?.value}
                           onChange={input?.onChange}
                         />
-                        <Box style={{ transform: "translate(0px, 10px)"}}>
+                        <Box style={{ transform: "translate(10px, 10px)" }}>
                           <PriorityCheckbox value={input.checkboxValue} />
                         </Box>
                       </div>
@@ -526,7 +548,7 @@ const ConfigurationForm = ({
               })}
               {isOverPriorityAttributesLimit() && (
                   <FormHelperText>
-                    Please only select up to 3 attributes!
+                    <span style={{ fontSize: 20, color: "red" }}>Please only star up to 3 attributes!</span>
                   </FormHelperText>
               )}
               <br />

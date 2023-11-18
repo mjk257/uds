@@ -109,7 +109,7 @@ function getAttributeValue(city, criteriaName) {
         case "costOfLiving":
             return city.rpp;
         case "crimeRate":
-            return null;
+            return city.crime_rate;
         case "walkAndTransability":
             return null;
         case "outdoorScore":
@@ -126,6 +126,14 @@ function getAttributeValue(city, criteriaName) {
             return city.partisan_lean;
         case "avgPopulationAge":
             return city.median_age;
+        case "annualPrecipitation":
+            return city.annual_precipitation;
+        case "annualSnowfall":
+            return city.annual_snowfall;
+        case "avgSummerTemp":
+            return city.summer_temp;
+        case "avgWinterTemp":
+            return city.winter_temp;
         default:
             return null;
     }

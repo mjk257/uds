@@ -2,6 +2,11 @@
 export const populationRange = [100000, 9000000];
 export const ageRange = [20, 100];
 export const densityRange = [100, 31000];
+export const annualSnowfallRange = [0, 120];
+export const annualRainfallRange = [20, 60];
+export const avgWinterTempRange = [15, 75];
+export const avgSummerTempRange = [55, 85];
+
 export const numTics = 10;
 
 export type CityPreferencesConfiguration = {
@@ -13,7 +18,10 @@ export type CityPreferencesConfiguration = {
     walkAndTransability: string | number,
     politics: string,
     outdoorScore: string | number,
-    climate: string,
+    annualRainfall: string | number[],
+    annualSnowfall: string | number[],
+    avgWinterTemp: string | number[],
+    avgSummerTemp: string | number[],
     avgPopulationAge: number[] | string
     priorityAttributes: string[]
 };
@@ -35,7 +43,10 @@ export const defaultCityPreferencesConfiguration : CityPreferencesConfiguration 
     walkAndTransability: "",
     politics: "",
     outdoorScore: "",
-    climate: "",
+    annualRainfall: annualRainfallRange,
+    annualSnowfall: annualSnowfallRange,
+    avgWinterTemp: avgWinterTempRange,
+    avgSummerTemp: avgSummerTempRange,
     avgPopulationAge: ageRange,
     priorityAttributes: []
 };
@@ -61,7 +72,12 @@ export type CityDetails = {
     partisan_lean: number // negative value is more republican, positive is more democratic
     outdoor_score: number // the closer this value is to 100, the better suited the city is for outdoor recreation
     occupation_data: number,
-    median_age: number
+    median_age: number,
+    annual_precipitation: number,
+    annual_snowfall: number,
+    winter_temp: number,
+    summer_temp: number,
+    crime_rate: number,
 }
 
 export type Occupation = {

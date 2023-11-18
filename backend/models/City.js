@@ -13,7 +13,12 @@ const citySchema = new mongoose.Schema({
     partisan_lean: Number, //negative value is more republican, positive is more democratic
     outdoor_score: Number,  // the closer this value is to 100, the better suited the city is for outdoor recreation
     occupation_data: Map, // info not in database but is for returning job information back to frontend
-    median_age: Number
+    median_age: Number,
+    annual_precipitation: Number,
+    annual_snowfall: Number,
+    summer_temp: Number,
+    winter_temp: Number,
+    crime_rate: Number
 });
 
 module.exports = mongoose.model('City', citySchema, 'cities');
