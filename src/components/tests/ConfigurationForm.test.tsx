@@ -16,13 +16,13 @@ describe("Testing ConfigurationForm component", () => {
     setReturnedCities: jest.fn(),
   };
 
-  test("renders ConfigurationForm header", () => {
+  test("renders ConfigurationForm header and initial helper text", () => {
     render(<ConfigurationForm {...mockProps} />);
 
-    const configurationFormHeader = screen.getByText(
-        "What Are You Looking For in a City?"
-    );
+    const configurationFormHeader = screen.getByText("What Are You Looking For in a City?");
     expect(configurationFormHeader).toBeInTheDocument();
+    const configurationFormHelperText = screen.getByText("Fill in any criteria that you want and star up to three that are very important to you.");
+    expect(configurationFormHelperText).toBeInTheDocument();
   });
 
   test("renders ConfigurationForm checkboxes", () => {
