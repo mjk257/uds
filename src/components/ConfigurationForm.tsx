@@ -252,7 +252,7 @@ const ConfigurationForm = ({
     const marks = []
     for (let i = 0; i <= numTics; i++) {
         const value = range[0] + i * increment;
-        let label = String(range[0] + i * increment);
+        let label = String(Math.round(range[0] + i * increment));
         // If in the thousands, shorten to "num K"
         if (Number(value) >= 1000 && Number(value) < 1000000) {
           label = (Math.round(value / 1000)) + "k";
@@ -343,7 +343,7 @@ const ConfigurationForm = ({
       min: populationRange[0],
       max: populationRange[1],
       valueLabelDisplay: "auto",
-      value: currentConfig.population,
+      value: Array.isArray(currentConfig.population)  ? currentConfig.population.slice(0, 2)  : currentConfig.population,
       onChange: (event: any) => handleSliderChange("population", event),
       marks: generateMarks(populationRange, numTics),
       checkboxValue: "population",
@@ -355,7 +355,7 @@ const ConfigurationForm = ({
       step: (densityRange[1] - densityRange[0]) / numTics,
       min: densityRange[0],
       max: densityRange[1],
-      value: currentConfig.populationDensity,
+      value: Array.isArray(currentConfig.populationDensity)  ? currentConfig.populationDensity.slice(0, 2)  : currentConfig.populationDensity,
       onChange: (event: any) => handleSliderChange("populationDensity", event),
       marks: generateMarks(densityRange, numTics),
       checkboxValue: "populationDensity",
@@ -367,7 +367,7 @@ const ConfigurationForm = ({
       step: (annualSnowfallRange[1] - annualSnowfallRange[0]) / numTics,
       min: annualSnowfallRange[0],
       max: annualSnowfallRange[1],
-      value: currentConfig.annualSnowfall,
+      value: Array.isArray(currentConfig.annualSnowfall)  ? currentConfig.annualSnowfall.slice(0, 2)  : currentConfig.annualSnowfall,
       onChange: (event: any) => handleSliderChange("annualSnowfall", event),
       marks: generateMarks(annualSnowfallRange, numTics),
       checkboxValue: "annualSnowfall",
@@ -379,7 +379,7 @@ const ConfigurationForm = ({
       step: (annualRainfallRange[1] - annualRainfallRange[0]) / numTics,
       min: annualRainfallRange[0],
       max: annualRainfallRange[1],
-      value: currentConfig.annualRainfall,
+      value: Array.isArray(currentConfig.annualRainfall)  ? currentConfig.annualRainfall.slice(0, 2)  : currentConfig.annualRainfall,
       onChange: (event: any) => handleSliderChange("annualRainfall", event),
       marks: generateMarks(annualRainfallRange, numTics),
       checkboxValue: "annualRainfall",
@@ -391,7 +391,7 @@ const ConfigurationForm = ({
       step: (avgWinterTempRange[1] - avgWinterTempRange[0]) / numTics,
       min: avgWinterTempRange[0],
       max: avgWinterTempRange[1],
-      value: currentConfig.avgWinterTemp,
+      value: Array.isArray(currentConfig.avgWinterTemp)  ? currentConfig.avgWinterTemp.slice(0, 2)  : currentConfig.avgWinterTemp,
       onChange: (event: any) => handleSliderChange("avgWinterTemp", event),
       marks: generateMarks(avgWinterTempRange, numTics),
       checkboxValue: "avgWinterTemp",
@@ -403,7 +403,7 @@ const ConfigurationForm = ({
       step: (avgSummerTempRange[1] - avgSummerTempRange[0]) / numTics,
       min: avgSummerTempRange[0],
       max: avgSummerTempRange[1],
-      value: currentConfig.avgSummerTemp,
+      value: Array.isArray(currentConfig.avgSummerTemp)  ? currentConfig.avgSummerTemp.slice(0, 2)  : currentConfig.avgSummerTemp,
       onChange: (event: any) => handleSliderChange("avgSummerTemp", event),
       marks: generateMarks(avgSummerTempRange, numTics),
       checkboxValue: "avgSummerTemp",
@@ -412,7 +412,7 @@ const ConfigurationForm = ({
     {
       componentType: "slider",
       inputLabel: "Average Population Age",
-      value: currentConfig.avgPopulationAge,
+      value: Array.isArray(currentConfig.avgPopulationAge)  ? currentConfig.avgPopulationAge.slice(0, 2)  : currentConfig.avgPopulationAge,
       step: (ageRange[1] - ageRange[0]) / numTics,
       min: ageRange[0],
       max: ageRange[1],

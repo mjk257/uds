@@ -185,7 +185,7 @@ const Map: React.FC<MapProps> = ({ cities, onMarkerClick }) => {
         map.current.remove();
       }
     };
-  }, [cities, cluster, onMarkerClick]);
+  }, [cities]);
 
   return (
     <div id="map-container">

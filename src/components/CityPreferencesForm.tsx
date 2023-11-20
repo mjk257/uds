@@ -43,12 +43,6 @@ export const CityPreferencesForm = () => {
       <Container maxWidth="xl">
         <Card className="preferences-form">
           <CardContent>
-            <ConfigurationList
-              setCurrentConfig={setCurrentConfig}
-              allConfigs={allConfigs}
-              currentConfigName={currentConfigName}
-              setCurrentConfigName={setCurrentConfigName}
-            />
             <ConfigurationForm
               currentConfig={currentConfig}
               setCurrentConfig={setCurrentConfig}

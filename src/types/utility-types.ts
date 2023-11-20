@@ -1,11 +1,16 @@
-// Later on, this will be obtained from an endpoint
-export const populationRange = [100000, 9000000];
-export const ageRange = [20, 100];
-export const densityRange = [100, 31000];
-export const annualSnowfallRange = [0, 120];
-export const annualRainfallRange = [20, 60];
-export const avgWinterTempRange = [15, 75];
-export const avgSummerTempRange = [55, 85];
+import{ getRanges } from "../util/api-calls";
+import { Ranges } from "./Ranges";
+let ranges = {} as Ranges;
+await getRanges().then((resp) => {
+    ranges = resp;
+});
+export const populationRange = [ranges.min_population, ranges.max_population, ranges.avg_population];
+export const ageRange = [ranges.min_age, ranges.max_age, ranges.avg_age];
+export const densityRange = [ranges.min_density, ranges.max_density, ranges.avg_density];
+export const annualSnowfallRange = [ranges.min_snow, ranges.max_snow, ranges.avg_snow];
+export const annualRainfallRange = [ranges.min_rain, ranges.max_rain, ranges.avg_rain];
+export const avgWinterTempRange = [ranges.min_winter_temp, ranges.max_winter_temp, ranges.avg_winter_temp];
+export const avgSummerTempRange = [ranges.min_summer_temp, ranges.max_summer_temp, ranges.avg_summer_temp];
 
 export const numTics = 10;
 
