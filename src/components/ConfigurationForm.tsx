@@ -20,6 +20,7 @@ import {
   MenuItem,
   Select, Slider,
   TextField,
+  CircularProgress,
 } from "@mui/material";
 import { Configs, ageRange, densityRange, populationRange, numTics,
   avgSummerTempRange, avgWinterTempRange,
@@ -36,6 +37,7 @@ const ConfigurationForm = ({
   setReturnedCities,
 }: Props) => {
   const [allOccupations, setAllOccupations] = React.useState([]);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const isOverPriorityAttributesLimit = () =>
     currentConfig?.priorityAttributes.length > 3;
@@ -222,6 +224,7 @@ const ConfigurationForm = ({
   };
 
   const submitForm = () => {
+    setIsLoading(true);
     // Create a copy of the current config, making sure to display the original on screen
     // This copy will contain the midpoint of the slider values, the same values for other fields
     const populationMidpoint = ((currentConfig.population[0] as number) + (currentConfig.population[1] as number)) / 2;
@@ -246,6 +249,7 @@ const ConfigurationForm = ({
     searchForCities(currentConfigCopy).then((resp) => {
       setReturnedCities(resp);
     });
+    setIsLoading(false);
   };
 
   const generateMarks = (range: number[], numTics: number) => {
@@ -554,14 +558,15 @@ const ConfigurationForm = ({
               )}
               <br />
               <div className="preferences-form-sibling-set">
-                <Button color="error" variant="outlined" onClick={clearForm}>
+                {isLoading && (<CircularProgress/>)}
+                <Button color="error" variant="outlined" onClick={clearForm} disabled={isLoading}>
                   Clear
                 </Button>
                 <Button
                   color="primary"
                   variant="outlined"
                   onClick={submitForm}
-                  disabled={isOverPriorityAttributesLimit() || isConfigEmpty()}
+                  disabled={isOverPriorityAttributesLimit() || isConfigEmpty() || isLoading}
                 >
                   Submit
                 </Button>

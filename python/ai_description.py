@@ -33,7 +33,7 @@ for city in cities.find():
         model=model,
         prompt=prompt,
         # The maximum length of the response
-        max_output_tokens=150,
+        max_output_tokens=200,
     )
     query = { "_id": city["_id"] }
     values = { "$set": { "description": completion.result}}
