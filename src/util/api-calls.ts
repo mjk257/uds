@@ -20,7 +20,18 @@ const getAllOccupations = async () => {
     return await response.json();
 }
 
+const getRanges = async () => {
+    const response = await fetch('/api/ranges', {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        }
+    });
+    return await response.json();
+}
+
 export {
     searchForCities,
-    getAllOccupations
+    getAllOccupations,
+    getRanges
 }
