@@ -43,7 +43,6 @@ const ConfigurationForm = ({
     currentConfig?.priorityAttributes.length > 3;
 
   const isConfigEmpty = () => {
-    console.log(currentConfig);
     const allSlidersInDefaultRange = isDefaultRange("population")
         && isDefaultRange("populationDensity")
         && isDefaultRange("avgPopulationAge")
@@ -94,8 +93,6 @@ const ConfigurationForm = ({
       isNaN(event.target.value) || event.target.value === ""
         ? event.target.value
         : Number(event.target.value);
-
-    console.log(value);
 
     if (property === "priorityAttributes") {
       if (newPriorityAttributes.includes(attribute)) {
@@ -158,7 +155,6 @@ const ConfigurationForm = ({
   useEffect(() => {
     let newPriorityAttributes = currentConfig.priorityAttributes;
     // Removing an attribute from prioritization if it is given no preference
-    console.log("Reached default range, should remove item from priority attributes")
 
     if (isDefaultRange("avgPopulationAge")) {
       newPriorityAttributes = newPriorityAttributes.filter((item: any) => item !== "avgPopulationAge");
