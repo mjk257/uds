@@ -1,4 +1,5 @@
-const searchForCities = async (body: any) => {
+const searchForCities = async (body: any, setIsLoading: Function) => {
+    setIsLoading(true);
     const response = await fetch('/api/search', {
         method: "POST",
         headers: {
@@ -6,6 +7,7 @@ const searchForCities = async (body: any) => {
         },
         body: JSON.stringify(body)
     });
+    setIsLoading(false);
     return await response.json();
 }
 
