@@ -7,7 +7,6 @@ const searchForCities = async (body: any, setIsLoading: Function) => {
         },
         body: JSON.stringify(body)
     });
-    setIsLoading(false);
     return await response.json();
 }
 

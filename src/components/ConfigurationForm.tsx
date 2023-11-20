@@ -247,6 +247,7 @@ const ConfigurationForm = ({
     // send the data to the search function and await its response
     searchForCities(currentConfigCopy, setIsLoading).then((resp) => {
       setReturnedCities(resp);
+      setIsLoading(false);
     });
   };
 
@@ -290,7 +291,8 @@ const ConfigurationForm = ({
               currentConfig[value] === null ||
               //@ts-ignore
               currentConfig[value] === "" ||
-              isDefaultRange(value)
+              isDefaultRange(value) ||
+              isLoading
             }
             checked={currentConfig.priorityAttributes.includes(value)}
             onChange={(event) => handleChange("priorityAttributes", event)}
@@ -476,6 +478,7 @@ const ConfigurationForm = ({
                             onChange={input?.onChange}
                             label={input?.label}
                             sx={{ width: "100%" }}
+                            disabled={isLoading}
                         >
                           {input.menuItems?.map((menuItem, index) => {
                             return (
@@ -506,6 +509,7 @@ const ConfigurationForm = ({
                           )}
                           value={input?.value}
                           onChange={input?.onChange}
+                          disabled={isLoading}
                         />
                         <Box style={{ transform: "translate(10px, 10px)" }}>
                           <PriorityCheckbox value={input.checkboxValue} bottomMargin={ 0.5 }/>
@@ -522,6 +526,7 @@ const ConfigurationForm = ({
                                   checked={currentConfig[input.checkboxValue] === input.checkedValue}
                                   onChange={ input?.onChange }
                                   value={ input?.value }
+                                  disabled={isLoading}
                             />
                             <PriorityCheckbox value={input.checkboxValue} bottomMargin={ 0.25 }/>
                           </FormLabel>
@@ -537,6 +542,7 @@ const ConfigurationForm = ({
                               key={index}
                               value={input?.value as number[]}
                               onChange={input?.onChange}
+                              disabled={isLoading}
                               step={input?.step}
                               min={input?.min}
                               max={ input?.max }
