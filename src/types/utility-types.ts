@@ -24,8 +24,8 @@ export type CityPreferencesConfiguration = {
     bikeability: string | number,
     politics: string,
     outdoorScore: string | number,
-    annualRainfall: string | number[],
-    annualSnowfall: string | number[],
+    annualRainfall: number[],
+    annualSnowfall: number[],
     avgWinterTemp: string | number[],
     avgSummerTemp: string | number[],
     avgPopulationAge: number[] | string
@@ -41,8 +41,8 @@ export type Configs = {
 }
 
 export const defaultCityPreferencesConfiguration : CityPreferencesConfiguration =  {
-    population: populationRange,
-    populationDensity: densityRange,
+    population: [0, 10],
+    populationDensity: "",
     costOfLiving: "",
     preferredOccupation: null,
     crimeRate: '',
@@ -50,11 +50,11 @@ export const defaultCityPreferencesConfiguration : CityPreferencesConfiguration 
     bikeability: "",
     politics: "",
     outdoorScore: "",
-    annualRainfall: annualRainfallRange,
-    annualSnowfall: annualSnowfallRange,
-    avgWinterTemp: avgWinterTempRange,
-    avgSummerTemp: avgSummerTempRange,
-    avgPopulationAge: ageRange,
+    annualRainfall: [],
+    annualSnowfall: [],
+    avgWinterTemp: [0, 10],
+    avgSummerTemp: [0, 10],
+    avgPopulationAge: [0, 10],
     priorityAttributes: []
 };
 
