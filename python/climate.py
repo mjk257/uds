@@ -1,56 +1,18 @@
 import requests
 import os
-import numpy
 import pandas as pd
 from dotenv import load_dotenv
-from pymongo import MongoClient
+from pymongo import MongoClient, UpdateOne
+from data_utils import *
 
-# function for getting the bounding box from coordinates
-def get_gps_bounding_box(latitude, longitude, deg_lat, deg_lon):
-
-    if latitude >= 0:
-        if latitude + deg_lat >= 90.0:
-            n = 90.0 * numpy.sign(latitude)
-            s = latitude - deg_lat
-        else:   
-            n = latitude + deg_lat
-            s = latitude - deg_lat
-
-    else:
-        if abs(latitude) + deg_lat >= 90.0:
-            n = 90.0 * numpy.sign(latitude)
-            s = (abs(latitude) - deg_lat) * numpy.sign(latitude)
-        else:   
-            n = latitude + deg_lat
-            s = latitude - deg_lat
-
-    if longitude >= 0:
-        if longitude + deg_lon >= 180.0:
-            w = 180.0 * numpy.sign(longitude)
-            e = longitude - deg_lon
-        else:   
-            w = longitude + deg_lon
-            e = longitude - deg_lon
-
-    else:
-        if abs(longitude) + deg_lon >= 180.0:
-            w = 180.0 * numpy.sign(longitude)
-            e = (abs(longitude) - deg_lon) * numpy.sign(longitude)
-        else:   
-            w = longitude + deg_lon
-            e = longitude - deg_lon
-            
-    return ",".join([str(n), str(w), str(s), str(e)])
-
+# Load environment variables
 load_dotenv("../.env")
 
 # Climate Zone API url
 api = "http://climateapi.scottpinkelman.com/api/v1/location/"
 
-# DB connection string
-db_url = os.getenv("MONGODB_URL")
-
 # Connect to DB
+db_url = os.getenv("MONGODB_URL")
 client = MongoClient(db_url)
 cities = client['uds']['cities']
 
@@ -59,11 +21,13 @@ summer = [5, 6, 7]
 winter = [0, 1, 11]
 
 # Call API and add climate zone and zone description
+writes = []
 for city in cities.find():
-    zone_response = requests.get(api + str(city['latitude']) + "/" + str(city['longitude'])).json()['return_values'][0]
-
     lat = city['latitude']
     lon = city['longitude']
+
+    # Call climate zone API
+    zone_response = requests.get(api + str(lat) + "/" + str(lon)).json()['return_values'][0]
 
     stations_list = []
 
@@ -75,6 +39,7 @@ for city in cities.find():
     }
     url = "https://www.ncei.noaa.gov/access/services/search/v1/data"
 
+    # Try up to 3 times
     for i in range(3):
         try:
             response = requests.get(url, params=params)
@@ -102,6 +67,7 @@ for city in cities.find():
         "units": "standard"
     }
 
+    # Try up to 3 times
     for i in range(3):
         try:
             response = requests.get(url, params=params)
@@ -128,4 +94,7 @@ for city in cities.find():
                        "annual_snow": int(df.groupby("DATE")['SNOW'].mean().sum()),
                        "climate_zone":  zone_response['koppen_geiger_zone'], 
                        "zone_description": zone_response['zone_description']} }
-    cities.update_one(query, values)
+    
+    writes.append(UpdateOne(query, values))
+    
+cities.bulk_write(writes)

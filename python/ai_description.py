@@ -1,24 +1,27 @@
 import os
 import google.generativeai as palm
-from pymongo import MongoClient
+from pymongo import MongoClient, UpdateOne
 from dotenv import load_dotenv
 
+# Load environment variables
 load_dotenv("../.env")
 
-db_url = os.getenv("MONGODB_URL")
-
-api_key = os.getenv("PALM_API_KEY")
-
 # connect to DB
+db_url = os.getenv("MONGODB_URL")
 client = MongoClient(db_url)
 cities = client['uds']['cities']
 
+# Setup PaLM
+api_key = os.getenv("PALM_API_KEY")
 palm.configure(api_key=api_key)
 models = [m for m in palm.list_models() if 'generateText' in m.supported_generation_methods]
 model = models[0].name
 
+# List of attributes to include in the description
 attributes = "climate, cost of living, job market, crime rate, walkability, public transport, politics, and outdoor recreation"
 
+# Prompt PaLM model and update DB with description
+writes = []
 for city in cities.find():
     city_name = city['name'] + ", " + city['state']
     prompt =  """
@@ -37,4 +40,6 @@ for city in cities.find():
     )
     query = { "_id": city["_id"] }
     values = { "$set": { "description": completion.result}}
-    cities.update_one(query, values)
+    writes.append(UpdateOne(query, values))
+
+cities.bulk_write(writes)

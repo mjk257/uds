@@ -46,14 +46,18 @@ const ConfigurationForm = ({
         && isDefaultRange("avgPopulationAge")
         && isDefaultRange("avgWinterTemp")
         && isDefaultRange("avgSummerTemp");
+    const occupationNull = currentConfig.preferredOccupation === null;
     let allOtherValuesEmpty = true;
     for (const [key, value] of Object.entries(currentConfig)) {
       if ((typeof(value) === "string" || typeof(value) === "number") && (value !== "" && value !== null)) {
         allOtherValuesEmpty = false;
       }
     }
+    if(currentConfig.annualRainfall.length || currentConfig.annualSnowfall.length){
+      allOtherValuesEmpty = false
+    }
     // Priority attributes can be empty, so submission should be enabled so long as at least 1 attribute is filled
-    return allSlidersInDefaultRange && allOtherValuesEmpty;
+    return allSlidersInDefaultRange && allOtherValuesEmpty && occupationNull;
   };
 
   const isDefaultRange = (property: string) => {
@@ -318,6 +322,8 @@ const ConfigurationForm = ({
               currentConfig[value] === null ||
               //@ts-ignore
               currentConfig[value] === "" ||
+              //@ts-ignore
+              (Array.isArray(currentConfig[value]) && currentConfig[value].length === 0) || 
               isDefaultRange(value) ||
               isLoading
             }
@@ -332,6 +338,11 @@ const ConfigurationForm = ({
   };
 
   const formInputs = [
+    {
+      componentType: "header",
+      text: "Traits",
+      checkboxValue: "traits"
+    },
     {
       componentType: "checkbox",
       label: "Low Cost of Living",
@@ -368,6 +379,11 @@ const ConfigurationForm = ({
       onChange: () => handleCheckboxChange("outdoorScore", 100)
     },
     {
+      componentType: "header",
+      text: "Population Stats",
+      checkboxValue: "pop stats"
+    },
+    {
       componentType: "slider",
       inputLabel: "Population",
       valueLabelDisplay: "auto",
@@ -376,6 +392,15 @@ const ConfigurationForm = ({
       marks: generateMarks(populationSlider),
       checkboxValue: "population",
       label: "Population"
+    },
+    {
+      componentType: "slider",
+      inputLabel: "Average Population Age",
+      value: Array.isArray(currentConfig.avgPopulationAge)  ? currentConfig.avgPopulationAge.slice(0, 2)  : currentConfig.avgPopulationAge,
+      marks: generateMarks(ageSlider),
+      onChange: (event: any) => handleSliderChange("avgPopulationAge", event),
+      checkboxValue: "avgPopulationAge",
+      label: "Average Population Age"
     },
     {
       componentType: "select",
@@ -390,6 +415,29 @@ const ConfigurationForm = ({
         { title: "Medium", value: densityRange[2] },
         { title: "High", value: densityRange[1] },
       ],
+    },
+    {
+      componentType: "header",
+      text: "Climate",
+      checkboxValue: "climate"
+    },
+    {
+      componentType: "slider",
+      inputLabel: "Average Winter Temperature (fahrenheit)",
+      value: Array.isArray(currentConfig.avgWinterTemp)  ? currentConfig.avgWinterTemp.slice(0, 2)  : currentConfig.avgWinterTemp,
+      onChange: (event: any) => handleSliderChange("avgWinterTemp", event),
+      marks: generateMarks(winterSlider),
+      checkboxValue: "avgWinterTemp",
+      label: "Average Winter Temperature (fahrenheit)"
+    },
+    {
+      componentType: "slider",
+      inputLabel: "Average Summer Temperature (fahrenheit)",
+      value: Array.isArray(currentConfig.avgSummerTemp)  ? currentConfig.avgSummerTemp.slice(0, 2)  : currentConfig.avgSummerTemp,
+      onChange: (event: any) => handleSliderChange("avgSummerTemp", event),
+      marks: generateMarks(summerSlider),
+      checkboxValue: "avgSummerTemp",
+      label: "Average Summer Temperature (fahrenheit)"
     },
     {
       componentType: "select",
@@ -420,31 +468,9 @@ const ConfigurationForm = ({
       multiple: true,
     },
     {
-      componentType: "slider",
-      inputLabel: "Average Winter Temperature (fahrenheit)",
-      value: Array.isArray(currentConfig.avgWinterTemp)  ? currentConfig.avgWinterTemp.slice(0, 2)  : currentConfig.avgWinterTemp,
-      onChange: (event: any) => handleSliderChange("avgWinterTemp", event),
-      marks: generateMarks(winterSlider),
-      checkboxValue: "avgWinterTemp",
-      label: "Average Winter Temperature (fahrenheit)"
-    },
-    {
-      componentType: "slider",
-      inputLabel: "Average Summer Temperature (fahrenheit)",
-      value: Array.isArray(currentConfig.avgSummerTemp)  ? currentConfig.avgSummerTemp.slice(0, 2)  : currentConfig.avgSummerTemp,
-      onChange: (event: any) => handleSliderChange("avgSummerTemp", event),
-      marks: generateMarks(summerSlider),
-      checkboxValue: "avgSummerTemp",
-      label: "Average Summer Temperature (fahrenheit)"
-    },
-    {
-      componentType: "slider",
-      inputLabel: "Average Population Age",
-      value: Array.isArray(currentConfig.avgPopulationAge)  ? currentConfig.avgPopulationAge.slice(0, 2)  : currentConfig.avgPopulationAge,
-      marks: generateMarks(ageSlider),
-      onChange: (event: any) => handleSliderChange("avgPopulationAge", event),
-      checkboxValue: "avgPopulationAge",
-      label: "Average Population Age"
+      componentType: "header",
+      text: "Career",
+      checkboxValue: "career"
     },
     {
       componentType: "autocomplete",
@@ -487,6 +513,11 @@ const ConfigurationForm = ({
                     className="preferences-select"
                     key={index}
                   >
+                    {input?.componentType === "header" && (
+                      <div style={{ display: 'flex', alignItems: 'left' }}>
+                        <h2>{input.text}</h2>
+                      </div>
+                    )}
                     {input?.componentType === "select" && (
                       <div style={{ display: 'flex', alignItems: 'left' }}>
                         <InputLabel id={input.inputLabel}>
