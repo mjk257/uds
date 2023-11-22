@@ -19,7 +19,7 @@ import {
   InputLabel,
   MenuItem,
   Select, Slider,
-  TextField,
+  TextField, Typography,
 } from "@mui/material";
 import { Configs, ageRange, densityRange, populationRange, numTics,
   avgSummerTempRange, avgWinterTempRange,
@@ -395,7 +395,7 @@ const ConfigurationForm = ({
       onChange: (event: any) => handleSliderChange("avgWinterTemp", event),
       marks: generateMarks(avgWinterTempRange, numTics),
       checkboxValue: "avgWinterTemp",
-      label: "Average Winter Temperature (fahrenheit)"
+      label: "Average Winter Temperature (°F)"
     },
     {
       componentType: "slider",
@@ -407,7 +407,7 @@ const ConfigurationForm = ({
       onChange: (event: any) => handleSliderChange("avgSummerTemp", event),
       marks: generateMarks(avgSummerTempRange, numTics),
       checkboxValue: "avgSummerTemp",
-      label: "Average Summer Temperature (fahrenheit)"
+      label: "Average Summer Temperature (°F)"
     },
     {
       componentType: "slider",
@@ -455,6 +455,10 @@ const ConfigurationForm = ({
             <CardHeader title="What Are You Looking For in a City?" />
             <Divider />
             <CardContent className="preferences-form-content">
+              <Typography variant="body1" className="preferences-form-text">
+                Fill in any criteria that you want and star up to three that are very important to you.
+              </Typography>
+              <br/>
               {formInputs.map((input, index) => {
                 return (
                   <FormControl
@@ -549,7 +553,7 @@ const ConfigurationForm = ({
               })}
               {isOverPriorityAttributesLimit() && (
                   <FormHelperText>
-                    <span style={{ fontSize: 20, color: "red" }}>Please only star up to 3 attributes!</span>
+                    <span style={{ fontSize: 16, color: "red" }}>You may only star up to three attributes!</span>
                   </FormHelperText>
               )}
               <br />
