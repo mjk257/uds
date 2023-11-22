@@ -1,11 +1,15 @@
-// Later on, this will be obtained from an endpoint
-export const populationRange = [100000, 9000000];
-export const ageRange = [20, 100];
-export const densityRange = [100, 31000];
-export const annualSnowfallRange = [0, 120];
-export const annualRainfallRange = [20, 60];
-export const avgWinterTempRange = [15, 75];
-export const avgSummerTempRange = [55, 85];
+import{ getRanges } from "../util/api-calls";
+let ranges = {} as Ranges;
+await getRanges().then((resp) => {
+    ranges = resp;
+});
+export const populationRange = [ranges.min_population, ranges.max_population, ranges.avg_population];
+export const ageRange = [ranges.min_age, ranges.max_age, ranges.avg_age];
+export const densityRange = [ranges.min_density, ranges.max_density, ranges.avg_density];
+export const annualSnowfallRange = [ranges.min_snow, ranges.max_snow, ranges.avg_snow];
+export const annualRainfallRange = [ranges.min_rain, ranges.max_rain, ranges.avg_rain];
+export const avgWinterTempRange = [ranges.min_winter_temp, ranges.max_winter_temp, ranges.avg_winter_temp];
+export const avgSummerTempRange = [ranges.min_summer_temp, ranges.max_summer_temp, ranges.avg_summer_temp];
 
 export const numTics = 10;
 
@@ -19,8 +23,8 @@ export type CityPreferencesConfiguration = {
     bikeability: string | number,
     politics: string,
     outdoorScore: string | number,
-    annualRainfall: string | number[],
-    annualSnowfall: string | number[],
+    annualRainfall: number[],
+    annualSnowfall: number[],
     avgWinterTemp: string | number[],
     avgSummerTemp: string | number[],
     avgPopulationAge: number[] | string
@@ -36,8 +40,8 @@ export type Configs = {
 }
 
 export const defaultCityPreferencesConfiguration : CityPreferencesConfiguration =  {
-    population: populationRange,
-    populationDensity: densityRange,
+    population: [0, 10],
+    populationDensity: "",
     costOfLiving: "",
     preferredOccupation: null,
     crimeRate: '',
@@ -45,11 +49,11 @@ export const defaultCityPreferencesConfiguration : CityPreferencesConfiguration 
     bikeability: "",
     politics: "",
     outdoorScore: "",
-    annualRainfall: annualRainfallRange,
-    annualSnowfall: annualSnowfallRange,
-    avgWinterTemp: avgWinterTempRange,
-    avgSummerTemp: avgSummerTempRange,
-    avgPopulationAge: ageRange,
+    annualRainfall: [],
+    annualSnowfall: [],
+    avgWinterTemp: [0, 10],
+    avgSummerTemp: [0, 10],
+    avgPopulationAge: [0, 10],
     priorityAttributes: []
 };
 
@@ -93,4 +97,29 @@ export type Occupation = {
 export type CityResponse = {
     [key: string]: CityDetails
 }
+
+export type Ranges = {
+    "_id":null,
+    "max_population": number,
+    "min_population": number,
+    "avg_population": number,
+    "max_density": number,
+    "min_density": number,
+    "avg_density": number,
+    "max_age": number,
+    "min_age": number,
+    "avg_age": number,
+    "max_summer_temp": number,
+    "min_summer_temp": number,
+    "avg_summer_temp": number,
+    "max_winter_temp": number,
+    "min_winter_temp": number,
+    "avg_winter_temp": number,
+    "max_rain": number,
+    "min_rain": number,
+    "avg_rain": number,
+    "max_snow": number,
+    "min_snow": number,
+    "avg_snow": number
+    }
 

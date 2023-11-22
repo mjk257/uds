@@ -19,9 +19,11 @@ import {
   InputLabel,
   MenuItem,
   Select, Slider,
-  TextField, Typography,
+  TextField,
+  CircularProgress,
+  Typography,
 } from "@mui/material";
-import { Configs, ageRange, densityRange, populationRange, numTics,
+import { Configs, ageRange, densityRange, populationRange,
   avgSummerTempRange, avgWinterTempRange,
   annualRainfallRange, annualSnowfallRange } from "../types/utility-types";
 import { searchForCities, getAllOccupations } from "../util/api-calls";
@@ -36,54 +38,72 @@ const ConfigurationForm = ({
   setReturnedCities,
 }: Props) => {
   const [allOccupations, setAllOccupations] = React.useState([]);
-
+  const [isLoading, setIsLoading] = React.useState(false);
   const isOverPriorityAttributesLimit = () =>
     currentConfig?.priorityAttributes.length > 3;
 
   const isConfigEmpty = () => {
-    console.log(currentConfig);
     const allSlidersInDefaultRange = isDefaultRange("population")
-        && isDefaultRange("populationDensity")
         && isDefaultRange("avgPopulationAge")
-        && isDefaultRange("annualSnowfall")
-        && isDefaultRange("annualRainfall")
         && isDefaultRange("avgWinterTemp")
         && isDefaultRange("avgSummerTemp");
+    const occupationNull = currentConfig.preferredOccupation === null;
     let allOtherValuesEmpty = true;
     for (const [key, value] of Object.entries(currentConfig)) {
       if ((typeof(value) === "string" || typeof(value) === "number") && (value !== "" && value !== null)) {
         allOtherValuesEmpty = false;
       }
     }
+    if(currentConfig.annualRainfall.length || currentConfig.annualSnowfall.length){
+      allOtherValuesEmpty = false
+    }
     // Priority attributes can be empty, so submission should be enabled so long as at least 1 attribute is filled
-    return allSlidersInDefaultRange && allOtherValuesEmpty;
+    return allSlidersInDefaultRange && allOtherValuesEmpty && occupationNull;
   };
 
   const isDefaultRange = (property: string) => {
     if (property === "population") {
-      return currentConfig.population[0] === populationRange[0] && currentConfig.population[1] === populationRange[1];
+      return currentConfig.population[0] === 0 && currentConfig.population[1] === 10;
     }
     else if (property === "populationDensity") {
-      return currentConfig.populationDensity[0] === densityRange[0] && currentConfig.populationDensity[1] === densityRange[1];
+      return currentConfig.populationDensity[0] === 0 && currentConfig.populationDensity[1] === 10;
     }
     else if (property === "avgPopulationAge") {
-      return currentConfig.avgPopulationAge[0] === ageRange[0] && currentConfig.avgPopulationAge[1] === ageRange[1];
+      return currentConfig.avgPopulationAge[0] === 0 && currentConfig.avgPopulationAge[1] === 10;
     }
     else if (property === "annualSnowfall") {
-        return currentConfig.annualSnowfall[0] === annualSnowfallRange[0] && currentConfig.annualSnowfall[1] === annualSnowfallRange[1];
+        return currentConfig.annualSnowfall[0] === 0 && currentConfig.annualSnowfall[1] === 10;
     }
     else if (property === "annualRainfall") {
-        return currentConfig.annualRainfall[0] === annualRainfallRange[0] && currentConfig.annualRainfall[1] === annualRainfallRange[1];
+        return currentConfig.annualRainfall[0] === 0 && currentConfig.annualRainfall[1] === 10;
     }
     else if (property === "avgWinterTemp") {
-        return currentConfig.avgWinterTemp[0] === avgWinterTempRange[0] && currentConfig.avgWinterTemp[1] === avgWinterTempRange[1];
+        return currentConfig.avgWinterTemp[0] === 0 && currentConfig.avgWinterTemp[1] === 10;
     }
     else if (property === "avgSummerTemp") {
-        return currentConfig.avgSummerTemp[0] === avgSummerTempRange[0] && currentConfig.avgSummerTemp[1] === avgSummerTempRange[1];
+        return currentConfig.avgSummerTemp[0] === 0 && currentConfig.avgSummerTemp[1] === 10;
     }
     // If none of these, return false
     return false;
   }
+
+  const handleMultiChange = (property: any, event: any) => {
+    let newPriorityAttributes = currentConfig.priorityAttributes;
+    const {
+      target: { value },
+    } = event;
+    let newValue;
+    if(typeof value === 'string'){
+      newValue = value.includes(",") ? value.split(",") : [value];
+    } else {
+      newValue = value;
+    }
+    setCurrentConfig({
+        ...currentConfig,
+        priorityAttributes: newPriorityAttributes,
+        [property]: newValue,
+    });
+  };
 
   const handleChange = (property: any, event: any) => {
     let newPriorityAttributes = currentConfig.priorityAttributes;
@@ -92,8 +112,6 @@ const ConfigurationForm = ({
       isNaN(event.target.value) || event.target.value === ""
         ? event.target.value
         : Number(event.target.value);
-
-    console.log(value);
 
     if (property === "priorityAttributes") {
       if (newPriorityAttributes.includes(attribute)) {
@@ -156,7 +174,6 @@ const ConfigurationForm = ({
   useEffect(() => {
     let newPriorityAttributes = currentConfig.priorityAttributes;
     // Removing an attribute from prioritization if it is given no preference
-    console.log("Reached default range, should remove item from priority attributes")
 
     if (isDefaultRange("avgPopulationAge")) {
       newPriorityAttributes = newPriorityAttributes.filter((item: any) => item !== "avgPopulationAge");
@@ -224,17 +241,15 @@ const ConfigurationForm = ({
   const submitForm = () => {
     // Create a copy of the current config, making sure to display the original on screen
     // This copy will contain the midpoint of the slider values, the same values for other fields
-    const populationMidpoint = ((currentConfig.population[0] as number) + (currentConfig.population[1] as number)) / 2;
-    const densityMidpoint = ((currentConfig.populationDensity[0] as number) + (currentConfig.populationDensity[1] as number)) / 2;
-    const ageMidpoint = ((currentConfig.avgPopulationAge[0] as number) + (currentConfig.avgPopulationAge[1] as number)) / 2;
-    const annualSnowfallMidpoint = ((currentConfig.annualSnowfall[0] as number) + (currentConfig.annualSnowfall[1] as number)) / 2;
-    const annualRainfallMidpoint = ((currentConfig.annualRainfall[0] as number) + (currentConfig.annualRainfall[1] as number)) / 2;
-    const avgWinterTempMidpoint = ((currentConfig.avgWinterTemp[0] as number) + (currentConfig.avgWinterTemp[1] as number)) / 2;
-    const avgSummerTempMidpoint = ((currentConfig.avgSummerTemp[0] as number) + (currentConfig.avgSummerTemp[1] as number)) / 2;
+    const populationMidpoint = (populationSlider[(currentConfig.population[0] as number)] + populationSlider[(currentConfig.population[1] as number)]) / 2;
+    const ageMidpoint = (ageSlider[(currentConfig.avgPopulationAge[0] as number)] + ageSlider[(currentConfig.avgPopulationAge[1] as number)]) / 2;
+    const annualSnowfallMidpoint = currentConfig.annualSnowfall.length > 0 ? currentConfig.annualSnowfall.reduce((a, b) => a + b) / currentConfig.annualSnowfall.length : null;
+    const annualRainfallMidpoint =currentConfig.annualRainfall.length > 0 ? currentConfig.annualRainfall.reduce((a, b) => a + b) / currentConfig.annualRainfall.length : null;
+    const avgWinterTempMidpoint = (summerSlider[(currentConfig.avgWinterTemp[0] as number)] + summerSlider[(currentConfig.avgWinterTemp[1] as number)]) / 2;
+    const avgSummerTempMidpoint = (winterSlider[(currentConfig.avgSummerTemp[0] as number)] + winterSlider[(currentConfig.avgSummerTemp[1] as number)]) / 2;
     const currentConfigCopy = {
         ...currentConfig,
         population: populationMidpoint,
-        populationDensity: densityMidpoint,
         avgPopulationAge: ageMidpoint,
         annualSnowfall: annualSnowfallMidpoint,
         annualRainfall: annualRainfallMidpoint,
@@ -243,29 +258,49 @@ const ConfigurationForm = ({
     }
 
     // send the data to the search function and await its response
-    searchForCities(currentConfigCopy).then((resp) => {
+    searchForCities(currentConfigCopy, setIsLoading).then((resp) => {
       setReturnedCities(resp);
+      setIsLoading(false);
     });
   };
 
-  const generateMarks = (range: number[], numTics: number) => {
-    const increment = (range[1] - range[0]) / numTics;
-    const marks = []
-    for (let i = 0; i <= numTics; i++) {
-        const value = range[0] + i * increment;
-        let label = String(range[0] + i * increment);
-        // If in the thousands, shorten to "num K"
-        if (Number(value) >= 1000 && Number(value) < 1000000) {
-          label = (Math.round(value / 1000)) + "k";
-        }
-        // If in the millions, shorten to "num M"
-        else if (Number(value) >= 1000000) {
-          label = (Math.round(value / 1000) / 1000) + "m";
-        }
-        marks.push({
-            value: value,
-            label: label
-        });
+  function numFormatter(num: number) {
+    if (num > 999 && num < 1000000) {
+      return (num / 1000).toFixed(0) + "K"; // convert to K for number from > 1000 < 1 million
+    } else if (num >= 1000000) {
+      return (num / 1000000).toFixed(0) + "M"; // convert to M for number from > 1 million
+    } else if (num < 900) {
+      return num; // if value < 1000, nothing to do
+    }
+  }
+
+  const generateRange = (ranges: number[]) => {
+    const range = [];
+    range.push(ranges[1]);
+    range.push(ranges[2]);
+    for(let i = 0; i < 10; i++){
+      if(i < 5){
+        range.push(Math.round(ranges[0] + i % 5 * ((ranges[2] - ranges[0]) / 5)))
+      } else if (i > 5){
+        range.push(Math.round(ranges[2] + i % 5 * ((ranges[1] - ranges[2]) / 5)))
+      }
+    }
+    console.log(range.sort(function(a, b){return a - b}))
+    return range.sort(function(a, b){return a - b});
+  }
+
+  const populationSlider = generateRange(populationRange);
+  const summerSlider = generateRange(avgSummerTempRange);
+  const winterSlider = generateRange(avgWinterTempRange);
+  const ageSlider = generateRange(ageRange);
+
+  const generateMarks = (range: number[]) => {
+    let marks = []
+    for(let i = 0; i < range.length; i++){
+      marks.push({
+        value: i,
+        label: numFormatter(Math.round(range[i]))
+      })
     }
     return marks;
   }
@@ -288,7 +323,10 @@ const ConfigurationForm = ({
               currentConfig[value] === null ||
               //@ts-ignore
               currentConfig[value] === "" ||
-              isDefaultRange(value)
+              //@ts-ignore
+              (Array.isArray(currentConfig[value]) && currentConfig[value].length === 0) || 
+              isDefaultRange(value) ||
+              isLoading
             }
             checked={currentConfig.priorityAttributes.includes(value)}
             onChange={(event) => handleChange("priorityAttributes", event)}
@@ -301,6 +339,11 @@ const ConfigurationForm = ({
   };
 
   const formInputs = [
+    {
+      componentType: "header",
+      text: "Traits",
+      checkboxValue: "traits"
+    },
     {
       componentType: "checkbox",
       label: "Low Cost of Living",
@@ -337,89 +380,98 @@ const ConfigurationForm = ({
       onChange: () => handleCheckboxChange("outdoorScore", 100)
     },
     {
+      componentType: "header",
+      text: "Population Stats",
+      checkboxValue: "pop stats"
+    },
+    {
       componentType: "slider",
       inputLabel: "Population",
-      step: (populationRange[1] - populationRange[0]) / numTics,
-      min: populationRange[0],
-      max: populationRange[1],
       valueLabelDisplay: "auto",
-      value: currentConfig.population,
+      value: Array.isArray(currentConfig.population)  ? currentConfig.population.slice(0, 2)  : currentConfig.population,
       onChange: (event: any) => handleSliderChange("population", event),
-      marks: generateMarks(populationRange, numTics),
+      marks: generateMarks(populationSlider),
       checkboxValue: "population",
       label: "Population"
     },
     {
       componentType: "slider",
+      inputLabel: "Average Population Age",
+      value: Array.isArray(currentConfig.avgPopulationAge)  ? currentConfig.avgPopulationAge.slice(0, 2)  : currentConfig.avgPopulationAge,
+      marks: generateMarks(ageSlider),
+      onChange: (event: any) => handleSliderChange("avgPopulationAge", event),
+      checkboxValue: "avgPopulationAge",
+      label: "Average Population Age"
+    },
+    {
+      componentType: "select",
       inputLabel: "Population Density",
-      step: (densityRange[1] - densityRange[0]) / numTics,
-      min: densityRange[0],
-      max: densityRange[1],
       value: currentConfig.populationDensity,
-      onChange: (event: any) => handleSliderChange("populationDensity", event),
-      marks: generateMarks(densityRange, numTics),
+      onChange: (event: any) => handleChange("populationDensity", event),
       checkboxValue: "populationDensity",
-      label: "Population Density"
+      label: "Population Density",
+      menuItems: [
+        { title: "No Preference", value: ""},
+        { title: "Low", value: densityRange[0] },
+        { title: "Medium", value: densityRange[2] },
+        { title: "High", value: densityRange[1] },
+      ],
     },
     {
-      componentType: "slider",
-      inputLabel: "Annual Snowfall (inches)",
-      step: (annualSnowfallRange[1] - annualSnowfallRange[0]) / numTics,
-      min: annualSnowfallRange[0],
-      max: annualSnowfallRange[1],
-      value: currentConfig.annualSnowfall,
-      onChange: (event: any) => handleSliderChange("annualSnowfall", event),
-      marks: generateMarks(annualSnowfallRange, numTics),
-      checkboxValue: "annualSnowfall",
-      label: "Annual Snowfall (inches)"
-    },
-    {
-      componentType: "slider",
-      inputLabel: "Annual Rainfall (inches)",
-      step: (annualRainfallRange[1] - annualRainfallRange[0]) / numTics,
-      min: annualRainfallRange[0],
-      max: annualRainfallRange[1],
-      value: currentConfig.annualRainfall,
-      onChange: (event: any) => handleSliderChange("annualRainfall", event),
-      marks: generateMarks(annualRainfallRange, numTics),
-      checkboxValue: "annualRainfall",
-      label: "Annual Rainfall (inches)"
+      componentType: "header",
+      text: "Climate",
+      checkboxValue: "climate"
     },
     {
       componentType: "slider",
       inputLabel: "Average Winter Temperature (fahrenheit)",
-      step: (avgWinterTempRange[1] - avgWinterTempRange[0]) / numTics,
-      min: avgWinterTempRange[0],
-      max: avgWinterTempRange[1],
-      value: currentConfig.avgWinterTemp,
+      value: Array.isArray(currentConfig.avgWinterTemp)  ? currentConfig.avgWinterTemp.slice(0, 2)  : currentConfig.avgWinterTemp,
       onChange: (event: any) => handleSliderChange("avgWinterTemp", event),
-      marks: generateMarks(avgWinterTempRange, numTics),
+      marks: generateMarks(winterSlider),
       checkboxValue: "avgWinterTemp",
       label: "Average Winter Temperature (°F)"
     },
     {
       componentType: "slider",
       inputLabel: "Average Summer Temperature (fahrenheit)",
-      step: (avgSummerTempRange[1] - avgSummerTempRange[0]) / numTics,
-      min: avgSummerTempRange[0],
-      max: avgSummerTempRange[1],
-      value: currentConfig.avgSummerTemp,
+      value: Array.isArray(currentConfig.avgSummerTemp)  ? currentConfig.avgSummerTemp.slice(0, 2)  : currentConfig.avgSummerTemp,
       onChange: (event: any) => handleSliderChange("avgSummerTemp", event),
-      marks: generateMarks(avgSummerTempRange, numTics),
+      marks: generateMarks(summerSlider),
       checkboxValue: "avgSummerTemp",
       label: "Average Summer Temperature (°F)"
     },
     {
-      componentType: "slider",
-      inputLabel: "Average Population Age",
-      value: currentConfig.avgPopulationAge,
-      step: (ageRange[1] - ageRange[0]) / numTics,
-      min: ageRange[0],
-      max: ageRange[1],
-      marks: generateMarks(ageRange, numTics),
-      onChange: (event: any) => handleSliderChange("avgPopulationAge", event),
-      checkboxValue: "avgPopulationAge",
-      label: "Average Population Age"
+      componentType: "select",
+      inputLabel: "Annual Snowfall (inches)",
+      value: currentConfig.annualSnowfall,
+      onChange: (event: any) => handleMultiChange("annualSnowfall", event),
+      checkboxValue: "annualSnowfall",
+      label: "Annual Snowfall",
+      menuItems: [
+        { title: "No Snow", value: annualSnowfallRange[0] },
+        { title: "Average Snow", value: annualSnowfallRange[2] },
+        { title: "Excessive Snow", value: annualSnowfallRange[1] },
+      ],
+      multiple: true,
+    },
+    {
+      componentType: "select",
+      inputLabel: "Annual Rainfall (inches)",
+      value: currentConfig.annualRainfall,
+      onChange: (event: any) => handleMultiChange("annualRainfall", event),
+      checkboxValue: "annualRainfall",
+      label: "Annual Rainfall",
+      menuItems: [
+        { title: "Dry", value: annualRainfallRange[0] },
+        { title: "Average", value: annualRainfallRange[2] },
+        { title: "Wet", value: annualRainfallRange[1] },
+      ],
+      multiple: true,
+    },
+    {
+      componentType: "header",
+      text: "Career",
+      checkboxValue: "career"
     },
     {
       componentType: "autocomplete",
@@ -466,6 +518,11 @@ const ConfigurationForm = ({
                     className="preferences-select"
                     key={index}
                   >
+                    {input?.componentType === "header" && (
+                      <div style={{ display: 'flex', alignItems: 'left' }}>
+                        <h2>{input.text}</h2>
+                      </div>
+                    )}
                     {input?.componentType === "select" && (
                       <div style={{ display: 'flex', alignItems: 'left' }}>
                         <InputLabel id={input.inputLabel}>
@@ -478,6 +535,8 @@ const ConfigurationForm = ({
                             onChange={input?.onChange}
                             label={input?.label}
                             sx={{ width: "100%" }}
+                            disabled={isLoading}
+                            multiple={input?.multiple}
                         >
                           {input.menuItems?.map((menuItem, index) => {
                             return (
@@ -508,6 +567,7 @@ const ConfigurationForm = ({
                           )}
                           value={input?.value}
                           onChange={input?.onChange}
+                          disabled={isLoading}
                         />
                         <Box style={{ transform: "translate(10px, 10px)" }}>
                           <PriorityCheckbox value={input.checkboxValue} bottomMargin={ 0.5 }/>
@@ -524,6 +584,7 @@ const ConfigurationForm = ({
                                   checked={currentConfig[input.checkboxValue] === input.checkedValue}
                                   onChange={ input?.onChange }
                                   value={ input?.value }
+                                  disabled={isLoading}
                             />
                             <PriorityCheckbox value={input.checkboxValue} bottomMargin={ 0.25 }/>
                           </FormLabel>
@@ -539,10 +600,12 @@ const ConfigurationForm = ({
                               key={index}
                               value={input?.value as number[]}
                               onChange={input?.onChange}
-                              step={input?.step}
-                              min={input?.min}
-                              max={ input?.max }
-                              marks={input?.marks}/>
+                              disabled={isLoading}
+                              step={null}
+                              min={0}
+                              max={10}
+                              marks={input?.marks}
+                              />
                         </>
                     )}
                     {input?.helperText && input?.value && (
@@ -558,14 +621,15 @@ const ConfigurationForm = ({
               )}
               <br />
               <div className="preferences-form-sibling-set">
-                <Button color="error" variant="outlined" onClick={clearForm}>
+                {isLoading && (<CircularProgress/>)}
+                <Button color="error" variant="outlined" onClick={clearForm} disabled={isLoading}>
                   Clear
                 </Button>
                 <Button
                   color="primary"
                   variant="outlined"
                   onClick={submitForm}
-                  disabled={isOverPriorityAttributesLimit() || isConfigEmpty()}
+                  disabled={isOverPriorityAttributesLimit() || isConfigEmpty() || isLoading}
                 >
                   Submit
                 </Button>

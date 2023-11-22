@@ -2,38 +2,21 @@ import pandas as pd
 import requests
 import os
 from dotenv import load_dotenv
-from pymongo import MongoClient
-from abbreviate_state import *
+from pymongo import MongoClient, ReplaceOne
+from data_utils import *
 
+# Load environment variables
 load_dotenv("../.env")
 
-# variables for atlas connection
-db_url = os.getenv("MONGODB_URL")
-
 # Connect to DB
+db_url = os.getenv("MONGODB_URL")
 client = MongoClient(db_url)
 cities = client['uds']['cities']
 
-# function to clean city name from census data
-def clean_name(x):
-    if("-" in x):
-        return x.split("-")[0]
-    if("/" in x):
-        return x.split("/")[0]
-    if("city" in x):
-        return x.split(" city")[0]
-    if("town" in x):
-        return x.split(" town")[0]
-    if("municipality" in x):
-        return x.split(" municipality")[0]
-    if("CDP" in x):
-        return x.split("Urban ")[1].split(" CDP")[0]
-    return x
-
-# census API call
+# Census API call
 response = requests.get("http://api.census.gov/data/2019/pep/population?get=NAME,DENSITY,POP&for=place:*&key=25ec91bd81fdfa691c08dbaf06adc71c3a2918d6")
 
-# clean census data
+# Clean Census data
 df = pd.DataFrame(response.json(), columns=['name', 'density', 'population', '0', '1'])
 df = df.drop(['0', '1'], axis=1)
 df = df.drop(0, axis=0)
@@ -51,11 +34,11 @@ df['density'] = df['density'].astype(float).astype(int)
 df = df.sort_values('name')
 df.reset_index(inplace = True, drop = True)
 
-# add columns for latitude and longitude
+# Add columns for latitude and longitude
 df.insert(4, column='latitude', value=0)
 df.insert(4, column='longitude', value=0)
 
-# call geocoding API
+# Call geocoding API
 for i, row in df.iterrows():
     api_url = "https://geocode.maps.co/search?city=" + df.at[i, 'name'].replace(" ", "+") + "&state=" + df.at[i, 'state'] + "&country=US"
     coordinates = requests.get(api_url)
@@ -64,6 +47,8 @@ for i, row in df.iterrows():
     df.at[i, 'latitude'] = float(coordinates.json()[0]['lat'])
     df.at[i, 'longitude'] = float(coordinates.json()[0]['lon'])
 
-# add to database
+# Add cities to DB
+writes = []
 for row in df.to_dict("records"):
-    cities.replace_one({'name': row.get('name'), 'state': row.get('state')}, row, upsert=True)
+    writes.append(ReplaceOne({'name': row.get('name'), 'state': row.get('state')}, row, upsert=True))
+cities.bulk_write(writes)
