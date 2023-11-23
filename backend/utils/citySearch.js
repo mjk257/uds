@@ -124,15 +124,15 @@ function getAttributeValue(city, criteriaName) {
             return city.zone_description; // TODO: Parse this data correctly to match input data
         case "politics":
             return city.partisan_lean;
-        case "avgPopulationAge":
+        case "populationAge":
             return city.median_age;
         case "annualPrecipitation":
             return city.annual_precipitation;
         case "annualSnowfall":
             return city.annual_snowfall;
-        case "avgSummerTemp":
+        case "summerTemp":
             return city.summer_temp;
-        case "avgWinterTemp":
+        case "winterTemp":
             return city.winter_temp;
         default:
             return null;
@@ -197,6 +197,7 @@ function getCityScores(cities, searchCriteria, valuedScalingFactor) {
     // cities is a list of City objects
     // searchCriteria is a JSON with keys=criteriaName and values=preferenceValue and one of keys="priorityAttributes", value=[list of criteriaName that were marked as important]
     let cityScores = Array(cities.length).fill(0);
+    let rangeScalingFactor = 10;
 
     // Get normalizing data (min and max of each criteria)
     let normalizeData = getNormalizationData(cities, searchCriteria);
@@ -208,7 +209,23 @@ function getCityScores(cities, searchCriteria, valuedScalingFactor) {
 
         let pref = searchCriteria[criteriaName];
 
-        if (typeof(pref) == "string" && pref == "") //If no preference then ignore the attribute
+        if (criteriaName == "preferredOccupation")
+            continue;
+
+        let rangeMin = null;
+        let rangeMax = null;
+
+        if (typeof(pref) == "object") {
+            if(pref != null && pref["min"] != null) {
+                rangeMin = pref["min"];
+                rangeMax = pref["max"];
+                pref = (rangeMax + rangeMin) / 2;
+            } else {
+                continue;
+            }
+        }
+
+        if ((typeof(pref) == "string" && pref == "") || pref == null) //If no preference then ignore the attribute
             continue;
 
         if (criteriaName == "politics") // Adjust preferences to numerical for politics preference
@@ -247,7 +264,10 @@ function getCityScores(cities, searchCriteria, valuedScalingFactor) {
             if (cityValue == null) // If attribute not in database (either in total or for the specific city)
                 continue;
 
-            cityValue = getNormalizedCityValue(cityValue, pref, normalizedPref, criteriaMin, criteriaMaxMinDiff, isValued, valuedScalingFactor);
+            if (rangeMin != null && cityValue >= rangeMin && cityValue <= rangeMax)
+                cityValue *= isValued ? rangeScalingFactor * valuedScalingFactor : rangeScalingFactor;
+            else
+                cityValue = getNormalizedCityValue(cityValue, pref, normalizedPref, criteriaMin, criteriaMaxMinDiff, isValued, valuedScalingFactor);
 
             if (cityValue == null)
                 break;
