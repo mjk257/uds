@@ -73,6 +73,18 @@ const Header = () => {
         {
             apiName: "U.S. Census Bureau American Community Survey (2015)",
             apiLink: "https://public.opendatasoft.com/explore/dataset/us-cities-demographics/information/?flg=en-us"
+        },
+        {
+            apiName: "Federal Bureau of Investigation Uniform Crime Reports (2018)",
+            apiLink: "https://ucr.fbi.gov/crime-in-the-u.s/2019/crime-in-the-u.s.-2019/tables/table-8/table-8.xls/view"
+        },
+        {
+            apiName: "WalkScore API",
+            apiLink: "https://www.walkscore.com/how-it-works/"
+        },
+        {
+            apiName: "PaLM API",
+            apiLink: "https://developers.generativeai.google/guide/palm_api_overview"
         }
 
 
@@ -81,12 +93,17 @@ const Header = () => {
         {
             term: "RPP",
             description: "Regional Price Parity (RPP) is a measure of the differences in the price levels of goods and services across states and metropolitan areas for a given year." +
-                " RPPs are expressed as a percentage of the overall national price level for each year."
+                " RPPs are expressed as a percentage of the overall national price level for each year. Due to smaller sample sizes, a portion of our cities use state RPPs."
         },
         {
             term: "Outdoor Score",
             description: "The outdoor score is calculated using a weighted, curved average using the percentage of the state covered by GAP-1, GAP-2, and GAP-3 protected areas, percentage of the state" +
-            " economy made up by the outdoor recreation industry, median annual air quality, LBs of chemicals released annually per state square mile, and miles of trail per state square mile."
+            " economy made up by the outdoor recreation industry, median annual air quality, LBs of chemicals released annually per state square mile, and miles of trail per state square mile." +
+            "Due to smaller sample sizes, a portion of our cities use outdoor scores without the median annual air quality (state score)."
+        },
+        {
+            term: "Description",
+            description: "The descriptions for cities are AI generated using Google's PaLM API. While we strive for accuracy and quality, please note that the information provided may not be entirely error-free or up-to-date. We do not assume any responsibility or liability for the use or interpretation of this content."
         }
     ]
 

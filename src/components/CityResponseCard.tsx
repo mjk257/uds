@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Card,
   CardContent,
@@ -10,6 +9,51 @@ import {
   Icon,
 } from "@mui/material";
 import { ExpandMore } from "@mui/icons-material";
+
+// Function to get a color on a red to green spectrum from a percent, max, and min
+function percentageToColor(perc: number, min: number, max: number) {
+  var base = (max - min);
+
+  if (base === 0) { perc = 100; }
+  else {
+    perc = (perc - min) / base * 100; 
+  }
+  
+  var r, g, b = 0;
+  if (perc < 50) {
+    r = 255;
+    g = Math.round(5.1 * perc);
+  }
+  else {
+    g = 255;
+    r = Math.round(510 - 5.10 * perc);
+  }
+  // Convert RGB to HSL
+  r /= 255;
+  g/= 255;
+  b /= 255;
+  let cmin = Math.min(r,g,b),
+      cmax = Math.max(r,g,b),
+      delta = cmax - cmin,
+      h = 0,
+      s = "100%",
+      l = "45%";
+      if (delta === 0)
+      h = 0;
+    // Red is max
+    else if (cmax === r)
+      h = ((g - b) / delta) % 6;
+    // Green is max
+    else if (cmax === g)
+      h = (b - r) / delta + 2;
+    // Blue is max
+    else
+      h = (r - g) / delta + 4;
+    h = Math.round(h * 60);
+    if (h < 0)
+        h += 360;
+    return "hsl(" + h + "," + s + "," + l + ")";
+}
 
 // This will likely take in props later on, but the base styling will be set up
 const CityResponseCard = ({ cityDetails, rank }: Props) => {
@@ -25,51 +69,34 @@ const CityResponseCard = ({ cityDetails, rank }: Props) => {
   };
 
   const populationToString = (population: number) => {
-    return population + " people";
+    return population.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " people";
   };
 
   const populationDensityToString = (density: number) => {
-    return density + " people per square mile";
+    return density.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " people per square mile";
   };
 
-  const crimeRateToString = (crimeRate: number) => {
-    return crimeRate + " crimes per 100,000 people";
+  const averagePopulationAgeToString = (avgPopulationAge: number) => {
+    return avgPopulationAge + " years old";
   };
 
-  const outdoorScoreToString = (outdoorScore: number) => {
-    // Outdoor score ranges from 58 through 100
-    // So I will use 79 as the average
-    const OUTDOOR_SCORE_AVG = 79;
-    const roundedOutdoorScore = Math.abs(OUTDOOR_SCORE_AVG - outdoorScore).toFixed(2);
-    if (outdoorScore === OUTDOOR_SCORE_AVG) {
-      return "No better or worse than other cities for outdoor recreation.";
-    } else if (outdoorScore > OUTDOOR_SCORE_AVG) {
-      return `${roundedOutdoorScore}% better for outdoor recreation than other cities in the U.S.A`;
-    } else {
-      return `${roundedOutdoorScore}% worse for outdoor recreation than other cities in the U.S.A`;
-    }
-  };
-
-  const walkabilityTransabilityToString = (walkAndTransability: number) => {
-    const roundedWAT = (100 - Math.abs(walkAndTransability)).toFixed(2);
-    if (walkAndTransability === 0) {
-      return "The walkability/transability in this city is equal to the national average.";
-    } else if (walkAndTransability > 0) {
-      return `${walkAndTransability}% higher walkability/transability than other cities in the U.S.A`;
-    } else {
-      return `${walkAndTransability}% lowerS walkability/transability than other cities in the U.S.A`;
-    }
+  const crimeRateToString = (crime_rate: number) => {
+    return crime_rate + " crimes per 100,000 people annually";
   };
 
   const politicsToString = (partisan_lean: number) => {
-    const roundedPartisanLean = (100 - Math.abs(partisan_lean)).toFixed(2);
-    if (partisan_lean === 0) {
-      return "Moderate, there is no major partisan lean in this area.";
-    } else if (partisan_lean > 0) {
-      return `${roundedPartisanLean}% more democratic than the average city in the U.S.A`;
+    // Ranges from 69 to -49
+    const roundedPartisanLean = Math.abs(partisan_lean);
+    let side = partisan_lean > 0 ? "Democrat" : "Republican"
+    let lean = "";
+    if (roundedPartisanLean > 0 && roundedPartisanLean < 10) {
+      lean = "mildly";
+    } else if (roundedPartisanLean > 10 && roundedPartisanLean < 20) {
+      lean = "moderately"
     } else {
-      return `${roundedPartisanLean}% more republican than the average city in the U.S.A`;
+      lean = "strongly"
     }
+    return "Leans " + lean + " " + side;
   };
 
   const numberOfJobsToString = (occupation_data: { [key: string]: any }) => {
@@ -79,8 +106,15 @@ const CityResponseCard = ({ cityDetails, rank }: Props) => {
       return occupation_data["job_count"] + " jobs for " + occupation_data["title"] + " with a median hourly salary of $" + occupation_data["hourly_salary"];
   };
 
-  const averagePopulationAgeToString = (avgPopulationAge: number) => {
-    return avgPopulationAge + " years old";
+  const precipToString = (precip: number) => {
+    let s = "";
+    if(precip !== 1)
+      s = "es"
+    return precip + " inch" + s + " annually";
+  };
+
+  const tempToString = (summer: number) => {
+    return summer + "°F";
   };
 
   const accordionDetails = [
@@ -97,6 +131,18 @@ const CityResponseCard = ({ cityDetails, rank }: Props) => {
         : "N/A",
     },
     {
+      title: "Average Population Age",
+      value: cityDetails?.median_age
+        ? averagePopulationAgeToString(cityDetails.median_age)
+        : "N/A",
+    },
+    {
+      title: "State Politics",
+      value: cityDetails?.partisan_lean
+        ? politicsToString(cityDetails.partisan_lean)
+        : "N/A",
+    },
+    {
       title: "Cost of Living",
       value: cityDetails?.rpp ? costOfLivingToString(cityDetails?.rpp) : "N/A",
     },
@@ -108,38 +154,59 @@ const CityResponseCard = ({ cityDetails, rank }: Props) => {
     },
     {
       title: "Crime Rate",
-      value: cityDetails?.crimeRate
-        ? crimeRateToString(cityDetails.crimeRate)
+      value: cityDetails?.crime_rate
+        ? crimeRateToString(cityDetails.crime_rate)
         : "N/A",
     },
     {
-      title: "Walkability/Transability",
-      value: cityDetails?.walkAndTransability
-        ? walkabilityTransabilityToString(cityDetails.walkAndTransability)
+      title: "WalkScore®",
+      value: cityDetails?.walkscore
+        ? cityDetails.walkscore
         : "N/A",
+      branding: "https://www.walkscore.com/how-it-works/"
     },
     {
-      title: "Politics",
-      value: cityDetails?.partisan_lean
-        ? politicsToString(cityDetails.partisan_lean)
+      title: "BikeScore®",
+      value: cityDetails?.bikescore
+        ? cityDetails.bikescore
         : "N/A",
+      branding: "https://www.walkscore.com/how-it-works/"
     },
     {
       title: "Outdoor Score",
       value: cityDetails?.outdoor_score
-        ? outdoorScoreToString(cityDetails.outdoor_score)
+        ? cityDetails.outdoor_score
         : "N/A",
+      style: {color: percentageToColor(cityDetails?.outdoor_score, 45, 100)}
     },
     {
-      title: "Climate",
+      title: "Climate Zone Description",
       value: cityDetails?.zone_description
         ? cityDetails?.zone_description
         : "N/A",
     },
     {
-      title: "Average Population Age",
-      value: cityDetails?.median_age
-        ? averagePopulationAgeToString(cityDetails.median_age)
+      title: "Average Rainfall",
+      value: cityDetails?.annual_precipitation
+        ? precipToString(cityDetails?.annual_precipitation)
+        : "N/A",
+    },
+    {
+      title: "Average Snowfall",
+      value: cityDetails?.annual_snow
+        ? precipToString(cityDetails?.annual_snow)
+        : "N/A",
+    },
+    {
+      title: "Average Summer Temperature",
+      value: cityDetails?.summer_temp
+        ? tempToString(cityDetails?.summer_temp)
+        : "N/A",
+    },
+    {
+      title: "Average Winter Temperature",
+      value: cityDetails?.winter_temp
+        ? tempToString(cityDetails?.winter_temp)
         : "N/A",
     },
   ];
@@ -153,8 +220,8 @@ const CityResponseCard = ({ cityDetails, rank }: Props) => {
         titleTypographyProps={{ align: "left" }}
       />
       <CardContent className="city-response-content">
-        {cityDetails?.summary ? (
-          <Typography>{cityDetails?.summary}</Typography>
+        {cityDetails?.description ? (
+          <Typography>{cityDetails?.description}</Typography>
         ) : (
           "N/A"
         )}
@@ -172,8 +239,17 @@ const CityResponseCard = ({ cityDetails, rank }: Props) => {
             {accordionDetails.map((item, idx) => {
               return (
                 <Typography key={idx} className="city-response-text">
-                  <span className="title">{`${item.title}: `}</span>{" "}
-                  {item.value}
+                  {item?.branding ? (
+                    <Typography>
+                      <span className="title"><a href={item.branding}>{`${item.title}`}</a>:</span>{" "}
+                      <span style={item.style}><a href={item.branding}>{item.value}</a></span>
+                    </Typography>
+                  ) : (
+                    <Typography>
+                      <span className="title">{`${item.title}: `}</span>{" "}
+                      <span style={item.style}>{item.value}</span>
+                    </Typography>
+                  )}
                 </Typography>
               );
             })}

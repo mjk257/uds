@@ -1,14 +1,33 @@
+import{ getRanges } from "../util/api-calls";
+let ranges = {} as Ranges;
+await getRanges().then((resp) => {
+    ranges = resp;
+});
+export const populationRange = [ranges.min_population, ranges.max_population, ranges.avg_population];
+export const ageRange = [ranges.min_age, ranges.max_age, ranges.avg_age];
+export const densityRange = [ranges.min_density, ranges.max_density, ranges.avg_density];
+export const annualSnowfallRange = [ranges.min_snow, ranges.max_snow, ranges.avg_snow];
+export const annualRainfallRange = [ranges.min_rain, ranges.max_rain, ranges.avg_rain];
+export const avgWinterTempRange = [ranges.min_winter_temp, ranges.max_winter_temp, ranges.avg_winter_temp];
+export const avgSummerTempRange = [ranges.min_summer_temp, ranges.max_summer_temp, ranges.avg_summer_temp];
+
+export const numTics = 10;
+
 export type CityPreferencesConfiguration = {
-    population: string | number,
-    populationDensity: string | number,
+    population: string | number[],
+    populationDensity: string | number[],
     costOfLiving: string | number,
     preferredOccupation: Occupation | null,
     crimeRate: number | string,
-    walkAndTransability: string | number,
+    walkability: string | number,
+    bikeability: string | number,
     politics: string,
     outdoorScore: string | number,
-    climate: string,
-    avgPopulationAge: number | string
+    annualRainfall: number[],
+    annualSnowfall: number[],
+    avgWinterTemp: string | number[],
+    avgSummerTemp: string | number[],
+    avgPopulationAge: number[] | string
     priorityAttributes: string[]
 };
 
@@ -21,16 +40,20 @@ export type Configs = {
 }
 
 export const defaultCityPreferencesConfiguration : CityPreferencesConfiguration =  {
-    population: "",
+    population: [0, 10],
     populationDensity: "",
     costOfLiving: "",
     preferredOccupation: null,
     crimeRate: '',
-    walkAndTransability: "",
+    walkability: "",
+    bikeability: "",
     politics: "",
     outdoorScore: "",
-    climate: "",
-    avgPopulationAge: '',
+    annualRainfall: [],
+    annualSnowfall: [],
+    avgWinterTemp: [0, 10],
+    avgSummerTemp: [0, 10],
+    avgPopulationAge: [0, 10],
     priorityAttributes: []
 };
 
@@ -55,7 +78,14 @@ export type CityDetails = {
     partisan_lean: number // negative value is more republican, positive is more democratic
     outdoor_score: number // the closer this value is to 100, the better suited the city is for outdoor recreation
     occupation_data: number,
-    median_age: number
+    median_age: number,
+    annual_precipitation: number,
+    annual_snowfall: number,
+    winter_temp: number,
+    summer_temp: number,
+    crime_rate: number,
+    walkscore: number,
+    bikescore: number
 }
 
 export type Occupation = {
@@ -67,4 +97,29 @@ export type Occupation = {
 export type CityResponse = {
     [key: string]: CityDetails
 }
+
+export type Ranges = {
+    "_id":null,
+    "max_population": number,
+    "min_population": number,
+    "avg_population": number,
+    "max_density": number,
+    "min_density": number,
+    "avg_density": number,
+    "max_age": number,
+    "min_age": number,
+    "avg_age": number,
+    "max_summer_temp": number,
+    "min_summer_temp": number,
+    "avg_summer_temp": number,
+    "max_winter_temp": number,
+    "min_winter_temp": number,
+    "avg_winter_temp": number,
+    "max_rain": number,
+    "min_rain": number,
+    "avg_rain": number,
+    "max_snow": number,
+    "min_snow": number,
+    "avg_snow": number
+    }
 

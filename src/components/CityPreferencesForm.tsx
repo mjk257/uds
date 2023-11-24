@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, Container } from "@mui/material";
-import ConfigurationList from "./ConfigurationList";
 import CityResponseCard from "./CityResponseCard";
 import ConfigurationForm from "./ConfigurationForm";
 import Map from "./Map";
@@ -8,14 +7,28 @@ import {
   defaultCityPreferencesConfigurationSet,
   CityResponse,
 } from "../types/utility-types";
+import axios from "axios";
 
 export const CityPreferencesForm = () => {
   const [allConfigs, setAllConfigs] = useState(
     defaultCityPreferencesConfigurationSet
   );
   const [currentConfig, setCurrentConfig] = useState(allConfigs.config1);
-  const [currentConfigName, setCurrentConfigName] = useState("config1");
+  const [currentConfigName] = useState("config1");
   const [returnedCities, setReturnedCities] = useState<CityResponse>({});
+
+  const [cities, setCities] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("/api/cities")
+      .then((response) => {
+        setCities(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching cities:", error);
+      });
+  }, []);
 
   const handleMarkerClick = (cityName: string) => {
     const cityResponseCard = document.getElementById(cityName);
@@ -29,12 +42,6 @@ export const CityPreferencesForm = () => {
       <Container maxWidth="xl">
         <Card className="preferences-form">
           <CardContent>
-            <ConfigurationList
-              setCurrentConfig={setCurrentConfig}
-              allConfigs={allConfigs}
-              currentConfigName={currentConfigName}
-              setCurrentConfigName={setCurrentConfigName}
-            />
             <ConfigurationForm
               currentConfig={currentConfig}
               setCurrentConfig={setCurrentConfig}
@@ -49,7 +56,11 @@ export const CityPreferencesForm = () => {
       <Container maxWidth="xl">
         {returnedCities && (
           <Map
-            cities={Object.values(returnedCities)}
+            cities={
+              Object.keys(returnedCities).length > 0
+                ? Object.values(returnedCities)
+                : cities
+            }
             onMarkerClick={handleMarkerClick}
           />
         )}

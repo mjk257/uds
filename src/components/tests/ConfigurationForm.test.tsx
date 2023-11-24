@@ -6,7 +6,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe("Testing ConfigurationList component", () => {
+describe("Testing ConfigurationForm component", () => {
   const mockProps = {
     currentConfig: defaultCityPreferencesConfigurationSet.config1,
     setCurrentConfig: jest.fn(),
@@ -16,54 +16,60 @@ describe("Testing ConfigurationList component", () => {
     setReturnedCities: jest.fn(),
   };
 
-  test("renders ConfigurationList header and configuration buttons", () => {
+  test("renders ConfigurationForm header and initial helper text", () => {
     render(<ConfigurationForm {...mockProps} />);
 
-    const configurationFormHeader = screen.getByText(
-      "What are you looking for in a city?"
-    );
+    const configurationFormHeader = screen.getByText("What Are You Looking For in a City?");
     expect(configurationFormHeader).toBeInTheDocument();
+    const configurationFormHelperText = screen.getByText("Fill in any criteria that you want and star up to three that are very important to you.");
+    expect(configurationFormHelperText).toBeInTheDocument();
+  });
 
-    // Tests for radio button groups
-    const lowCostOfLivingRadioGroup = screen.getByText("Low Cost of Living?");
+  test("renders ConfigurationForm checkboxes", () => {
+    render(<ConfigurationForm {...mockProps} />);
+
+    const lowCostOfLivingRadioGroup = screen.getByText("Low Cost of Living");
     expect(lowCostOfLivingRadioGroup).toBeInTheDocument();
-    const lowCrimeRateRadioGroup = screen.getByText("Low Crime Rate?");
+    const lowCrimeRateRadioGroup = screen.getByText("Low Crime Rate");
     expect(lowCrimeRateRadioGroup).toBeInTheDocument();
-    const highWalkabilityTransabilityRadioGroup = screen.getByText(
-      "High Walkability/Transability?"
+    const walkability = screen.getByText(
+        "High Walkability"
     );
-    expect(highWalkabilityTransabilityRadioGroup).toBeInTheDocument();
-    const outdoorScoreRadioGroup = screen.getByText("Good for Outdoor Recreation?");
+    expect(walkability).toBeInTheDocument();
+    const bikeability = screen.getByText(
+        "High Bikeability"
+    );
+    expect(bikeability).toBeInTheDocument();
+    const outdoorScoreRadioGroup = screen.getByText("Good for Outdoor Recreation");
     expect(outdoorScoreRadioGroup).toBeInTheDocument();
+  });
 
-    // Tests for selects
-    const populationSelect = screen.getAllByText("Population");
-    expect(populationSelect).toHaveLength(2);
-    const populationDensitySelect = screen.getAllByText("Population Density");
-    expect(populationDensitySelect).toHaveLength(2);
-    const preferredOccupationSelect = screen.getAllByText(
-      "Preferred Occupation"
-    );
-    expect(preferredOccupationSelect).toHaveLength(2);
-    const politicsSelect = screen.getAllByText("Politics");
-    expect(politicsSelect).toHaveLength(2);
-    const climateSelect = screen.getAllByText("Climate");
-    expect(climateSelect).toHaveLength(2);
-    const averagePopulationAgeSelect = screen.getAllByText(
-      "Average Population Age"
-    );
-    expect(averagePopulationAgeSelect).toHaveLength(2);
+  test("renders ConfigurationForm sliders", () => {
+    render(<ConfigurationForm {...mockProps} />);
 
-    // Tests for specific checkbox values for radio button groups
-    const costOfLivingCheckbox = screen.getByText("Cost of Living");
-    expect(costOfLivingCheckbox).toBeInTheDocument();
-    const crimeRateCheckbox = screen.getByText("Crime Rate");
-    expect(crimeRateCheckbox).toBeInTheDocument();
-    const walkabilityTransabilityCheckbox = screen.getByText(
-      "Walkability/Transability"
-    );
-    expect(walkabilityTransabilityCheckbox).toBeInTheDocument();
-    const outdoorScoreCheckbox = screen.getByText("Good for Outdoor Recreation");
-    expect(outdoorScoreCheckbox).toBeInTheDocument();
+    // Tests for sliders
+    const population = screen.getByText("Population");
+    expect(population).toBeInTheDocument();
+    const populationDensity = screen.getByText("Population Density");
+    expect(populationDensity).toBeInTheDocument();
+    const annualSnowfall = screen.getByText("Annual Snowfall (inches)");
+    expect(annualSnowfall).toBeInTheDocument();
+    const annualRainfall = screen.getByText("Annual Rainfall (inches)");
+    expect(annualRainfall).toBeInTheDocument();
+    const avgWinterTemp = screen.getByText("Average Winter Temperature (°F)");
+    expect(avgWinterTemp).toBeInTheDocument();
+    const avgSummerTemp = screen.getByText("Average Summer Temperature (°F)");
+    expect(avgSummerTemp).toBeInTheDocument();
+    const averagePopulationAgeSelect = screen.getByText("Average Population Age");
+    expect(averagePopulationAgeSelect).toBeInTheDocument();
+  });
+
+  test("renders ConfigurationForm select menus", () => {
+    render(<ConfigurationForm {...mockProps} />);
+
+    const preferredOccupationSelect = screen.getByText("Preferred Occupation");
+    expect(preferredOccupationSelect).toBeInTheDocument();
+    const politicsSelect = screen.getByText("Politics");
+    expect(politicsSelect).toBeInTheDocument();
   });
 });
