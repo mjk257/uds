@@ -240,21 +240,15 @@ const ConfigurationForm = ({
 
   const submitForm = () => {
     // Create a copy of the current config, making sure to display the original on screen
-    // This copy will contain the midpoint of the slider values, the same values for other fields
-    const populationMidpoint = (populationSlider[(currentConfig.population[0] as number)] + populationSlider[(currentConfig.population[1] as number)]) / 2;
-    const ageMidpoint = (ageSlider[(currentConfig.avgPopulationAge[0] as number)] + ageSlider[(currentConfig.avgPopulationAge[1] as number)]) / 2;
-    const annualSnowfallMidpoint = currentConfig.annualSnowfall.length > 0 ? currentConfig.annualSnowfall.reduce((a, b) => a + b) / currentConfig.annualSnowfall.length : null;
-    const annualRainfallMidpoint =currentConfig.annualRainfall.length > 0 ? currentConfig.annualRainfall.reduce((a, b) => a + b) / currentConfig.annualRainfall.length : null;
-    const avgWinterTempMidpoint = (summerSlider[(currentConfig.avgWinterTemp[0] as number)] + summerSlider[(currentConfig.avgWinterTemp[1] as number)]) / 2;
-    const avgSummerTempMidpoint = (winterSlider[(currentConfig.avgSummerTemp[0] as number)] + winterSlider[(currentConfig.avgSummerTemp[1] as number)]) / 2;
+    // This copy will contain the min and max values of the slider values, the same values for other fields
     const currentConfigCopy = {
         ...currentConfig,
-        population: populationMidpoint,
-        avgPopulationAge: ageMidpoint,
-        annualSnowfall: annualSnowfallMidpoint,
-        annualRainfall: annualRainfallMidpoint,
-        avgWinterTemp: avgWinterTempMidpoint,
-        avgSummerTemp: avgSummerTempMidpoint
+        population: {min: populationSlider[(currentConfig.population[0] as number)], max: populationSlider[(currentConfig.population[1] as number)]},
+        populationAge: {min: ageSlider[(currentConfig.avgPopulationAge[0] as number)], max: ageSlider[(currentConfig.avgPopulationAge[1] as number)]},
+        annualSnowfall: currentConfig.annualSnowfall.length > 0 ? {min: Math.min.apply(null, currentConfig.annualSnowfall), max: Math.max.apply(null, currentConfig.annualSnowfall)} : null,
+        annualRainfall: currentConfig.annualRainfall.length > 0 ? {min: Math.min.apply(null, currentConfig.annualRainfall), max: Math.max.apply(null, currentConfig.annualRainfall)} : null,
+        winterTemp: {min: winterSlider[(currentConfig.avgWinterTemp[0] as number)], max: winterSlider[(currentConfig.avgWinterTemp[1] as number)]},
+        summerTemp: {min: summerSlider[(currentConfig.avgSummerTemp[0] as number)], max: summerSlider[(currentConfig.avgSummerTemp[1] as number)]}
     }
 
     // send the data to the search function and await its response
