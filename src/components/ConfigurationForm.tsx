@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   CityPreferencesConfiguration,
   defaultCityPreferencesConfiguration,
@@ -22,10 +22,8 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { Configs, ageRange, densityRange, populationRange,
-  avgSummerTempRange, avgWinterTempRange,
-  annualRainfallRange, annualSnowfallRange } from "../types/utility-types";
-import { searchForCities, getAllOccupations } from "../util/api-calls";
+import { Configs, Ranges } from "../types/utility-types";
+import { searchForCities, getAllOccupations, getRanges } from "../util/api-calls";
 import {Star, StarBorder} from "@mui/icons-material";
 import {LoadingButton} from "@mui/lab";
 
@@ -37,8 +35,17 @@ const ConfigurationForm = ({
   setAllConfigs,
   setReturnedCities,
 }: Props) => {
-  const [allOccupations, setAllOccupations] = React.useState([]);
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [allOccupations, setAllOccupations] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [ranges, setRanges] = useState({} as Ranges);
+  const [populationRange, setPopulationRange] = useState<number[]>([]);
+  const [ageRange, setAgeRange] = useState<number[]>([]);
+  const [densityRange, setDensityRange] = useState<number[]>([]);
+  const [annualSnowfallRange, setAnnualSnowfallRange] = useState<number[]>([]);
+  const [annualRainfallRange, setAnnualRainfallRange] = useState<number[]>([]);
+  const [avgWinterTempRange, setAvgWinterTempRange] = useState<number[]>([]);
+  const [avgSummerTempRange, setAvgSummerTempRange] = useState<number[]>([]);
+
   const isOverPriorityAttributesLimit = () =>
     currentConfig?.priorityAttributes.length > 3;
 
@@ -225,7 +232,25 @@ const ConfigurationForm = ({
     getAllOccupations().then((resp) => {
       setAllOccupations(resp);
     });
+    // Fetching configuration form ranges and setting appropriate ranges
+    getRanges().then((resp) => {
+      console.log(resp);
+      setRanges(resp);
+    });
   }, []);
+
+  // Set appropriate ranges
+  useEffect(() => {
+    if (ranges !== null) {
+      setPopulationRange([ranges.min_population, ranges.max_population, ranges.avg_population]);
+      setAgeRange([ranges.min_age, ranges.max_age, ranges.avg_age]);
+      setDensityRange([ranges.min_density, ranges.max_density, ranges.avg_density]);
+      setAnnualSnowfallRange([ranges.min_density, ranges.max_density, ranges.avg_density]);
+      setAnnualRainfallRange([ranges.min_rain, ranges.max_rain, ranges.avg_rain]);
+      setAvgWinterTempRange([ranges.min_winter_temp, ranges.max_winter_temp, ranges.avg_winter_temp]);
+      setAvgSummerTempRange([ranges.min_summer_temp, ranges.max_summer_temp, ranges.avg_summer_temp]);
+    }
+  }, [ranges]);
 
   useEffect(() => {
     setAllConfigs({
@@ -245,8 +270,6 @@ const ConfigurationForm = ({
         ...currentConfig,
         population: {min: populationSlider[(currentConfig.population[0] as number)], max: populationSlider[(currentConfig.population[1] as number)]},
         populationAge: {min: ageSlider[(currentConfig.avgPopulationAge[0] as number)], max: ageSlider[(currentConfig.avgPopulationAge[1] as number)]},
-        annualSnowfall: currentConfig.annualSnowfall.length > 0 ? {min: Math.min.apply(null, currentConfig.annualSnowfall), max: Math.max.apply(null, currentConfig.annualSnowfall)} : null,
-        annualRainfall: currentConfig.annualRainfall.length > 0 ? {min: Math.min.apply(null, currentConfig.annualRainfall), max: Math.max.apply(null, currentConfig.annualRainfall)} : null,
         winterTemp: {min: winterSlider[(currentConfig.avgWinterTemp[0] as number)], max: winterSlider[(currentConfig.avgWinterTemp[1] as number)]},
         summerTemp: {min: summerSlider[(currentConfig.avgSummerTemp[0] as number)], max: summerSlider[(currentConfig.avgSummerTemp[1] as number)]}
     }
@@ -493,11 +516,26 @@ const ConfigurationForm = ({
     }
   ];
 
+  const isRangeEmpty = (range: number[]) => {
+    if (range.length === 0) {
+      return true;
+    }
+    for (let i = 0; i < range.length; i++) {
+        if (range[i] === undefined || range[i] === null) {
+            return true;
+        }
+    }
+    return false;
+  }
+
   return (
     <>
       <div className="preferences-form-container">
-        {allOccupations && (
+        {allOccupations && !isRangeEmpty(populationRange) && !isRangeEmpty(avgSummerTempRange) && !isRangeEmpty(avgWinterTempRange)
+            && !isRangeEmpty(ageRange) && !isRangeEmpty(annualRainfallRange)
+            && !isRangeEmpty(annualRainfallRange) && !isRangeEmpty(densityRange) && (
           <Card className="preferences-form-card">
+            <> {console.log(populationRange)} </>
             <CardHeader title="What Are You Looking For in a City?" />
             <Divider />
             <CardContent className="preferences-form-content">
