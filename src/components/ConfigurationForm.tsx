@@ -20,7 +20,6 @@ import {
   MenuItem,
   Select, Slider,
   TextField,
-  CircularProgress,
   Typography,
 } from "@mui/material";
 import { Configs, ageRange, densityRange, populationRange,
@@ -28,6 +27,7 @@ import { Configs, ageRange, densityRange, populationRange,
   annualRainfallRange, annualSnowfallRange } from "../types/utility-types";
 import { searchForCities, getAllOccupations } from "../util/api-calls";
 import {Star, StarBorder} from "@mui/icons-material";
+import {LoadingButton} from "@mui/lab";
 
 const ConfigurationForm = ({
   currentConfig,
@@ -618,18 +618,18 @@ const ConfigurationForm = ({
               )}
               <br />
               <div className="preferences-form-sibling-set">
-                {isLoading && (<CircularProgress/>)}
                 <Button color="error" variant="outlined" onClick={clearForm} disabled={isLoading}>
                   Clear
                 </Button>
-                <Button
+                <LoadingButton
+                  loading={ isLoading }
                   color="primary"
                   variant="outlined"
                   onClick={submitForm}
                   disabled={isOverPriorityAttributesLimit() || isConfigEmpty() || isLoading}
-                >
+                  >
                   Submit
-                </Button>
+                </LoadingButton>
               </div>
             </CardContent>
           </Card>
