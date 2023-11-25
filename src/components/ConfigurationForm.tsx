@@ -34,17 +34,17 @@ const ConfigurationForm = ({
   currentConfigName,
   setAllConfigs,
   setReturnedCities,
+  allOccupations,
+  allRanges
 }: Props) => {
-  const [allOccupations, setAllOccupations] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [ranges, setRanges] = useState({} as Ranges);
-  const [populationRange, setPopulationRange] = useState<number[]>([]);
-  const [ageRange, setAgeRange] = useState<number[]>([]);
-  const [densityRange, setDensityRange] = useState<number[]>([]);
-  const [annualSnowfallRange, setAnnualSnowfallRange] = useState<number[]>([]);
-  const [annualRainfallRange, setAnnualRainfallRange] = useState<number[]>([]);
-  const [avgWinterTempRange, setAvgWinterTempRange] = useState<number[]>([]);
-  const [avgSummerTempRange, setAvgSummerTempRange] = useState<number[]>([]);
+  const populationRange = [allRanges.min_population, allRanges.max_population, allRanges.avg_population];
+  const ageRange =[allRanges.min_age, allRanges.max_age, allRanges.avg_age];
+  const densityRange = [allRanges.min_density, allRanges.max_density, allRanges.avg_density];
+  const annualSnowfallRange = [allRanges.min_density, allRanges.max_density, allRanges.avg_density];
+  const annualRainfallRange = [allRanges.min_rain, allRanges.max_rain, allRanges.avg_rain];
+  const avgWinterTempRange = [allRanges.min_winter_temp, allRanges.max_winter_temp, allRanges.avg_winter_temp];
+  const avgSummerTempRange = [allRanges.min_summer_temp, allRanges.max_summer_temp, allRanges.avg_summer_temp];
 
   const isOverPriorityAttributesLimit = () =>
     currentConfig?.priorityAttributes.length > 3;
@@ -226,31 +226,6 @@ const ConfigurationForm = ({
       [property]: newValue,
     });
   };
-
-  useEffect(() => {
-    // Get all the occupations at the beginning
-    getAllOccupations().then((resp) => {
-      setAllOccupations(resp);
-    });
-    // Fetching configuration form ranges and setting appropriate ranges
-    getRanges().then((resp) => {
-      console.log(resp);
-      setRanges(resp);
-    });
-  }, []);
-
-  // Set appropriate ranges
-  useEffect(() => {
-    if (ranges !== null) {
-      setPopulationRange([ranges.min_population, ranges.max_population, ranges.avg_population]);
-      setAgeRange([ranges.min_age, ranges.max_age, ranges.avg_age]);
-      setDensityRange([ranges.min_density, ranges.max_density, ranges.avg_density]);
-      setAnnualSnowfallRange([ranges.min_density, ranges.max_density, ranges.avg_density]);
-      setAnnualRainfallRange([ranges.min_rain, ranges.max_rain, ranges.avg_rain]);
-      setAvgWinterTempRange([ranges.min_winter_temp, ranges.max_winter_temp, ranges.avg_winter_temp]);
-      setAvgSummerTempRange([ranges.min_summer_temp, ranges.max_summer_temp, ranges.avg_summer_temp]);
-    }
-  }, [ranges]);
 
   useEffect(() => {
     setAllConfigs({
@@ -671,7 +646,6 @@ const ConfigurationForm = ({
                 </div>
               </CardContent>
             </Card>
-          )
         </div>)}
     </>
   );
@@ -684,6 +658,8 @@ type Props = {
   currentConfigName: String;
   setAllConfigs: Function;
   setReturnedCities: Function;
+  allOccupations: Occupation[];
+  allRanges: Ranges;
 };
 
 type CheckboxProps = {
