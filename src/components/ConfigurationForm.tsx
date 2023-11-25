@@ -530,149 +530,149 @@ const ConfigurationForm = ({
 
   return (
     <>
-      <div className="preferences-form-container">
-        {allOccupations && !isRangeEmpty(populationRange) && !isRangeEmpty(avgSummerTempRange) && !isRangeEmpty(avgWinterTempRange)
-            && !isRangeEmpty(ageRange) && !isRangeEmpty(annualRainfallRange)
-            && !isRangeEmpty(annualRainfallRange) && !isRangeEmpty(densityRange) && (
-          <Card className="preferences-form-card">
-            <> {console.log(populationRange)} </>
-            <CardHeader title="What Are You Looking For in a City?" />
-            <Divider />
-            <CardContent className="preferences-form-content">
-              <Typography variant="body1" className="preferences-form-text">
-                Fill in any criteria that you want and star up to three that are very important to you.
-              </Typography>
-              <br/>
-              {formInputs.map((input, index) => {
-                return (
-                  <FormControl
-                    variant="standard"
-                    className="preferences-select"
-                    key={index}
-                  >
-                    {input?.componentType === "header" && (
-                        <>
-                          <br />
-                          <div style={{ display: 'flex', alignItems: 'left' }}>
-                            <Typography variant="h5" sx={{ display: 'flex', alignItems: 'left' }}><strong>{input.text}</strong></Typography>
-                          </div>
-                        </>
-                    )}
-                    {input?.componentType === "select" && (
-                      <div style={{ display: 'flex', alignItems: 'left' }}>
-                        <InputLabel id={input.inputLabel}>
-                          {input.label}
-                        </InputLabel>
-                        <Select
-                            labelId={input?.inputLabel}
-                            id={input?.inputLabel}
+      {allOccupations && !isRangeEmpty(populationRange) && !isRangeEmpty(avgSummerTempRange) && !isRangeEmpty(avgWinterTempRange)
+          && !isRangeEmpty(ageRange) && !isRangeEmpty(annualRainfallRange)
+          && !isRangeEmpty(annualRainfallRange) && !isRangeEmpty(densityRange) && (
+        <div className="preferences-form-container">
+            <Card className="preferences-form-card">
+              <> {console.log(populationRange)} </>
+              <CardHeader title="What Are You Looking For in a City?" />
+              <Divider />
+              <CardContent className="preferences-form-content">
+                <Typography variant="body1" className="preferences-form-text">
+                  Fill in any criteria that you want and star up to three that are very important to you.
+                </Typography>
+                <br/>
+                {formInputs.map((input, index) => {
+                  return (
+                    <FormControl
+                      variant="standard"
+                      className="preferences-select"
+                      key={index}
+                    >
+                      {input?.componentType === "header" && (
+                          <>
+                            <br />
+                            <div style={{ display: 'flex', alignItems: 'left' }}>
+                              <Typography variant="h5" sx={{ display: 'flex', alignItems: 'left' }}><strong>{input.text}</strong></Typography>
+                            </div>
+                          </>
+                      )}
+                      {input?.componentType === "select" && (
+                        <div style={{ display: 'flex', alignItems: 'left' }}>
+                          <InputLabel id={input.inputLabel}>
+                            {input.label}
+                          </InputLabel>
+                          <Select
+                              labelId={input?.inputLabel}
+                              id={input?.inputLabel}
+                              value={input?.value}
+                              onChange={input?.onChange}
+                              label={input?.label}
+                              sx={{ width: "100%" }}
+                              disabled={isLoading}
+                              multiple={input?.multiple}
+                          >
+                            {input.menuItems?.map((menuItem, index) => {
+                              return (
+                                  <MenuItem value={menuItem.value} key={index}>
+                                    {menuItem.title}
+                                  </MenuItem>
+                              );
+                            })}
+                          </Select>
+                          <Box style={{ transform: "translate(10px, 10px)" }}>
+                            <PriorityCheckbox value={input.checkboxValue} bottomMargin={ 0.5 }/>
+                          </Box>
+                        </div>
+                      )}
+                      {input?.componentType === "autocomplete" && (
+                        <div style={{ display: 'flex', alignItems: 'left' }}>
+                          <Autocomplete
+                            options={input?.options as Occupation[]}
+                            autoComplete
+                            getOptionLabel={input?.getOptionLabel}
+                            sx={{ width: "100%" }}
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                label={input?.label}
+                                variant="standard"
+                              />
+                            )}
                             value={input?.value}
                             onChange={input?.onChange}
-                            label={input?.label}
-                            sx={{ width: "100%" }}
                             disabled={isLoading}
-                            multiple={input?.multiple}
-                        >
-                          {input.menuItems?.map((menuItem, index) => {
-                            return (
-                                <MenuItem value={menuItem.value} key={index}>
-                                  {menuItem.title}
-                                </MenuItem>
-                            );
-                          })}
-                        </Select>
-                        <Box style={{ transform: "translate(10px, 10px)" }}>
-                          <PriorityCheckbox value={input.checkboxValue} bottomMargin={ 0.5 }/>
-                        </Box>
-                      </div>
-                    )}
-                    {input?.componentType === "autocomplete" && (
-                      <div style={{ display: 'flex', alignItems: 'left' }}>
-                        <Autocomplete
-                          options={input?.options as Occupation[]}
-                          autoComplete
-                          getOptionLabel={input?.getOptionLabel}
-                          sx={{ width: "100%" }}
-                          renderInput={(params) => (
-                            <TextField
-                              {...params}
-                              label={input?.label}
-                              variant="standard"
-                            />
-                          )}
-                          value={input?.value}
-                          onChange={input?.onChange}
-                          disabled={isLoading}
-                        />
-                        <Box style={{ transform: "translate(10px, 10px)" }}>
-                          <PriorityCheckbox value={input.checkboxValue} bottomMargin={ 0.5 }/>
-                        </Box>
-                      </div>
-                    )}
-                    {input?.componentType === "checkbox" && (
-                        <>
-                          <FormLabel sx={{ width: "fit-content", pointerEvents: "none", marginTop: -1, marginBottom: -1 }}>
-                            {input?.label}
-                            <Checkbox
-                                  sx={{ width: "fit-content", pointerEvents: "auto" }}
-                                  //@ts-ignore
-                                  checked={currentConfig[input.checkboxValue] === input.checkedValue}
-                                  onChange={ input?.onChange }
-                                  value={ input?.value }
-                                  disabled={isLoading}
-                            />
-                            <PriorityCheckbox value={input.checkboxValue} bottomMargin={ 0.25 }/>
-                          </FormLabel>
-                        </>
-                    )}
-                    {input?.componentType === "slider" && (
-                        <>
-                          <FormLabel sx={{ width: "fit-content", pointerEvents: "none", marginTop: -1, marginBottom: -1 }}>
-                            {input?.label}
-                            <PriorityCheckbox value={input?.checkboxValue} bottomMargin={ 0.5 }/>
-                          </FormLabel>
-                          <Slider
-                              key={index}
-                              value={input?.value as number[]}
-                              onChange={input?.onChange}
-                              disabled={isLoading}
-                              step={null}
-                              min={0}
-                              max={10}
-                              marks={input?.marks}
+                          />
+                          <Box style={{ transform: "translate(10px, 10px)" }}>
+                            <PriorityCheckbox value={input.checkboxValue} bottomMargin={ 0.5 }/>
+                          </Box>
+                        </div>
+                      )}
+                      {input?.componentType === "checkbox" && (
+                          <>
+                            <FormLabel sx={{ width: "fit-content", pointerEvents: "none", marginTop: -1, marginBottom: -1 }}>
+                              {input?.label}
+                              <Checkbox
+                                    sx={{ width: "fit-content", pointerEvents: "auto" }}
+                                    //@ts-ignore
+                                    checked={currentConfig[input.checkboxValue] === input.checkedValue}
+                                    onChange={ input?.onChange }
+                                    value={ input?.value }
+                                    disabled={isLoading}
                               />
-                        </>
-                    )}
-                    {input?.helperText && input?.value && (
-                        <FormHelperText>{input?.helperText}</FormHelperText>
-                    )}
-                  </FormControl>
-                );
-              })}
-              {isOverPriorityAttributesLimit() && (
-                  <FormHelperText>
-                    <span style={{ fontSize: 16, color: "red" }}>You may only star up to three attributes!</span>
-                  </FormHelperText>
-              )}
-              <br />
-              <div className="preferences-form-sibling-set">
-                <Button color="error" variant="outlined" onClick={clearForm} disabled={isLoading}>
-                  Clear
-                </Button>
-                <LoadingButton
-                  loading={ isLoading }
-                  color="primary"
-                  variant="outlined"
-                  onClick={submitForm}
-                  disabled={isOverPriorityAttributesLimit() || isConfigEmpty() || isLoading}
-                  >
-                  Submit
-                </LoadingButton>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-      </div>
+                              <PriorityCheckbox value={input.checkboxValue} bottomMargin={ 0.25 }/>
+                            </FormLabel>
+                          </>
+                      )}
+                      {input?.componentType === "slider" && (
+                          <>
+                            <FormLabel sx={{ width: "fit-content", pointerEvents: "none", marginTop: -1, marginBottom: -1 }}>
+                              {input?.label}
+                              <PriorityCheckbox value={input?.checkboxValue} bottomMargin={ 0.5 }/>
+                            </FormLabel>
+                            <Slider
+                                key={index}
+                                value={input?.value as number[]}
+                                onChange={input?.onChange}
+                                disabled={isLoading}
+                                step={null}
+                                min={0}
+                                max={10}
+                                marks={input?.marks}
+                                />
+                          </>
+                      )}
+                      {input?.helperText && input?.value && (
+                          <FormHelperText>{input?.helperText}</FormHelperText>
+                      )}
+                    </FormControl>
+                  );
+                })}
+                {isOverPriorityAttributesLimit() && (
+                    <FormHelperText>
+                      <span style={{ fontSize: 16, color: "red" }}>You may only star up to three attributes!</span>
+                    </FormHelperText>
+                )}
+                <br />
+                <div className="preferences-form-sibling-set">
+                  <Button color="error" variant="outlined" onClick={clearForm} disabled={isLoading}>
+                    Clear
+                  </Button>
+                  <LoadingButton
+                    loading={ isLoading }
+                    color="primary"
+                    variant="outlined"
+                    onClick={submitForm}
+                    disabled={isOverPriorityAttributesLimit() || isConfigEmpty() || isLoading}
+                    >
+                    Submit
+                  </LoadingButton>
+                </div>
+              </CardContent>
+            </Card>
+          )
+        </div>)}
     </>
   );
 };
