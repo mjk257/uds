@@ -225,6 +225,7 @@ const CityResponseCard = ({ cityDetails, rank }: Props) => {
         ) : (
           "N/A"
         )}
+        <br/>
         <Accordion className="city-response-details">
           <AccordionSummary
             expandIcon={
