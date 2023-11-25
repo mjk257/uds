@@ -13,7 +13,6 @@ import {
   Checkbox,
   Divider,
   FormControl,
-  FormControlLabel,
   FormHelperText,
   FormLabel,
   InputLabel,
@@ -23,9 +22,9 @@ import {
   Typography,
 } from "@mui/material";
 import { Configs, Ranges } from "../types/utility-types";
-import { searchForCities, getAllOccupations, getRanges } from "../util/api-calls";
-import {Star, StarBorder} from "@mui/icons-material";
+import { searchForCities } from "../util/api-calls";
 import {LoadingButton} from "@mui/lab";
+import PriorityCheckbox from "./PriorityCheckbox";
 
 const ConfigurationForm = ({
   currentConfig,
@@ -181,7 +180,6 @@ const ConfigurationForm = ({
   useEffect(() => {
     let newPriorityAttributes = currentConfig.priorityAttributes;
     // Removing an attribute from prioritization if it is given no preference
-
     if (isDefaultRange("avgPopulationAge")) {
       newPriorityAttributes = newPriorityAttributes.filter((item: any) => item !== "avgPopulationAge");
     }
@@ -249,6 +247,8 @@ const ConfigurationForm = ({
         summerTemp: {min: summerSlider[(currentConfig.avgSummerTemp[0] as number)], max: summerSlider[(currentConfig.avgSummerTemp[1] as number)]}
     }
 
+    console.log(currentConfigCopy);
+
     // send the data to the search function and await its response
     searchForCities(currentConfigCopy, setIsLoading).then((resp) => {
       setReturnedCities(resp);
@@ -277,7 +277,7 @@ const ConfigurationForm = ({
         range.push(Math.round(ranges[2] + i % 5 * ((ranges[1] - ranges[2]) / 5)))
       }
     }
-    console.log(range.sort(function(a, b){return a - b}))
+    // console.log(range.sort(function(a, b){return a - b}))
     return range.sort(function(a, b){return a - b});
   }
 
@@ -300,35 +300,6 @@ const ConfigurationForm = ({
   useEffect(() => {
     formInputs[6].options = allOccupations;
   }, [allOccupations]);
-
-  const PriorityCheckbox = ({ value, bottomMargin } : CheckboxProps) => {
-    return (
-      <FormControlLabel
-        control={
-          <Checkbox
-            sx={{ marginLeft: 1, marginBottom: bottomMargin, width: "fit-content", pointerEvents: "auto" }}
-            icon={ <StarBorder /> }
-            checkedIcon={ <Star /> }
-            //@ts-ignore
-            disabled={
-              //@ts-ignore
-              currentConfig[value] === null ||
-              //@ts-ignore
-              currentConfig[value] === "" ||
-              //@ts-ignore
-              (Array.isArray(currentConfig[value]) && currentConfig[value].length === 0) || 
-              isDefaultRange(value) ||
-              isLoading
-            }
-            checked={currentConfig.priorityAttributes.includes(value)}
-            onChange={(event) => handleChange("priorityAttributes", event)}
-            value={value}
-          />
-        }
-        label={""}
-      />
-    );
-  };
 
   const formInputs = [
     {
@@ -557,7 +528,9 @@ const ConfigurationForm = ({
                             })}
                           </Select>
                           <Box style={{ transform: "translate(10px, 10px)" }}>
-                            <PriorityCheckbox value={input.checkboxValue} bottomMargin={ 0.5 }/>
+                            <PriorityCheckbox currentConfig={ currentConfig } value={input.checkboxValue}
+                                              bottomMargin={ 0.5 } isDefaultRange={ isDefaultRange }
+                                              handleChange={ handleChange } isLoading={ isLoading }/>
                           </Box>
                         </div>
                       )}
@@ -580,7 +553,9 @@ const ConfigurationForm = ({
                             disabled={isLoading}
                           />
                           <Box style={{ transform: "translate(10px, 10px)" }}>
-                            <PriorityCheckbox value={input.checkboxValue} bottomMargin={ 0.5 }/>
+                            <PriorityCheckbox currentConfig={ currentConfig } value={input.checkboxValue}
+                                              bottomMargin={ 0.5 } isDefaultRange={ isDefaultRange }
+                                              handleChange={ handleChange } isLoading={ isLoading }/>
                           </Box>
                         </div>
                       )}
@@ -596,7 +571,9 @@ const ConfigurationForm = ({
                                     value={ input?.value }
                                     disabled={isLoading}
                               />
-                              <PriorityCheckbox value={input.checkboxValue} bottomMargin={ 0.25 }/>
+                              <PriorityCheckbox currentConfig={ currentConfig } value={input.checkboxValue}
+                                                bottomMargin={ 0.25 } isDefaultRange={ isDefaultRange }
+                                                handleChange={ handleChange } isLoading={ isLoading }/>
                             </FormLabel>
                           </>
                       )}
@@ -604,7 +581,9 @@ const ConfigurationForm = ({
                           <>
                             <FormLabel sx={{ width: "fit-content", pointerEvents: "none", marginTop: -1, marginBottom: -1 }}>
                               {input?.label}
-                              <PriorityCheckbox value={input?.checkboxValue} bottomMargin={ 0.5 }/>
+                              <PriorityCheckbox currentConfig={ currentConfig } value={input.checkboxValue}
+                                                bottomMargin={ 0.5 } isDefaultRange={ isDefaultRange }
+                                                handleChange={ handleChange } isLoading={ isLoading }/>
                             </FormLabel>
                             <Slider
                                 key={index}
@@ -661,10 +640,5 @@ type Props = {
   allOccupations: Occupation[];
   allRanges: Ranges;
 };
-
-type CheckboxProps = {
-  value: string,
-  bottomMargin: number
-}
 
 export default ConfigurationForm;
