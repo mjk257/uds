@@ -513,9 +513,12 @@ const ConfigurationForm = ({
                     key={index}
                   >
                     {input?.componentType === "header" && (
-                      <div style={{ display: 'flex', alignItems: 'left' }}>
-                        <h2>{input.text}</h2>
-                      </div>
+                        <>
+                          <br />
+                          <div style={{ display: 'flex', alignItems: 'left' }}>
+                            <Typography variant="h5" sx={{ display: 'flex', alignItems: 'left' }}><strong>{input.text}</strong></Typography>
+                          </div>
+                        </>
                     )}
                     {input?.componentType === "select" && (
                       <div style={{ display: 'flex', alignItems: 'left' }}>
