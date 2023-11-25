@@ -242,7 +242,7 @@ const CityResponseCard = ({ cityDetails, rank }: Props) => {
                   {item?.branding ? (
                     <Typography>
                       <span className="title"><a href={item.branding}>{`${item.title}`}</a>:</span>{" "}
-                      <span style={item.style}><a href={item.branding}>{item.value}</a></span>
+                      <span style={item.style}>{item.value}</span>
                     </Typography>
                   ) : (
                     <Typography>
