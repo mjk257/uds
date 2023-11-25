@@ -33,7 +33,7 @@ const ConfigurationForm = ({
   allConfigs,
   currentConfigName,
   setAllConfigs,
-  setReturnedCities
+  setReturnedCities,
 }: Props) => {
   const [allOccupations, setAllOccupations] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -228,7 +228,6 @@ const ConfigurationForm = ({
   };
 
   useEffect(() => {
-    console.log("Is Entered");
     // Get all the occupations at the beginning
     getAllOccupations().then((resp) => {
       setAllOccupations(resp);
@@ -517,13 +516,26 @@ const ConfigurationForm = ({
     }
   ];
 
+  const isRangeEmpty = (range: number[]) => {
+    if (range.length === 0) {
+      return true;
+    }
+    for (let i = 0; i < range.length; i++) {
+        if (range[i] === undefined || range[i] === null) {
+            return true;
+        }
+    }
+    return false;
+  }
+
   return (
     <>
-      {allOccupations && populationRange && avgSummerTempRange && avgWinterTempRange
-          && ageRange && annualRainfallRange
-          && annualRainfallRange && densityRange && (
+      {allOccupations && !isRangeEmpty(populationRange) && !isRangeEmpty(avgSummerTempRange) && !isRangeEmpty(avgWinterTempRange)
+          && !isRangeEmpty(ageRange) && !isRangeEmpty(annualRainfallRange)
+          && !isRangeEmpty(annualRainfallRange) && !isRangeEmpty(densityRange) && (
         <div className="preferences-form-container">
             <Card className="preferences-form-card">
+              <> {console.log(populationRange)} </>
               <CardHeader title="What Are You Looking For in a City?" />
               <Divider />
               <CardContent className="preferences-form-content">
