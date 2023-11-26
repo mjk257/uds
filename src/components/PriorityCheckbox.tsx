@@ -3,6 +3,11 @@ import { Star, StarBorder } from "@mui/icons-material";
 import React from "react";
 import {CityPreferencesConfiguration} from "../types/utility-types";
 
+/*
+NOTE:
+This component is untested, because the component essentially is
+just a wrapped up version of another component
+ */
 const PriorityCheckbox = ({ currentConfig, value, bottomMargin, isDefaultRange, isLoading, handleChange } : CheckboxProps) => {
     return (
         <FormControlLabel
