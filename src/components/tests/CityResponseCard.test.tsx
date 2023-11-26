@@ -1,5 +1,6 @@
 import { render, screen, cleanup } from "@testing-library/react";
 import CityResponseCard from "../CityResponseCard";
+import {CityDetails} from "../../types/utility-types";
 
 afterEach(() => {
     cleanup();
@@ -17,20 +18,27 @@ const nycSummary = "New York City is a city in the United States. " +
     "It is also the most humid-subtropical city in the United States. " +
     "It is also the youngest city in the United States.";
 
-const mockCityDetails = {
-    summary: nycSummary,
+const mockCityDetails: CityDetails = {
+    density: 1,
+    population: 1,
     name: "New York City",
     state: "NY",
-    population: 8398748,
-    density: 10933,
-    costOfLiving: 20,
-    preferredOccupation: 100000,
-    crimeRate: 45000,
-    walkAndTransability: 20,
-    partisan_lean: 25,
-    outdoorScore: 79,
-    zone_description: "humid subtropical",
-    median_age: 35
+    longitude: 1,
+    latitude: 1,
+    rpp: 1,
+    climate_zone: "humid-subtropical",
+    zone_description: nycSummary,
+    partisan_lean: 1,
+    outdoor_score: 1,
+    occupation_data: 1,
+    median_age: 1,
+    annual_precipitation: 1,
+    annual_snowfall: 1,
+    winter_temp: 1,
+    summer_temp: 1,
+    crime_rate: 1,
+    walkscore: 1,
+    bikescore: 1
 }
 
 describe("Testing ConfigurationList component", () => {
