@@ -28,7 +28,7 @@ const Map: React.FC<MapProps> = ({ cities, onMarkerClick }) => {
     // Initialize the map
     map.current = new mapboxgl.Map({
       container: mapContainer.current as HTMLDivElement, // Update the container property here
-      style: "mapbox://styles/fwm25/clnxrvfh9007y01qshgob0qej",
+      style: "mapbox://styles/mapbox/outdoors-v12",
       center: [-98.583333, 39.833333],
       zoom: 3,
       maxBounds: [

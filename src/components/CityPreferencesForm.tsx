@@ -5,16 +5,31 @@ import ConfigurationForm from "./ConfigurationForm";
 import Map from "./Map";
 import {
   defaultCityPreferencesConfigurationSet,
-  CityResponse
+  CityResponse,
+  CityPreferencesConfiguration
 } from "../types/utility-types";
 import {getAllCities, getAllOccupations, getRanges,} from "../util/api-calls";
+import Cookies from 'js-cookie';
 
 export const CityPreferencesForm = () => {
   // This field remains if we want to read configurations later
   const [allConfigs, setAllConfigs] = useState(
     defaultCityPreferencesConfigurationSet
   );
-  const [currentConfig, setCurrentConfig] = useState(allConfigs.config1);
+
+   // Read 'userInput' cookie, load configurations from last submit
+   let parsedConfig = allConfigs.config1
+   const userInputCookie = Cookies.get('userInput');
+   if (userInputCookie) {
+     try {
+       // Parse the cookie and update the currentConfig
+       parsedConfig = JSON.parse(userInputCookie) as CityPreferencesConfiguration
+       
+     } catch (error) {
+       console.error("Error parsing 'userInput' cookie:", error);
+     }
+   } 
+  const [currentConfig, setCurrentConfig] = useState(parsedConfig);
   const [returnedCities, setReturnedCities] = useState<CityResponse>({});
 
   // API Data

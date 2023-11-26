@@ -1,6 +1,7 @@
 import {CityPreferencesConfiguration, defaultCityPreferencesConfiguration, Ranges} from "../../types/utility-types";
 import {useEffect} from "react";
 import {searchForCities} from "../../util/api-calls";
+import Cookies from 'js-cookie';
 
 
 const useConfigForm = ({ currentConfig, setCurrentConfig, allRanges, setReturnedCities, setIsLoading } : Props) => {
@@ -229,7 +230,9 @@ const useConfigForm = ({ currentConfig, setCurrentConfig, allRanges, setReturned
     }
 
     const clearForm = () => {
-        setCurrentConfig(defaultCityPreferencesConfiguration);
+        setCurrentConfig(defaultCityPreferencesConfiguration); 
+        //comment line below if you want cookie to be reset when form is cleared
+        Cookies.set('userInput', JSON.stringify(defaultCityPreferencesConfiguration))
     };
 
     // Slider data
@@ -250,7 +253,9 @@ const useConfigForm = ({ currentConfig, setCurrentConfig, allRanges, setReturned
             winterTemp: {min: sliders.winterSlider[(currentConfig.avgWinterTemp[0] as number)], max: sliders.winterSlider[(currentConfig.avgWinterTemp[1] as number)]},
             summerTemp: {min: sliders.summerSlider[(currentConfig.avgSummerTemp[0] as number)], max: sliders.summerSlider[(currentConfig.avgSummerTemp[1] as number)]}
         }
-
+        
+        // Save configuration to cookie on submit
+        Cookies.set('userInput', JSON.stringify(currentConfigCopy), { expires: 15 })
         console.log(currentConfigCopy);
 
         // send the data to the search function and await its response
