@@ -236,9 +236,8 @@ const ConfigurationForm = ({
                     >
                       {input?.componentType === "header" && (
                           <>
-                            <br />
                             <div style={{ display: 'flex', alignItems: 'left' }}>
-                              <Typography variant="h5" sx={{ display: 'flex', alignItems: 'left' }}><strong>{input.text}</strong></Typography>
+                              <Typography variant="h4" sx={{ display: 'flex', alignItems: 'left', marginTop: "10px" }}><strong>{input.text}</strong></Typography>
                             </div>
                           </>
                       )}
