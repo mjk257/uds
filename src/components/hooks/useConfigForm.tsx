@@ -255,7 +255,7 @@ const useConfigForm = ({ currentConfig, setCurrentConfig, allRanges, setReturned
         }
         
         // Save configuration to cookie on submit
-        Cookies.set('userInput', JSON.stringify(currentConfigCopy), { expires: 15 })
+        Cookies.set('userInput', JSON.stringify(currentConfig), { expires: 15 })
         console.log(currentConfigCopy);
 
         // send the data to the search function and await its response
