@@ -1,18 +1,3 @@
-import{ getRanges } from "../util/api-calls";
-let ranges = {} as Ranges;
-await getRanges().then((resp) => {
-    ranges = resp;
-});
-export const populationRange = [ranges.min_population, ranges.max_population, ranges.avg_population];
-export const ageRange = [ranges.min_age, ranges.max_age, ranges.avg_age];
-export const densityRange = [ranges.min_density, ranges.max_density, ranges.avg_density];
-export const annualSnowfallRange = [ranges.min_snow, ranges.max_snow, ranges.avg_snow];
-export const annualRainfallRange = [ranges.min_rain, ranges.max_rain, ranges.avg_rain];
-export const avgWinterTempRange = [ranges.min_winter_temp, ranges.max_winter_temp, ranges.avg_winter_temp];
-export const avgSummerTempRange = [ranges.min_summer_temp, ranges.max_summer_temp, ranges.avg_summer_temp];
-
-export const numTics = 10;
-
 export type CityPreferencesConfiguration = {
     population: string | number[],
     populationDensity: string | number[],
@@ -75,8 +60,8 @@ export type CityDetails = {
     rpp: number,
     climate_zone: string,
     zone_description: string,
-    partisan_lean: number // negative value is more republican, positive is more democratic
-    outdoor_score: number // the closer this value is to 100, the better suited the city is for outdoor recreation
+    partisan_lean: number, // negative value is more republican, positive is more democratic
+    outdoor_score: number, // the closer this value is to 100, the better suited the city is for outdoor recreation
     occupation_data: number,
     median_age: number,
     annual_precipitation: number,
@@ -99,7 +84,7 @@ export type CityResponse = {
 }
 
 export type Ranges = {
-    "_id":null,
+    "_id": null,
     "max_population": number,
     "min_population": number,
     "avg_population": number,
@@ -121,5 +106,5 @@ export type Ranges = {
     "max_snow": number,
     "min_snow": number,
     "avg_snow": number
-    }
+}
 

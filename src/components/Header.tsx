@@ -12,7 +12,7 @@ import {GitHub} from "@mui/icons-material";
 
 const Header = () => {
 
-    const headerSx = { display: { xs: 'none', sm: 'block' } };
+    const headerSx = { display: { sm: 'inline' } };
     const [aboutPopupOpen, setAboutPopupOpen] = React.useState(false);
     const [creditsPopupOpen, setCreditsPopupOpen] = React.useState(false);
     const [helpPopupOpen, setHelpPopupOpen] = React.useState(false);
@@ -86,8 +86,6 @@ const Header = () => {
             apiName: "PaLM API",
             apiLink: "https://developers.generativeai.google/guide/palm_api_overview"
         }
-
-
     ]
     const helpTerms = [
         {
@@ -234,16 +232,14 @@ const Header = () => {
                                 sx={ headerSx }>
                         UDS: Urban Discovery System
                     </Typography>
-                    <Box sx={ headerSx }>
-                        {navButtons.map((item) => (
-                            <>
-                                <Button key={ item.buttonTitle } color='inherit' onClick={ () => item.popupProps.setPopupOpen(true) }>
-                                    { item.buttonTitle }
-                                </Button>
-                                <Popup key={ item.buttonTitle + " Popup" } { ...item.popupProps } />
-                            </>
-                        ))}
-                    </Box>
+                    {navButtons.map((item) => (
+                        <>
+                            <Button key={ item.buttonTitle } color='inherit' onClick={ () => item.popupProps.setPopupOpen(true) }>
+                                { item.buttonTitle }
+                            </Button>
+                            <Popup key={ item.buttonTitle + " Popup" } { ...item.popupProps } />
+                        </>
+                    ))}
                     {navIcons.map((item) => (
                         <Link key={ item.link } color='inherit' href={ item.link } target="_blank">
                             { item.icon }
