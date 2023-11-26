@@ -5,18 +5,16 @@ import ConfigurationForm from "./ConfigurationForm";
 import Map from "./Map";
 import {
   defaultCityPreferencesConfigurationSet,
-  CityResponse, Ranges,
+  CityResponse
 } from "../types/utility-types";
-import axios from "axios";
 import {getAllCities, getAllOccupations, getRanges,} from "../util/api-calls";
 
 export const CityPreferencesForm = () => {
-  // These three fields are used for configurations, should we decide to re-add them
+  // This field remains if we want to read configurations later
   const [allConfigs, setAllConfigs] = useState(
     defaultCityPreferencesConfigurationSet
   );
   const [currentConfig, setCurrentConfig] = useState(allConfigs.config1);
-  const [currentConfigName] = useState("config1");
   const [returnedCities, setReturnedCities] = useState<CityResponse>({});
 
   // API Data
@@ -54,9 +52,6 @@ export const CityPreferencesForm = () => {
                   <ConfigurationForm
                     currentConfig={currentConfig}
                     setCurrentConfig={setCurrentConfig}
-                    allConfigs={allConfigs}
-                    currentConfigName={currentConfigName}
-                    setAllConfigs={setAllConfigs}
                     setReturnedCities={setReturnedCities}
                     allOccupations={allOccupations}
                     allRanges={ranges}
