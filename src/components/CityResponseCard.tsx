@@ -119,96 +119,127 @@ const CityResponseCard = ({ cityDetails, rank }: Props) => {
 
   const accordionDetails = [
     {
+      component: "header",
+      title: "Traits"
+    },
+    {
+      component: "statistic",
+      title: "Cost of Living",
+      value: cityDetails?.rpp ? costOfLivingToString(cityDetails?.rpp) : "N/A",
+    },
+    {
+      component: "statistic",
+      title: "Crime Rate",
+      value: cityDetails?.crime_rate
+          ? crimeRateToString(cityDetails.crime_rate)
+          : "N/A",
+    },
+    {
+      component: "statistic-branding",
+      title: "WalkScore®",
+      value: cityDetails?.walkscore
+          ? cityDetails.walkscore
+          : "N/A",
+      branding: "https://www.walkscore.com/how-it-works/"
+    },
+    {
+      component: "statistic-branding",
+      title: "BikeScore®",
+      value: cityDetails?.bikescore
+          ? cityDetails.bikescore
+          : "N/A",
+      branding: "https://www.walkscore.com/how-it-works/"
+    },
+    {
+      component: "statistic",
+      title: "Outdoor Score",
+      value: cityDetails?.outdoor_score
+          ? cityDetails.outdoor_score
+          : "N/A",
+      style: {color: percentageToColor(cityDetails?.outdoor_score, 45, 100)}
+    },
+    {
+      component: "header",
+      title: "Population Stats"
+    },
+    {
+      component: "statistic",
       title: "Population",
       value: cityDetails?.population
         ? populationToString(cityDetails.population)
         : "N/A",
     },
     {
+      component: "statistic",
       title: "Population Density",
       value: cityDetails?.density
         ? populationDensityToString(cityDetails.density)
         : "N/A",
     },
     {
+      component: "statistic",
       title: "Average Population Age",
       value: cityDetails?.median_age
         ? averagePopulationAgeToString(cityDetails.median_age)
         : "N/A",
     },
     {
+      component: "header",
+      title: "Climate",
+    },
+    {
+      component: "statistic",
+      title: "Climate Zone Description",
+      value: cityDetails?.zone_description
+          ? cityDetails?.zone_description
+          : "N/A",
+    },
+    {
+      component: "statistic",
+      title: "Average Winter Temperature",
+      value: cityDetails?.winter_temp
+          ? tempToString(cityDetails?.winter_temp)
+          : "N/A",
+    },
+    {
+      component: "statistic",
+      title: "Average Summer Temperature",
+      value: cityDetails?.summer_temp
+          ? tempToString(cityDetails?.summer_temp)
+          : "N/A",
+    },
+    {
+      component: "statistic",
+      title: "Average Snowfall",
+      value: cityDetails?.annual_snow
+          ? precipToString(cityDetails?.annual_snow)
+          : "N/A",
+    },
+    {
+      component: "statistic",
+      title: "Average Rainfall",
+      value: cityDetails?.annual_precipitation
+          ? precipToString(cityDetails?.annual_precipitation)
+          : "N/A",
+    },
+    {
+      component: "header",
+      title: "Career",
+    },
+    {
+      component: "statistic",
+      title: "Job Market",
+      value: cityDetails?.occupation_data
+          ? numberOfJobsToString(cityDetails.occupation_data)
+          : "N/A",
+    },
+    {
+      component: "statistic",
       title: "State Politics",
       value: cityDetails?.partisan_lean
         ? politicsToString(cityDetails.partisan_lean)
         : "N/A",
-    },
-    {
-      title: "Cost of Living",
-      value: cityDetails?.rpp ? costOfLivingToString(cityDetails?.rpp) : "N/A",
-    },
-    {
-      title: "Job Market",
-      value: cityDetails?.occupation_data
-        ? numberOfJobsToString(cityDetails.occupation_data)
-        : "N/A",
-    },
-    {
-      title: "Crime Rate",
-      value: cityDetails?.crime_rate
-        ? crimeRateToString(cityDetails.crime_rate)
-        : "N/A",
-    },
-    {
-      title: "WalkScore®",
-      value: cityDetails?.walkscore
-        ? cityDetails.walkscore
-        : "N/A",
-      branding: "https://www.walkscore.com/how-it-works/"
-    },
-    {
-      title: "BikeScore®",
-      value: cityDetails?.bikescore
-        ? cityDetails.bikescore
-        : "N/A",
-      branding: "https://www.walkscore.com/how-it-works/"
-    },
-    {
-      title: "Outdoor Score",
-      value: cityDetails?.outdoor_score
-        ? cityDetails.outdoor_score
-        : "N/A",
-      style: {color: percentageToColor(cityDetails?.outdoor_score, 45, 100)}
-    },
-    {
-      title: "Climate Zone Description",
-      value: cityDetails?.zone_description
-        ? cityDetails?.zone_description
-        : "N/A",
-    },
-    {
-      title: "Average Rainfall",
-      value: cityDetails?.annual_precipitation
-        ? precipToString(cityDetails?.annual_precipitation)
-        : "N/A",
-    },
-    {
-      title: "Average Snowfall",
-      value: cityDetails?.annual_snow
-        ? precipToString(cityDetails?.annual_snow)
-        : "N/A",
-    },
-    {
-      title: "Average Summer Temperature",
-      value: cityDetails?.summer_temp
-        ? tempToString(cityDetails?.summer_temp)
-        : "N/A",
-    },
-    {
-      title: "Average Winter Temperature",
-      value: cityDetails?.winter_temp
-        ? tempToString(cityDetails?.winter_temp)
-        : "N/A",
-    },
+    }
   ];
 
   const id = cityDetails?.name.replace(/ /g, "-"); // Convert city name to a valid ID
@@ -239,19 +270,25 @@ const CityResponseCard = ({ cityDetails, rank }: Props) => {
           <AccordionDetails>
             {accordionDetails.map((item, idx) => {
               return (
-                <Typography key={idx} className="city-response-text">
-                  {item?.branding ? (
-                    <Typography>
-                      <span className="title"><a href={item.branding}>{`${item.title}`}</a>:</span>{" "}
-                      <span style={item.style}>{item.value}</span>
-                    </Typography>
-                  ) : (
-                    <Typography>
-                      <span className="title">{`${item.title}: `}</span>{" "}
-                      <span style={item.style}>{item.value}</span>
-                    </Typography>
-                  )}
-                </Typography>
+                  <>
+                    {item?.component === "header" && (
+                        <Typography variant='h4' sx={{ marginTop: "20px", marginBottom: "10px" }} key={idx} className="city-response-header">
+                          {item.title}
+                        </Typography>
+                    )}
+                    {item?.component === "statistic" && (
+                        <Typography className='city-response-text'>
+                          <span className="title">{`${item.title}: `}</span>{" "}
+                          <span style={item.style}>{item.value}</span>
+                        </Typography>
+                    )}
+                    {item?.component === "statistic-branding" && (
+                        <Typography className='city-response-text'>
+                          <span className="title"><a href={item.branding}>{`${item.title}`}</a>:</span>{" "}
+                          <span style={item.style}>{item.value}</span>
+                        </Typography>
+                    )}
+                  </>
               );
             })}
           </AccordionDetails>

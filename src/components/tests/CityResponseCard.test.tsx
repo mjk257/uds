@@ -2,10 +2,6 @@ import { render, screen, cleanup } from "@testing-library/react";
 import CityResponseCard from "../CityResponseCard";
 import {CityDetails} from "../../types/utility-types";
 
-afterEach(() => {
-    cleanup();
-});
-
 const nycSummary = "New York City is a city in the United States. " +
     "It is the largest city in the United States. " +
     "It is also the most populous city in the United States. " +
@@ -41,49 +37,79 @@ const mockCityDetails: CityDetails = {
     bikescore: 1
 }
 
-describe("Testing ConfigurationList component", () => {
+describe("Testing CityResponseCard component", () => {
 
     const mockProps = {
         cityDetails: mockCityDetails,
         rank: 1
     }
 
-    test("renders ConfigurationList header and configuration buttons", () => {
+    afterEach(() => {
+        cleanup();
+    });
+
+    test("renders header and description", () => {
         render(<CityResponseCard { ...mockProps } />);
 
         const cityName = screen.getByText("1.) New York City, NY");
         expect(cityName).toBeInTheDocument();
         const citySummary = screen.getByText(nycSummary);
         expect(citySummary).toBeInTheDocument();
+    });
+
+    test("renders Traits section", () => {
+       render(<CityResponseCard { ...mockProps } />);
+
+       const traitsHeader = screen.getByText("Traits");
+       expect(traitsHeader).toBeInTheDocument();
+        const costOfLiving = screen.getByText("Cost of Living:");
+        expect(costOfLiving).toBeInTheDocument();
+        const crimeRate = screen.getByText("Crime Rate:");
+        expect(crimeRate).toBeInTheDocument();
+        const walkability = screen.getByText("WalkScore®");
+        expect(walkability).toBeInTheDocument();
+        const bikeability = screen.getByText("BikeScore®");
+        expect(bikeability).toBeInTheDocument();
+        const outdoorScore = screen.getByText("Outdoor Score:");
+        expect(outdoorScore).toBeInTheDocument();
+    });
+
+    test("renders Population Stats section", () => {
+        render(<CityResponseCard { ...mockProps } />);
+
         const population = screen.getByText("Population:");
         expect(population).toBeInTheDocument();
         const populationDensity = screen.getByText("Population Density:");
         expect(populationDensity).toBeInTheDocument();
-        const costOfLiving = screen.getByText("Cost of Living:");
-        expect(costOfLiving).toBeInTheDocument();
-        const numberOfJobs = screen.getByText("Job Market:");
-        expect(numberOfJobs).toBeInTheDocument();
-        const crimeRate = screen.getByText("Crime Rate:");
-        expect(crimeRate).toBeInTheDocument();
-        const walkScore = screen.getByText("WalkScore®");
-        expect(walkScore).toBeInTheDocument();
-        const bikeScore = screen.getByText("BikeScore®");
-        expect(bikeScore).toBeInTheDocument();
-        const politics = screen.getByText("State Politics:");
-        expect(politics).toBeInTheDocument();
-        const outdoorScore = screen.getByText("Outdoor Score:");
-        expect(outdoorScore).toBeInTheDocument();
-        const climate = screen.getByText("Climate Zone Description:");
-        expect(climate).toBeInTheDocument();
-        const rainfall = screen.getByText("Average Rainfall:");
-        expect(rainfall).toBeInTheDocument();
-        const snow = screen.getByText("Average Snowfall:");
-        expect(snow).toBeInTheDocument();
-        const summerTemp = screen.getByText("Average Summer Temperature:");
-        expect(summerTemp).toBeInTheDocument();
-        const winterTemp = screen.getByText("Average Winter Temperature:");
-        expect(winterTemp).toBeInTheDocument();
         const averagePopulationAge = screen.getByText("Average Population Age:");
         expect(averagePopulationAge).toBeInTheDocument();
+    });
+
+    test("renders Climate section", () => {
+        render(<CityResponseCard { ...mockProps } />);
+
+        const climateHeader = screen.getByText("Climate");
+        expect(climateHeader).toBeInTheDocument();
+        const climateZone = screen.getByText("Climate Zone Description:");
+        expect(climateZone).toBeInTheDocument();
+        const winterTemp = screen.getByText("Average Winter Temperature:");
+        expect(winterTemp).toBeInTheDocument();
+        const summerTemp = screen.getByText("Average Summer Temperature:");
+        expect(summerTemp).toBeInTheDocument();
+        const snow = screen.getByText("Average Snowfall:");
+        expect(snow).toBeInTheDocument();
+        const rainfall = screen.getByText("Average Rainfall:");
+        expect(rainfall).toBeInTheDocument();
+    });
+
+    test("renders Career section", () => {
+        render(<CityResponseCard { ...mockProps } />);
+
+        const careerHeader = screen.getByText("Career");
+        expect(careerHeader).toBeInTheDocument();
+        const occupation = screen.getByText("Job Market:");
+        expect(occupation).toBeInTheDocument();
+        const politics = screen.getByText("State Politics:");
+        expect(politics).toBeInTheDocument();
     });
 });
