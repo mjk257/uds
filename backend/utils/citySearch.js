@@ -1,6 +1,7 @@
 const City = require('../models/City');
 const axios = require('axios');
 require('dotenv').config();
+var fs = require('fs');
 
 const api_header = {
     "Content-Type": "application/json",
@@ -264,10 +265,11 @@ function getCityScores(cities, searchCriteria, valuedScalingFactor) {
             if (cityValue == null) // If attribute not in database (either in total or for the specific city)
                 continue;
 
-            if (rangeMin != null && cityValue >= rangeMin && cityValue <= rangeMax)
-                cityValue *= isValued ? rangeScalingFactor * valuedScalingFactor : rangeScalingFactor;
-            else
+            if (rangeMin != null && cityValue >= rangeMin && cityValue <= rangeMax) {
+                cityValue = isValued ? rangeScalingFactor * valuedScalingFactor : rangeScalingFactor;
+            } else {
                 cityValue = getNormalizedCityValue(cityValue, pref, normalizedPref, criteriaMin, criteriaMaxMinDiff, isValued, valuedScalingFactor);
+            }
 
             if (cityValue == null)
                 break;
