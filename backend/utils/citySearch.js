@@ -127,7 +127,7 @@ function getAttributeValue(city, criteriaName) {
             return city.partisan_lean;
         case "populationAge":
             return city.median_age;
-        case "annualPrecipitation":
+        case "annualRainfall":
             return city.annual_precipitation;
         case "annualSnowfall":
             return city.annual_snowfall;
