@@ -10,6 +10,7 @@ const api_header = {
 
 // Takes in cities and searchCriteria and returns ranked list of top 10 cities
 async function citySearch(cities, searchCriteria) {
+    // console.log(JSON.stringify(cities))
     // Main variables for changing how search works
     const valuedScalingFactor = 5;
     let topCities = [];
