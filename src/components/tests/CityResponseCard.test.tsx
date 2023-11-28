@@ -34,7 +34,8 @@ const mockCityDetails: CityDetails = {
     summer_temp: 1,
     crime_rate: 1,
     walkscore: 1,
-    bikescore: 1
+    bikescore: 1,
+    image_url: "url"
 }
 
 describe("Testing CityResponseCard component", () => {

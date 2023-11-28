@@ -7,6 +7,8 @@ import {
   Typography,
   AccordionDetails,
   Icon,
+  CardMedia,
+  Box
 } from "@mui/material";
 import { ExpandMore } from "@mui/icons-material";
 
@@ -250,6 +252,14 @@ const CityResponseCard = ({ cityDetails, rank }: Props) => {
         title={`${rank}.) ${cityDetails?.name}, ${cityDetails?.state}`}
         titleTypographyProps={{ align: "left" }}
       />
+      <a href={cityDetails?.image_url} target="_blank" rel="noreferrer">
+        <CardMedia
+          width="200"
+          component="img"
+          height="400px"
+          src={cityDetails?.image_url}
+        />
+      </a>
       <CardContent className="city-response-content">
         {cityDetails?.description ? (
           <Typography>{cityDetails?.description}</Typography>
