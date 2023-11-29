@@ -262,9 +262,9 @@ const CityResponseCard = ({ cityDetails, rank }: Props) => {
             sx={{width: "50%", paddingRight: "10px"}}
           />
           {cityDetails?.description ? (
-            <Typography sx={{ display: 'inline', verticalAlign:"middle"}}>{cityDetails?.description}</Typography>
+            <Typography sx={{width: "50%"}}>{cityDetails?.description}</Typography>
           ) : (
-            <Typography>N/A</Typography>
+            <Typography sx={{width: "50%"}}>N/A</Typography>
           )}
         </Box>
         <br/>
