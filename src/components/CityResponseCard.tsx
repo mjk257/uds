@@ -252,20 +252,21 @@ const CityResponseCard = ({ cityDetails, rank }: Props) => {
         title={`${rank}.) ${cityDetails?.name}, ${cityDetails?.state}`}
         titleTypographyProps={{ align: "left" }}
       />
-      <a href={cityDetails?.image_url} target="_blank" rel="noreferrer">
-        <CardMedia
-          width="200"
-          component="img"
-          height="400px"
-          src={cityDetails?.image_url}
-        />
-      </a>
+      
       <CardContent className="city-response-content">
-        {cityDetails?.description ? (
-          <Typography>{cityDetails?.description}</Typography>
-        ) : (
-          "N/A"
-        )}
+        <Box component="div" sx={{ display: 'flex', alignItems: "center"}}>
+          <CardMedia
+            height="300"
+            component="img"
+            src={cityDetails?.image_url}
+            sx={{width: "50%", paddingRight: "10px"}}
+          />
+          {cityDetails?.description ? (
+            <Typography sx={{ display: 'inline', verticalAlign:"middle"}}>{cityDetails?.description}</Typography>
+          ) : (
+            <Typography>N/A</Typography>
+          )}
+        </Box>
         <br/>
         <Accordion className="city-response-details">
           <AccordionSummary
