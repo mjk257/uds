@@ -64,8 +64,8 @@ const ConfigurationForm = ({
       componentType: "checkbox",
       label: "Low Cost of Living",
       checkboxValue: "costOfLiving",
-      checkedValue: 95,
-      onChange: () => handleCheckboxChange("costOfLiving", 95)
+      checkedValue: 0,
+      onChange: () => handleCheckboxChange("costOfLiving", 0)
     },
     {
       componentType: "checkbox",

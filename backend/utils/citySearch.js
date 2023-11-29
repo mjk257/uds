@@ -1,6 +1,7 @@
 const City = require('../models/City');
 const axios = require('axios');
 require('dotenv').config();
+var fs = require('fs');
 
 const api_header = {
     "Content-Type": "application/json",
@@ -9,6 +10,7 @@ const api_header = {
 
 // Takes in cities and searchCriteria and returns ranked list of top 10 cities
 async function citySearch(cities, searchCriteria) {
+    // console.log(JSON.stringify(cities))
     // Main variables for changing how search works
     const valuedScalingFactor = 5;
     let topCities = [];
@@ -126,7 +128,7 @@ function getAttributeValue(city, criteriaName) {
             return city.partisan_lean;
         case "populationAge":
             return city.median_age;
-        case "annualPrecipitation":
+        case "annualRainfall":
             return city.annual_precipitation;
         case "annualSnowfall":
             return city.annual_snowfall;
@@ -264,10 +266,11 @@ function getCityScores(cities, searchCriteria, valuedScalingFactor) {
             if (cityValue == null) // If attribute not in database (either in total or for the specific city)
                 continue;
 
-            if (rangeMin != null && cityValue >= rangeMin && cityValue <= rangeMax)
-                cityValue *= isValued ? rangeScalingFactor * valuedScalingFactor : rangeScalingFactor;
-            else
+            if (rangeMin != null && cityValue >= rangeMin && cityValue <= rangeMax) {
+                cityValue = isValued ? rangeScalingFactor * valuedScalingFactor : rangeScalingFactor;
+            } else {
                 cityValue = getNormalizedCityValue(cityValue, pref, normalizedPref, criteriaMin, criteriaMaxMinDiff, isValued, valuedScalingFactor);
+            }
 
             if (cityValue == null)
                 break;
