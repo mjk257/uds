@@ -99,7 +99,8 @@ export const CityPreferencesForm = () => {
             <Box display="flex"
                  justifyContent="center"
                  alignItems="center"
-                 minHeight="50vh">
+                 minHeight="100vh"
+                 flexDirection="column">
               <CircularProgress size={100} />
             </Box>
           )}
