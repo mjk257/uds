@@ -213,9 +213,7 @@ const CityResponseCard = ({ cityDetails, rank }: Props) => {
     {
       component: "statistic",
       title: "Average Snowfall",
-      value: cityDetails?.annual_snow
-          ? precipToString(cityDetails?.annual_snow)
-          : "N/A",
+      value: precipToString(cityDetails?.annual_snow)
     },
     {
       component: "statistic",

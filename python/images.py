@@ -23,7 +23,7 @@ for city in cities.find():
     if(city['population'] > 500000):
         term = " Downtown"
     else:
-        term = " Buildings"
+        term = " Building"
     params = {
         "method": "flickr.photos.search",
         "api_key": api_key,
