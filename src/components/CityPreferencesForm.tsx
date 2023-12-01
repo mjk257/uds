@@ -134,14 +134,12 @@ export const CityPreferencesForm = () => {
                   justifyContent: "center",
                 }}
               >
-                <CityResponseCard cityDetails={selectedCity} rank={0} />
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleClose}
-                >
-                  Close
-                </Button>
+                <CityResponseCard
+                  cityDetails={selectedCity}
+                  rank={null}
+                  handleClose={handleClose}
+                  isMarkerClicked={true}
+                />
               </Box>
             )}
             <Card className="preferences-form">
@@ -161,11 +159,24 @@ export const CityPreferencesForm = () => {
             {returnedCities &&
               Object.values(returnedCities).map((city, idx) => {
                 return (
-                  <CityResponseCard
-                    cityDetails={city}
-                    key={idx}
-                    rank={idx + 1}
-                  />
+                  <Box
+                    sx={{
+                      width: "100%",
+                      boxSizing: "border-box",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <CityResponseCard
+                      cityDetails={city}
+                      key={idx}
+                      rank={idx + 1}
+                      handleClose={handleClose}
+                      isMarkerClicked={false}
+                    />
+                  </Box>
                 );
               })}
           </Container>
