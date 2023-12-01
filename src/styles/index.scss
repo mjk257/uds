@@ -7,8 +7,7 @@
   box-shadow: rgba(31, 22, 41, 0.4) -5px 5px, rgba(31, 22, 41, 0.3) -10px 10px, rgba(31, 22, 41, 0.2) -15px 15px, rgba(31, 22, 41, 0.1) -20px 20px, rgba(31, 22, 41, 0.05) -25px 25px !important;
   //box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px !important; //Regular box shadow, backup
   border-radius: 20px !important;
-
-
+  
   .configurations-header {
     margin-top: 20px;
     margin-bottom: 20px;
@@ -60,6 +59,7 @@
   margin: 5% 5% 5% 5%;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px !important; 
   border-radius: 10px !important;
+  
   .city-response-content {
     border-radius: 10em;
     .city-response-text {
@@ -84,7 +84,8 @@
 #map-container {
   display: flex;
   justify-content: center;
-  width: 85vw;
+  width: 100%;
+  max-width: 100%;
   height: 65vh;
   margin-top: 5%;
   margin-bottom: 5%;
@@ -98,20 +99,36 @@
   border-radius: 5px;
 }
 
-@media (max-width: 600px) {
+/* Styles for devices with a screen width between 768px and 1024px (medium devices) */
+@media (min-width: 600px) and (max-width: 1200px) {
+  /* Your styles for medium devices go here */
   #map-container {
-    width: 100vw;
+    width: 80vw;
   }
+
+  .preferences-form {
+    width: 80vw;
+  }
+
+  .city-response {
+    width: 80vw;
+  }
+
+  /* Add more styles as needed for medium devices */
 }
 
 @media (min-width: 1200px) {
   #map-container {
     width: 65vw;
   }
-}
 
-.mapboxgl-marker {
-  cursor: pointer;
+  .preferences-form {
+    width: 65vw;
+  }
+
+  .city-response {
+    width: 65vw;
+  }
 }
 
 .footer {

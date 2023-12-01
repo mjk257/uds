@@ -28,7 +28,7 @@ const Map: React.FC<MapProps> = ({ cities, onMarkerClick }) => {
     // Initialize the map
     map.current = new mapboxgl.Map({
       container: mapContainer.current as HTMLDivElement, // Update the container property here
-      style: "mapbox://styles/mapbox/outdoors-v12",
+      style: process.env.REACT_APP_MAPBOX_MAP_STYLE as string,
       center: [-98.583333, 39.833333],
       zoom: 3,
       maxBounds: [
@@ -83,6 +83,7 @@ const Map: React.FC<MapProps> = ({ cities, onMarkerClick }) => {
           "circle-radius": 18,
           "circle-stroke-width": 2,
           "circle-stroke-color": "#fff",
+          "circle-opacity": 0.8,
         },
         layout: {
           visibility: "visible", // Make sure the cluster layer is visible
@@ -112,6 +113,7 @@ const Map: React.FC<MapProps> = ({ cities, onMarkerClick }) => {
           "circle-radius": 10,
           "circle-stroke-width": 2,
           "circle-stroke-color": "#fff",
+          "circle-opacity": 0.7,
         },
         layout: {
           visibility: "visible", // Make sure the cluster layer is visible
@@ -172,7 +174,7 @@ const Map: React.FC<MapProps> = ({ cities, onMarkerClick }) => {
       });
 
       map.current?.on("click", "unclustered-point", (e) => {
-        const cityName = e.features?.[0]?.properties?.name;
+        const cityName = e.features?.[0]?.properties?.cityId;
         if (cityName) {
           onMarkerClick(cityName);
         }
@@ -185,7 +187,7 @@ const Map: React.FC<MapProps> = ({ cities, onMarkerClick }) => {
         map.current.remove();
       }
     };
-  }, [cities]);
+  }, [cities, cluster, onMarkerClick]);
 
   return (
     <div id="map-container">
