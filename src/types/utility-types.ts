@@ -70,7 +70,8 @@ export type CityDetails = {
     summer_temp: number,
     crime_rate: number,
     walkscore: number,
-    bikescore: number
+    bikescore: number,
+    image_url: string
 }
 
 export type Occupation = {

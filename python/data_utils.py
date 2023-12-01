@@ -4,6 +4,9 @@ import numpy
 def abbreviate(x):
     return us_state_to_abbrev.get(x)
 
+def extend(x):
+    return list(us_state_to_abbrev.keys())[list(us_state_to_abbrev.values()).index(x)]
+
 # Dictionary for state name to abbreviation mappings
 us_state_to_abbrev = {
     "Alabama": "AL",

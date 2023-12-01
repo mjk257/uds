@@ -20,7 +20,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { Configs, Ranges } from "../types/utility-types";
+import { Ranges } from "../types/utility-types";
 import {LoadingButton} from "@mui/lab";
 import PriorityCheckbox from "./PriorityCheckbox";
 import useConfigForm from "./hooks/useConfigForm";

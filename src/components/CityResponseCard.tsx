@@ -7,6 +7,8 @@ import {
   Typography,
   AccordionDetails,
   Icon,
+  CardMedia,
+  Box
 } from "@mui/material";
 import { ExpandMore } from "@mui/icons-material";
 
@@ -211,9 +213,7 @@ const CityResponseCard = ({ cityDetails, rank }: Props) => {
     {
       component: "statistic",
       title: "Average Snowfall",
-      value: cityDetails?.annual_snow
-          ? precipToString(cityDetails?.annual_snow)
-          : "N/A",
+      value: precipToString(cityDetails?.annual_snow)
     },
     {
       component: "statistic",
@@ -250,12 +250,21 @@ const CityResponseCard = ({ cityDetails, rank }: Props) => {
         title={`${rank}.) ${cityDetails?.name}, ${cityDetails?.state}`}
         titleTypographyProps={{ align: "left" }}
       />
+      
       <CardContent className="city-response-content">
-        {cityDetails?.description ? (
-          <Typography>{cityDetails?.description}</Typography>
-        ) : (
-          "N/A"
-        )}
+        <Box component="div" sx={{ display: 'flex', alignItems: "center"}}>
+          <CardMedia
+            height="300"
+            component="img"
+            src={cityDetails?.image_url}
+            sx={{width: "50%", paddingRight: "10px"}}
+          />
+          {cityDetails?.description ? (
+            <Typography sx={{width: "50%"}}>{cityDetails?.description}</Typography>
+          ) : (
+            <Typography sx={{width: "50%"}}>N/A</Typography>
+          )}
+        </Box>
         <br/>
         <Accordion className="city-response-details">
           <AccordionSummary
