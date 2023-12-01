@@ -1,6 +1,7 @@
 import React from "react";
 import {
     AppBar,
+    Box,
     Button,
     Link,
     Toolbar,
@@ -9,9 +10,9 @@ import {
 import Popup from "./Popup";
 import {GitHub} from "@mui/icons-material";
 
-const Header = () => {
+const Header = ({setSearch, setReturnedCities}: Props) => {
 
-    const headerSx = { display: { sm: 'inline' } };
+    const headerSx = { display: { sm: 'inline', justifyContent: "space-between" } };
     const [aboutPopupOpen, setAboutPopupOpen] = React.useState(false);
     const [creditsPopupOpen, setCreditsPopupOpen] = React.useState(false);
     const [helpPopupOpen, setHelpPopupOpen] = React.useState(false);
@@ -230,28 +231,47 @@ const Header = () => {
         <div>
             <AppBar position="static" className='header-bar'>
                 <Toolbar>
-                    <Typography variant='h4' component='div'
-                                className='header-bar-text' align='left'
-                                sx={ headerSx }>
-                        UDS: Urban Discovery System
-                    </Typography>
-                    {navButtons.map((item) => (
-                        <>
-                            <Button key={ item.buttonTitle } color='inherit' onClick={ () => item.popupProps.setPopupOpen(true) }>
-                                { item.buttonTitle }
-                            </Button>
-                            <Popup key={ item.buttonTitle + " Popup" } { ...item.popupProps } />
-                        </>
-                    ))}
-                    {navIcons.map((item) => (
-                        <Link key={ item.link } color='inherit' href={ item.link } target="_blank">
-                            { item.icon }
-                        </Link>
-                    ))}
+                    <Box>
+                        <Typography variant='h6' component='div'
+                                    className='header-bar-text' align='left'
+                                    sx={ headerSx }>
+                            UDS: Urban Discovery System
+                        </Typography>
+                    </Box>
+                    <Box sx={{ float: 'none', 
+                        width: '200px',
+                        marginLeft: 'auto',
+                        marginRight: 'auto' }}>
+                        <Button variant="contained" sx={{marginRight: '4px'}} onClick={() => {
+                            setSearch(true);
+                            setReturnedCities({});
+                        }}>Search</Button>
+                        <Button variant="contained" sx={{marginLeft: '4px'}} onClick={() => {
+                            setSearch(false);
+                        }}>Browse</Button>
+                    </Box>
+                        {navButtons.map((item) => (
+                            <>
+                                <Button key={ item.buttonTitle } color='inherit' onClick={ () => item.popupProps.setPopupOpen(true) }>
+                                    { item.buttonTitle }
+                                </Button>
+                                <Popup key={ item.buttonTitle + " Popup" } { ...item.popupProps } />
+                            </>
+                        ))}
+                        {navIcons.map((item) => (
+                            <Link key={ item.link } color='inherit' href={ item.link } target="_blank">
+                                { item.icon }
+                            </Link>
+                        ))}
                 </Toolbar>
             </AppBar>
         </div>
     );
 }
+
+type Props = {
+    setSearch: Function;
+    setReturnedCities: Function;
+};
 
 export default Header;

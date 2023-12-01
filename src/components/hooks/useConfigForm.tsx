@@ -23,6 +23,7 @@ const useConfigForm = ({ currentConfig, setCurrentConfig, allRanges, setReturned
             && isDefaultRange("avgSummerTemp");
         const occupationNull = currentConfig.preferredOccupation === null;
         let allOtherValuesEmpty = true;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         for (const [key, value] of Object.entries(currentConfig)) {
             if ((typeof(value) === "string" || typeof(value) === "number") && (value !== "" && value !== null)) {
                 allOtherValuesEmpty = false;
@@ -173,6 +174,7 @@ const useConfigForm = ({ currentConfig, setCurrentConfig, allRanges, setReturned
             ...currentConfig,
             priorityAttributes: newPriorityAttributes
         });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentConfig.population, currentConfig.populationDensity, currentConfig.avgPopulationAge,
         currentConfig.annualRainfall, currentConfig.annualSnowfall, currentConfig.avgWinterTemp, currentConfig.avgSummerTemp])
 
@@ -262,6 +264,7 @@ const useConfigForm = ({ currentConfig, setCurrentConfig, allRanges, setReturned
         searchForCities(currentConfigCopy, setIsLoading).then((resp) => {
             setReturnedCities(resp);
             setIsLoading(false);
+            window.scrollTo(0, 0);
         });
     };
 

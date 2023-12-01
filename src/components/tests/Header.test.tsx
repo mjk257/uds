@@ -8,7 +8,7 @@ afterEach(() => {
 describe("Testing Header component", () => {
 
     test("Renders all parts of the header (title + toolbar buttons)", () => {
-        render(<Header />);
+        render(<Header setSearch={()=>{}} setReturnedCities={()=>{}}/>);
 
         const header = screen.getByText("UDS: Urban Discovery System");
         expect(header).toBeInTheDocument();

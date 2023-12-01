@@ -24,7 +24,9 @@ while True:
     subprocess.run(["python", "crime_rate.py"])
     print("Crime rate script completed. Running WalkScore script...")
     subprocess.run(["python", "walkscore.py"])
-    print("WalkScore script completed. Running crime rate script...")
+    print("WalkScore script completed. Running images script...")
+    subprocess.run(["python", "images.py"])
+    print("Images script completed. Running job codes script...")
     subprocess.run(["python", "job_codes.py"])
     print("Job codes script completed. All scripts have finished.")
     break

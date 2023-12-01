@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -14,21 +14,16 @@ import {
   defaultCityPreferencesConfigurationSet,
   CityResponse,
   CityPreferencesConfiguration,
+  City
 } from "../types/utility-types";
-import { getAllCities, getAllOccupations, getRanges } from "../util/api-calls";
+import { getAllOccupations, getRanges } from "../util/api-calls";
 import Cookies from "js-cookie";
 
-export const CityPreferencesForm = () => {
-  interface City {
-    name: string;
-    state: string;
-    population: number;
-    latitude: number;
-    longitude: number;
-  }
+export const CityPreferencesForm = ({cities, returnedCities, setReturnedCities} : Props) => {
+
 
   // This field remains if we want to read configurations later
-  const [allConfigs, setAllConfigs] = useState(
+  const [allConfigs] = useState(
     defaultCityPreferencesConfigurationSet
   );
 
@@ -46,120 +41,73 @@ export const CityPreferencesForm = () => {
     }
   }
   const [currentConfig, setCurrentConfig] = useState(parsedConfig);
-  const [returnedCities, setReturnedCities] = useState<CityResponse>({});
+
 
   // API Data
   const [allOccupations, setAllOccupations] = useState([]);
   const [ranges, setRanges] = useState(null);
-  const [cities, setCities] = useState<City[]>([]);
 
   useEffect(() => {
     // Getting all necessary form data from the backend
     getAllOccupations().then((resp) => {
       setAllOccupations(resp);
     });
-    getAllCities().then((resp) => {
-      setCities(resp);
-    });
     getRanges().then((resp) => {
       setRanges(resp);
     });
   }, []);
 
-  // City to search when selected on map
-  const [selectedCity, setSelectedCity] = useState<City | null>(null);
-
-  useEffect(() => {
-    if (selectedCity) {
-      const cityResponseCard = document.getElementById(
-        (selectedCity as City).name.replace(/\s/g, "-")
-      );
-      if (cityResponseCard) {
-        cityResponseCard.scrollIntoView({ behavior: "smooth" });
-      }
-    }
-  }, [selectedCity]);
-
-  const handleMarkerClick = useCallback(
-    (cityName: string) => {
-      // Replace spaces with hyphens in the city name
-      const cityNameId = cityName.replace(/\s/g, "-");
-
-      // Check if a response card for the clicked city already exists
-      const existingCard = document.getElementById(cityNameId);
-      if (existingCard) {
-        // If it exists, scroll to the existing card
-        existingCard.scrollIntoView({ behavior: "smooth" });
-      } else {
-        // If it doesn't exist, generate a new response card
-        const selectedCity = cities.find((city) => city.name === cityName);
-        setSelectedCity(selectedCity as City);
-      }
-    },
-    [cities]
-  );
-
-  const handleClose = useCallback(() => {
-    setSelectedCity(null);
-  }, []);
 
   return (
     <div>
       {allOccupations && ranges ? (
         <>
-          <Container
-            maxWidth="xl"
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            {returnedCities && (
-              <Map
-                cities={
-                  Object.keys(returnedCities).length > 0
-                    ? Object.values(returnedCities)
-                    : cities
-                }
-                onMarkerClick={handleMarkerClick}
-              />
+          
+            {Object.keys(returnedCities).length === 0 && (
+              <Container
+              maxWidth="xl"
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Card className="preferences-form">
+                <CardContent>
+                  <ConfigurationForm
+                    currentConfig={currentConfig}
+                    setCurrentConfig={setCurrentConfig}
+                    setReturnedCities={setReturnedCities}
+                    allOccupations={allOccupations}
+                    allRanges={ranges}
+                  />
+                </CardContent>
+              </Card>
+              </Container>
             )}
-            {selectedCity && (
-              <Box
-                sx={{
-                  width: "100%",
-                  boxSizing: "border-box",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <CityResponseCard
-                  cityDetails={selectedCity}
-                  rank={null}
-                  handleClose={handleClose}
-                  isMarkerClicked={true}
-                />
-              </Box>
-            )}
-            <Card className="preferences-form">
-              <CardContent>
-                <ConfigurationForm
-                  currentConfig={currentConfig}
-                  setCurrentConfig={setCurrentConfig}
-                  setReturnedCities={setReturnedCities}
-                  allOccupations={allOccupations}
-                  allRanges={ranges}
-                />
-              </CardContent>
-            </Card>
-          </Container>
+
           {/* Note: In the future, the data should be returned as an array, already sorted by rank, since JSON's aren't ordered */}
           <Container maxWidth="xl">
-            {returnedCities &&
+            {Object.keys(returnedCities).length > 0 && returnedCities && (
+              <Box>
+                <Map
+                  cities={
+                    Object.keys(returnedCities).length > 0
+                      ? Object.values(returnedCities)
+                      : cities
+                  }
+                  onMarkerClick={() => {}}
+                />
+                <Box className="button-container">
+                  <Button variant="contained" onClick={() => {
+                    setReturnedCities({});
+                    window.scrollTo(0, 0);
+                    }}>New Search</Button>
+                </Box>
+              </Box>
+            )} 
+            {Object.keys(returnedCities).length > 0 && returnedCities &&
               Object.values(returnedCities).map((city, idx) => {
                 return (
                   <Box
@@ -176,12 +124,15 @@ export const CityPreferencesForm = () => {
                       cityDetails={city}
                       key={idx}
                       rank={idx + 1}
-                      handleClose={handleClose}
-                      isMarkerClicked={false}
                     />
                   </Box>
                 );
-              })}
+              })} 
+              {Object.keys(returnedCities).length > 0 && returnedCities && (
+                <Box className="button-container">
+                  <Button variant="contained" onClick={() => window.scrollTo({top: 0, behavior: "smooth"})}>Back to Top</Button>
+                </Box>
+              )}
           </Container>
         </>
       ) : (
@@ -193,8 +144,16 @@ export const CityPreferencesForm = () => {
               <CircularProgress size={100} />
             </Box>
           )}
+      <br/>
+      <br/>
     </div>
   );
+};
+
+type Props = {
+  cities: City[];
+  returnedCities: CityResponse;
+  setReturnedCities: Function;
 };
 
 export default CityPreferencesForm;

@@ -1,10 +1,10 @@
-import React, {ReactElement, useState} from 'react';
+import React, {ReactElement} from 'react';
 import {
     Dialog,
     DialogContent,
     DialogContentText,
     DialogTitle,
-    IconButton, Typography
+    IconButton,
 } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 
@@ -17,8 +17,6 @@ const Popup = ({ title, content, popupOpen, setPopupOpen } : Props) => {
             setPopupOpen(true);
         }
     }
-
-    const closeSx = { float: 'right' }
 
     return (
         <>
