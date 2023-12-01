@@ -24,6 +24,11 @@ import { Configs, Ranges } from "../types/utility-types";
 import {LoadingButton} from "@mui/lab";
 import PriorityCheckbox from "./PriorityCheckbox";
 import useConfigForm from "./hooks/useConfigForm";
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import LocalPoliceIcon from '@mui/icons-material/LocalPolice';
+import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk';
+import PedalBikeIcon from '@mui/icons-material/PedalBike';
+import ParkIcon from '@mui/icons-material/Park';
 
 const ConfigurationForm = ({
   currentConfig,
@@ -65,35 +70,41 @@ const ConfigurationForm = ({
       label: "Low Cost of Living",
       checkboxValue: "costOfLiving",
       checkedValue: 0,
-      onChange: () => handleCheckboxChange("costOfLiving", 0)
+      onChange: () => handleCheckboxChange("costOfLiving", 0),
+      icon: (<AttachMoneyIcon></AttachMoneyIcon>)
+      
     },
     {
       componentType: "checkbox",
       label: "Low Crime Rate",
       checkboxValue: "crimeRate",
       checkedValue: 1,
-      onChange: () => handleCheckboxChange("crimeRate", 1)
+      onChange: () => handleCheckboxChange("crimeRate", 1),
+      icon: (<LocalPoliceIcon></LocalPoliceIcon>)
     },
     {
       componentType: "checkbox",
       label: "High Walkability",
       checkboxValue: "walkability",
       checkedValue: 100,
-      onChange: () => handleCheckboxChange("walkability", 100)
+      onChange: () => handleCheckboxChange("walkability", 100),
+      icon: (<DirectionsWalkIcon></DirectionsWalkIcon>)
     },
     {
       componentType: "checkbox",
       label: "High Bikeability",
       checkboxValue: "bikeability",
       checkedValue: 100,
-      onChange: () => handleCheckboxChange("bikeability", 100)
+      onChange: () => handleCheckboxChange("bikeability", 100),
+      icon: (<PedalBikeIcon></PedalBikeIcon>)
     },
     {
       componentType: "checkbox",
       label: "Good for Outdoor Recreation",
       checkboxValue: "outdoorScore",
       checkedValue: 100,
-      onChange: () => handleCheckboxChange("outdoorScore", 100)
+      onChange: () => handleCheckboxChange("outdoorScore", 100),
+      icon:(<ParkIcon></ParkIcon>)
     },
     {
       componentType: "header",
@@ -219,8 +230,8 @@ const ConfigurationForm = ({
     <>
       {allOccupations && allRanges && (
         <div className="preferences-form-container">
-            <Card className="preferences-form-card">
-              <CardHeader title="What Are You Looking For in a City?" />
+            <Card sx={{borderRadius:"15px"}} className="preferences-form-card">
+              <CardHeader title="What Are You Looking For in a City?"/>
               <Divider />
               <CardContent className="preferences-form-content">
                 <Typography variant="body1" className="preferences-form-text">
@@ -298,19 +309,21 @@ const ConfigurationForm = ({
                       )}
                       {input?.componentType === "checkbox" && (
                           <>
-                            <FormLabel sx={{ width: "fit-content", pointerEvents: "none", marginTop: -1, marginBottom: -1 }}>
-                              {input?.label}
-                              <Checkbox
-                                    sx={{ width: "fit-content", pointerEvents: "auto" }}
-                                    //@ts-ignore
-                                    checked={currentConfig[input.checkboxValue] === input.checkedValue}
-                                    onChange={ input?.onChange }
-                                    value={ input?.value }
-                                    disabled={isLoading}
-                              />
-                              <PriorityCheckbox currentConfig={ currentConfig } value={input.checkboxValue}
-                                                bottomMargin={ 0.25 } isDefaultRange={ isDefaultRange }
-                                                handleChange={ handleChange } isLoading={ isLoading }/>
+                            <FormLabel sx={{display:"flex", alignItems:"center" , width: "fit-content", pointerEvents: "none", marginTop: -1, marginBottom: -1 }}>
+                              {input?.icon}<div style={{margin:"0px 5px"}}></div>{input?.label}
+                              <div style={{ display: "flex", alignItems: "center", marginRight: "5px"}}>
+                                <Checkbox
+                                      sx={{ width: "fit-content", pointerEvents: "auto" }}
+                                      //@ts-ignore
+                                      checked={currentConfig[input.checkboxValue] === input.checkedValue}
+                                      onChange={ input?.onChange }
+                                      value={ input?.value }
+                                      disabled={isLoading}
+                                />
+                                <PriorityCheckbox currentConfig={ currentConfig } value={input.checkboxValue}
+                                                  bottomMargin={ 0.25 } isDefaultRange={ isDefaultRange }
+                                                  handleChange={ handleChange } isLoading={ isLoading }/>
+                              </div>
                             </FormLabel>
                           </>
                       )}

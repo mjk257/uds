@@ -8,7 +8,7 @@ const useConfigForm = ({ currentConfig, setCurrentConfig, allRanges, setReturned
     const populationRange = [allRanges.min_population, allRanges.max_population, allRanges.avg_population];
     const ageRange =[allRanges.min_age, allRanges.max_age, allRanges.avg_age];
     const densityRange = [allRanges.min_density, allRanges.max_density, allRanges.avg_density];
-    const annualSnowfallRange = [allRanges.min_snow, allRanges.max_snow, allRanges.avg_snow];
+    const annualSnowfallRange = [allRanges.min_density, allRanges.max_density, allRanges.avg_density];
     const annualRainfallRange = [allRanges.min_rain, allRanges.max_rain, allRanges.avg_rain];
     const avgWinterTempRange = [allRanges.min_winter_temp, allRanges.max_winter_temp, allRanges.avg_winter_temp];
     const avgSummerTempRange = [allRanges.min_summer_temp, allRanges.max_summer_temp, allRanges.avg_summer_temp];
@@ -243,52 +243,15 @@ const useConfigForm = ({ currentConfig, setCurrentConfig, allRanges, setReturned
         ageSlider: generateRange(ageRange)
     }
 
-    const createMultiRanges = (formSelection: number[], formRange: number[]) => {
-        // If multiple choice is a single value, treat as single preference value
-        // If multiple choice are multiple values, create "range" with min and max
-
-        // formRange = [min, max, avg]
-        let rangeMin = null;
-        let rangeMax = null;
-        let formSelectionLength = formSelection.length;
-        formSelection.sort((a, b) => a - b);
-
-        if (formSelectionLength === 0)
-            return null;
-        else if (formSelectionLength === 1)
-            return formSelection[0];
-
-        if (formSelection[0] === formRange[0])
-            rangeMin = formSelection[0];
-
-        if (formSelection[formSelectionLength - 1] === formRange[1])
-            rangeMax = formRange[1];
-
-        if (formSelectionLength === 2) {
-            if (rangeMin == null) {
-                rangeMin = formRange[0]/3 + 2*formRange[2]/3;
-            } else if (rangeMax == null) {
-                rangeMax = formRange[1]/3 + 2*formRange[2]/3;
-            }
-        }
-
-        return {min: rangeMin, max: rangeMax};
-    }
-
     const submitForm = () => {
         // Create a copy of the current config, making sure to display the original on screen
         // This copy will contain the min and max values of the slider values, the same values for other fields
         const currentConfigCopy = {
             ...currentConfig,
-            annualRainfall: createMultiRanges(currentConfig.annualRainfall, annualRainfallRange),
-            annualSnowfall: createMultiRanges(currentConfig.annualSnowfall, annualSnowfallRange),
             population: {min: sliders.populationSlider[(currentConfig.population[0] as number)], max: sliders.populationSlider[(currentConfig.population[1] as number)]},
             populationAge: {min: sliders.ageSlider[(currentConfig.avgPopulationAge[0] as number)], max: sliders.ageSlider[(currentConfig.avgPopulationAge[1] as number)]},
             winterTemp: {min: sliders.winterSlider[(currentConfig.avgWinterTemp[0] as number)], max: sliders.winterSlider[(currentConfig.avgWinterTemp[1] as number)]},
-            summerTemp: {min: sliders.summerSlider[(currentConfig.avgSummerTemp[0] as number)], max: sliders.summerSlider[(currentConfig.avgSummerTemp[1] as number)]},
-            avgPopulationAge: null,
-            avgWinterTemp: null,
-            avgSummerTemp: null
+            summerTemp: {min: sliders.summerSlider[(currentConfig.avgSummerTemp[0] as number)], max: sliders.summerSlider[(currentConfig.avgSummerTemp[1] as number)]}
         }
         
         // Save configuration to cookie on submit
