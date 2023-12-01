@@ -114,4 +114,14 @@ describe("Testing CityResponseCard component", () => {
     const politics = screen.getByText("State Politics:");
     expect(politics).toBeInTheDocument();
   });
+
+  test("renders Close button when isMarkerClicked is true", () => {
+    // Set isMarkerClicked to true for this test
+    const mockPropsWithButton = { ...mockProps, isMarkerClicked: true };
+
+    render(<CityResponseCard {...mockPropsWithButton} />);
+
+    const closeButton = screen.getByText("Close");
+    expect(closeButton).toBeInTheDocument();
+  });
 });
