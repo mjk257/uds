@@ -131,7 +131,7 @@ function getAttributeValue(city, criteriaName) {
         case "annualRainfall":
             return city.annual_precipitation;
         case "annualSnowfall":
-            return city.annual_snowfall;
+            return city.annual_snow;
         case "summerTemp":
             return city.summer_temp;
         case "winterTemp":
