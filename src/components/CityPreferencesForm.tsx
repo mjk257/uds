@@ -182,15 +182,14 @@ export const CityPreferencesForm = () => {
           </Container>
         </>
       ) : (
-        <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          minHeight="50vh"
-        >
-          <CircularProgress size={100} />
-        </Box>
-      )}
+            <Box display="flex"
+                 justifyContent="center"
+                 alignItems="center"
+                 minHeight="100vh"
+                 flexDirection="column">
+              <CircularProgress size={100} />
+            </Box>
+          )}
     </div>
   );
 };

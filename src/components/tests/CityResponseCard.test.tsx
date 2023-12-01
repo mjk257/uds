@@ -16,27 +16,28 @@ const nycSummary =
   "It is also the youngest city in the United States.";
 
 const mockCityDetails: CityDetails = {
-  density: 1,
-  population: 1,
-  name: "New York City",
-  state: "NY",
-  longitude: 1,
-  latitude: 1,
-  rpp: 1,
-  climate_zone: "humid-subtropical",
-  zone_description: nycSummary,
-  partisan_lean: 1,
-  outdoor_score: 1,
-  occupation_data: 1,
-  median_age: 1,
-  annual_precipitation: 1,
-  annual_snowfall: 1,
-  winter_temp: 1,
-  summer_temp: 1,
-  crime_rate: 1,
-  walkscore: 1,
-  bikescore: 1,
-};
+    density: 1,
+    population: 1,
+    name: "New York City",
+    state: "NY",
+    longitude: 1,
+    latitude: 1,
+    rpp: 1,
+    climate_zone: "humid-subtropical",
+    zone_description: nycSummary,
+    partisan_lean: 1,
+    outdoor_score: 1,
+    occupation_data: 1,
+    median_age: 1,
+    annual_precipitation: 1,
+    annual_snowfall: 1,
+    winter_temp: 1,
+    summer_temp: 1,
+    crime_rate: 1,
+    walkscore: 1,
+    bikescore: 1,
+    image_url: "url"
+}
 
 describe("Testing CityResponseCard component", () => {
   const mockProps = {

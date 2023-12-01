@@ -1,17 +1,20 @@
 .preferences-form {
-  background-color: #d9d9d9 !important;
+  background-color: #f0f0f0 !important;
   text-align: center;
-  margin: 5%;
-  border: 1px solid;
-  width: 100%;
-  max-width: 100%;
+  margin-left: 5%;
+  margin-right: 5%;
+  margin-top: 5%;
+  box-shadow: rgba(31, 22, 41, 0.4) -5px 5px, rgba(31, 22, 41, 0.3) -10px 10px, rgba(31, 22, 41, 0.2) -15px 15px, rgba(31, 22, 41, 0.1) -20px 20px, rgba(31, 22, 41, 0.05) -25px 25px !important;
+  //box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px !important; //Regular box shadow, backup
+  border-radius: 20px !important;
+  
   .configurations-header {
     margin-top: 20px;
     margin-bottom: 20px;
     font-weight: bold;
   }
   .preferences-form-container {
-    padding: 5% 5% 5% 5%;
+    padding: 3% 3% 3% 3%;
     .preferences-form-card {
       text-align: center;
       .preferences-form-content {
@@ -54,9 +57,9 @@
 .city-response {
   background-color: whitesmoke !important;
   margin: 5% 5% 5% 5%;
-  border: 1px solid;
-  width: 100%;
-  max-width: 100%;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px !important; 
+  border-radius: 10px !important;
+  
   .city-response-content {
     border-radius: 10em;
     .city-response-text {
@@ -133,6 +136,8 @@
   color: white;
   text-align: center;
   padding: 20px 0;
+  top: 'auto';
+  bottom: 0;
   .footer-link {
     color: white !important;
     text-decoration: none;
