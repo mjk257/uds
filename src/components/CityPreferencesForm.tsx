@@ -72,7 +72,7 @@ export const CityPreferencesForm = () => {
   useEffect(() => {
     if (selectedCity) {
       const cityResponseCard = document.getElementById(
-        (selectedCity as City).name
+        (selectedCity as City).name.replace(/\s/g, "-")
       );
       if (cityResponseCard) {
         cityResponseCard.scrollIntoView({ behavior: "smooth" });
@@ -82,8 +82,11 @@ export const CityPreferencesForm = () => {
 
   const handleMarkerClick = useCallback(
     (cityName: string) => {
+      // Replace spaces with hyphens in the city name
+      const cityNameId = cityName.replace(/\s/g, "-");
+
       // Check if a response card for the clicked city already exists
-      const existingCard = document.getElementById(cityName);
+      const existingCard = document.getElementById(cityNameId);
       if (existingCard) {
         // If it exists, scroll to the existing card
         existingCard.scrollIntoView({ behavior: "smooth" });
