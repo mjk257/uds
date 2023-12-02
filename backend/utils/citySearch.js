@@ -123,7 +123,7 @@ function getAttributeValue(city, criteriaName) {
         case "populationDensity":
             return city.density;
         case "climate":
-            return city.zone_description; // TODO: Parse this data correctly to match input data
+            return city.zone_description;
         case "politics":
             return city.partisan_lean;
         case "populationAge":
