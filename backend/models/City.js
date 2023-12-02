@@ -15,7 +15,7 @@ const citySchema = new mongoose.Schema({
     occupation_data: Map, // info not in database but is for returning job information back to frontend
     median_age: Number,
     annual_precipitation: Number,
-    annual_snowfall: Number,
+    annual_snow: Number,
     summer_temp: Number,
     winter_temp: Number,
     crime_rate: Number,

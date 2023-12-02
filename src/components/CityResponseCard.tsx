@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Card,
   CardContent,
   CardHeader,
@@ -9,8 +8,7 @@ import {
   Typography,
   AccordionDetails,
   Icon,
-  CardMedia,
-  Box
+  CardMedia
 } from "@mui/material";
 import { ExpandMore } from "@mui/icons-material";
 
@@ -59,9 +57,7 @@ function percentageToColor(perc: number, min: number, max: number) {
 // This will likely take in props later on, but the base styling will be set up
 const CityResponseCard = ({
   cityDetails,
-  rank,
-  handleClose,
-  isMarkerClicked,
+  rank
 }: Props) => {
   const costOfLivingToString = (rpp: number) => {
     const roundedRpp = Math.abs(rpp - 100).toFixed(2);
@@ -294,7 +290,7 @@ const CityResponseCard = ({
                 <>
                   {item?.component === "header" && (
                     <Typography
-                      variant="h4"
+                      variant="h5"
                       sx={{ marginTop: "20px", marginBottom: "10px" }}
                       key={idx}
                       className="city-response-header"
@@ -322,13 +318,6 @@ const CityResponseCard = ({
           </AccordionDetails>
         </Accordion>
       </CardContent>
-      {isMarkerClicked && (
-        <Box display="flex" justifyContent="center" marginBottom="3%">
-          <Button variant="contained" color="primary" onClick={handleClose}>
-            Close
-          </Button>
-        </Box>
-      )}
     </Card>
   );
 };
@@ -336,8 +325,6 @@ const CityResponseCard = ({
 type Props = {
   cityDetails: any;
   rank: number | null;
-  handleClose: () => void;
-  isMarkerClicked: boolean;
 };
 
 export default CityResponseCard;

@@ -109,3 +109,10 @@ export type Ranges = {
     "avg_snow": number
 }
 
+export interface City {
+    name: string;
+    state: string;
+    population: number;
+    latitude: number;
+    longitude: number;
+}

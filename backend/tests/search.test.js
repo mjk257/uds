@@ -54,7 +54,7 @@ describe("Testing citySearch", () => {
         expect(results[0].state).toBe("TX");
     })
 
-    test('job data', async () => {
+    test('job data - NOTE: When job data changes, this might fail', async () => {
         const searchCriteria = {
             ...basicSearchCriteria, 
             costOfLiving: 120,
@@ -80,5 +80,30 @@ describe("Testing citySearch", () => {
 
         expect(results[0].name).toBe("Fresno");
         expect(results[0].state).toBe("CA");
+    })
+
+    test('all values', async () => {
+        const searchCriteria = {
+            "population":119980,
+            "populationDensity":4298,
+            "costOfLiving":99.8,
+            "preferredOccupation":null,
+            "crimeRate":220,
+            "walkability":80,
+            "bikeability":84,
+            "politics":-1.175974,
+            "outdoorScore":65,
+            "annualRainfall":31,
+            "annualSnowfall":45,
+            "priorityAttributes":[],
+            "populationAge":28.1,
+            "winterTemp":70,
+            "summerTemp":26
+        };
+
+        const results = await citySearch(test_cities, searchCriteria);
+
+        expect(results[0].name).toBe("Ann Arbor");
+        expect(results[0].state).toBe("MI");
     })
 });

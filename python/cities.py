@@ -40,7 +40,7 @@ df.insert(4, column='longitude', value=0)
 
 # Call geocoding API
 for i, row in df.iterrows():
-    api_url = "https://geocode.maps.co/search?city=" + df.at[i, 'name'].replace(" ", "+") + "&state=" + df.at[i, 'state'] + "&country=US"
+    api_url = "https://geocode.maps.co/search?city=" + df.at[i, 'name'].replace(" ", "+") + "&state=" + extend(df.at[i, 'state']) + "&country=US"
     coordinates = requests.get(api_url)
     while coordinates.status_code != 200:
         coordinates = requests.get(api_url)
