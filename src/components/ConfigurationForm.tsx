@@ -213,11 +213,11 @@ const ConfigurationForm = ({
     },
     {
       componentType: "select",
-      inputLabel: "Politics",
+      inputLabel: "State Politics",
       value: currentConfig.politics,
       onChange: (event: any) => handleChange("politics", event),
       checkboxValue: "politics",
-      label: "Politics",
+      label: "State Politics",
       menuItems: [
         { title: "No Preference", value: "" },
         { title: "Democrat", value: "democrat" },

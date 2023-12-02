@@ -14,7 +14,7 @@ interface City {
 
 interface MapProps {
   cities: City[];
-  onMarkerClick: (cityName: string) => void;
+  onMarkerClick: (cityName: string, cityState: string) => void;
 }
 
 const Map: React.FC<MapProps> = ({ cities, onMarkerClick }) => {
@@ -175,8 +175,9 @@ const Map: React.FC<MapProps> = ({ cities, onMarkerClick }) => {
 
       map.current?.on("click", "unclustered-point", (e) => {
         const cityName = e.features?.[0]?.properties?.cityId;
+        const cityState = e.features?.[0]?.properties?.category;
         if (cityName) {
-          onMarkerClick(cityName);
+          onMarkerClick(cityName, cityState);
         }
       });
     });

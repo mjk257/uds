@@ -102,7 +102,7 @@ export const CityPreferencesForm = ({cities, returnedCities, setReturnedCities} 
                 <Box className="button-container">
                   <Button variant="contained" onClick={() => {
                     setReturnedCities({});
-                    window.scrollTo(0, 0);
+                    window.scrollTo({top: 0, behavior: "smooth"});
                     }}>New Search</Button>
                 </Box>
               </Box>

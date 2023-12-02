@@ -25,20 +25,10 @@ export const CityBrowseForm = ({cities} : Props) => {
   }, [selectedCity]);
 
   const handleMarkerClick = useCallback(
-    (cityName: string) => {
-      // Replace spaces with hyphens in the city name
-      const cityNameId = cityName.replace(/\s/g, "-");
-
-      // Check if a response card for the clicked city already exists
-      const existingCard = document.getElementById(cityNameId);
-      if (existingCard) {
-        // If it exists, scroll to the existing card
-        existingCard.scrollIntoView({ behavior: "smooth" });
-      } else {
-        // If it doesn't exist, generate a new response card
-        const selectedCity = cities.find((city) => city.name === cityName);
-        setSelectedCity(selectedCity as City);
-      }
+    (cityName: string, cityState: string) => {
+      // If it doesn't exist, generate a new response card
+      const selectedCity = cities.find((city) => city.name === cityName && city.state === cityState);
+      setSelectedCity(selectedCity as City);
     },
     [cities]
   );
