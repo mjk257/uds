@@ -88,7 +88,7 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 
 To load up a fresh version of the database, simply run
 `./python/full_ingestion.py`
-
+Note that for some of the scripts if an API key is required, then the respective environment variable should be present and valid.
 To run any individual ingestion scripts, first run
 `pip install -r requirements.txt` 
 followed by
