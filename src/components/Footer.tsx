@@ -6,6 +6,9 @@ const Footer = () => {
     return (
         <AppBar position="static" className='footer'>
             <Container maxWidth="lg">
+                <Link href='https://myself-14.gitbook.io/untitled/' target='_blank' className='footer-link' data-testid='github-footer-icon'>
+                    UDS Developer Zone
+                </Link>
                 <Toolbar disableGutters>
                     <Typography variant="body2" color="inherit" style={{ flex: 1 }} align='center' data-testid='uds-footer-test'>
                         &copy; {new Date().getFullYear()} UDS: Urban Discovery System

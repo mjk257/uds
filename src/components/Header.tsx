@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import Popup from "./Popup";
 import {GitHub} from "@mui/icons-material";
+import logo from "./logo.png";
 
 const Header = ({setSearch, setReturnedCities}: Props) => {
 
@@ -136,7 +137,7 @@ const Header = ({setSearch, setReturnedCities}: Props) => {
                         <li>Tyler Avery</li>
                         <li>Vikranth Mallikarjun</li>
                         <li>Thomas Bornhorst</li>
-                        <li>Fatih Ahmet Gurbuz</li>
+                        <li>Fatih Ahmet Gurbuz (<a href='https://www.linkedin.com/in/fatihahmetgurbuz/?locale=en_US'>LinkedIn</a>)</li>
                         <li>Ziyad Sbeih</li>
                         <li>Francis Mungai</li>
                     </ul>
@@ -231,6 +232,9 @@ const Header = ({setSearch, setReturnedCities}: Props) => {
         <div>
             <AppBar position="static" className='header-bar'>
                 <Toolbar>
+                    <Box>
+                        <img src={logo} alt="UDS Logo" className='header-bar-logo' style ={{height: 60, padding: 3, paddingRight: 10}}/>
+                    </Box>
                     <Box>
                         <Typography variant='h6' component='div'
                                     className='header-bar-text' align='left'
